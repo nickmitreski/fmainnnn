@@ -1,0 +1,2411 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.emulator-container {
+    perspective: 1000px;
+}
+
+.iphone-frame {
+    width: 350px;
+    height: 720px;
+    background: linear-gradient(145deg, #2c2c2c, #1a1a1a);
+    border-radius: 45px;
+    position: relative;
+    box-shadow:
+        0 0 0 8px #1a1a1a,
+        0 20px 60px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: rotateX(5deg) rotateY(-5deg);
+    transition: transform 0.3s ease;
+}
+
+.iphone-frame:hover {
+    transform: rotateX(0deg) rotateY(0deg);
+}
+
+.screen-bezel {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    right: 15px;
+    bottom: 15px;
+    background: #000;
+    border-radius: 35px;
+    overflow: hidden;
+}
+
+.notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 30px;
+    background: #000;
+    border-radius: 0 0 20px 20px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.speaker {
+    width: 50px;
+    height: 4px;
+    background: #333;
+    border-radius: 2px;
+}
+
+.camera {
+    width: 10px;
+    height: 10px;
+    background: #1a1a1a;
+    border-radius: 50%;
+    border: 1px solid #333;
+}
+
+.screen {
+    width: 100%;
+    height: 100%;
+    background: #000;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-bar {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    background: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(20px);
+    z-index: 5;
+    position: relative;
+}
+
+.status-left .time {
+    margin-left: 5px;
+}
+
+.status-right {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.signal-bars {
+    display: flex;
+    gap: 2px;
+    align-items: end;
+}
+
+.bar {
+    width: 3px;
+    background: white;
+    border-radius: 1px;
+}
+
+.bar:nth-child(1) { height: 4px; }
+.bar:nth-child(2) { height: 6px; }
+.bar:nth-child(3) { height: 8px; }
+.bar:nth-child(4) { height: 10px; }
+
+.battery {
+    width: 20px;
+    height: 10px;
+    border: 1px solid white;
+    border-radius: 2px;
+    position: relative;
+}
+
+.battery::after {
+    content: '';
+    position: absolute;
+    right: -3px;
+    top: 2px;
+    width: 2px;
+    height: 6px;
+    background: white;
+    border-radius: 0 1px 1px 0;
+}
+
+.battery-level {
+    width: 70%;
+    height: 100%;
+    background: white;
+    border-radius: 1px;
+}
+
+.app-container {
+    flex: 1;
+    position: relative;
+    height: calc(100% - 44px);
+    display: flex; 
+    flex-direction: column;
+}
+
+.wallpaper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    opacity: 0.9;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    transition: background-image 0.5s ease, background-size 0.5s ease;
+}
+
+.wallpaper.diamond-tile {
+    background-size: 20%; /* 5 times smaller texture */
+    background-repeat: repeat;
+}
+
+.home-screen {
+    position: relative;
+    height: 100%;
+    padding: 40px 30px 120px;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+    flex: 1;
+    align-content: start;
+}
+
+.app-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.app-icon:hover {
+    transform: scale(1.1);
+}
+
+.app-icon:active {
+    transform: scale(0.95);
+}
+
+.icon-bg {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    transition: box-shadow 0.2s ease;
+}
+
+.icon-bg img { /* Style for the image icons */
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the icon-bg area */
+    border-radius: 15px; /* Match parent border-radius */
+}
+
+.app-icon:hover .icon-bg {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* Base colors - images will override the content, but background will remain */
+.phone-icon { background: linear-gradient(135deg, #34d399, #10b981); }
+.messages-icon { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+.safari-icon { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+.settings-icon { background: linear-gradient(135deg, #6b7280, #4b5563); }
+.photos-icon { background: linear-gradient(135deg, #fbbf24, #f59e0b); }
+.camera-icon { background: linear-gradient(135deg, #1f2937, #111827); }
+.music-icon { background: linear-gradient(135deg, #ec4899, #db2777); }
+.weather-icon { background: linear-gradient(135deg, #0ea5e9, #0284c7); }
+/* New Files icon */
+.files-icon { background: linear-gradient(135deg, #5ac8fa, #007aff); } /* Blueish gradient */
+/* New App Store Icon */
+.appstore-icon { background: linear-gradient(135deg, #00c6ff, #0072ff); } /* App Store blue */
+/* WebSim Chat icon */
+.websim-chat-icon { background: linear-gradient(135deg, #4dc0b5, #38a89d); } /* Teal/Cyan for chat */
+
+
+.app-icon span {
+    color: white;
+    font-size: 12px;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Virus App Icons */
+.app-icon.virus-app-icon {
+    animation: glitch-icon 0.5s infinite alternate; /* Add glitch effect */
+}
+
+.app-icon.virus-app-icon .icon-bg {
+    background: linear-gradient(135deg, #ff0000, #8b0000); /* Red/dark red for virus */
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+}
+
+.app-icon.virus-app-icon .virus-emoji {
+    font-size: 30px;
+    transform: rotate(5deg);
+    animation: pulse-emoji 1s infinite alternate;
+}
+
+@keyframes glitch-icon {
+    0% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(1px, -1px) scale(1.02); }
+    50% { transform: translate(-1px, 1px) scale(0.98); }
+    75% { transform: translate(1px, 1px) scale(1.01); }
+    100% { transform: translate(0, 0) scale(1); }
+}
+
+@keyframes pulse-emoji {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.dock {
+    position: absolute;
+    bottom: 30px;
+    left: 30px;
+    right: 30px;
+    height: 80px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    padding: 0 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.dock .app-icon span {
+    display: none;
+}
+
+.home-indicator {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 140px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.side-buttons {
+    position: absolute;
+    left: -3px;
+    top: 120px;
+}
+
+.volume-up,
+.volume-down,
+.mute-switch {
+    width: 6px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    margin-bottom: 8px;
+    border: 1px solid #333;
+}
+
+.volume-up { height: 25px; }
+.volume-down { height: 25px; }
+.mute-switch {
+    height: 15px;
+    top: -15px;
+    position: relative;
+}
+
+.power-button {
+    position: absolute;
+    right: -3px;
+    top: 150px;
+    width: 6px;
+    height: 60px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    border: 1px solid #333;
+    cursor: pointer; /* Make power button clickable */
+}
+
+.messages-app-screen,
+.phone-app-screen,
+.settings-app-screen,
+.photos-app-screen,
+.weather-app-screen,
+.safari-app-screen,
+.music-app-screen,
+.files-app-screen,
+.appstore-app-screen,
+.websim-chat-app-screen { /* Added websim-chat-app-screen */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #333 0%, #111 100%);
+    display: flex;
+    flex-direction: column;
+}
+
+.messages-header,
+.phone-header,
+.settings-header,
+.photos-header,
+.weather-header,
+.safari-header,
+.music-header,
+.files-header,
+.appstore-header,
+.websim-chat-header { /* Added websim-chat-header */
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 50px;
+}
+
+.messages-header .back-button,
+.phone-header .back-button,
+.settings-header .back-button,
+.photos-header .back-button,
+.weather-header .back-button,
+.safari-header .back-button,
+.music-header .back-button,
+.files-header .back-button,
+.appstore-header .back-button,
+.websim-chat-header .back-button { /* Added websim-chat-header back button */
+    color: #007aff;
+    cursor: pointer;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+.messages-header .back-button::before,
+.phone-header .back-button::before,
+.settings-header .back-button::before,
+.photos-header .back-button::before,
+.weather-header .back-button::before,
+.safari-header .back-button::before,
+.music-header .back-button::before,
+.files-header .back-button::before,
+.appstore-header .back-button::before,
+.websim-chat-header .back-button::before { /* Added websim-chat-header back button before */
+    content: '';
+    border: solid #007aff;
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 3px;
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+    margin-left: -2px;
+}
+
+.messages-header .header-title,
+.phone-header .header-title,
+.settings-header .header-title,
+.photos-header .header-title,
+.weather-header .header-title,
+.safari-header .header-title,
+.music-header .header-title,
+.files-header .header-title,
+.appstore-header .header-title,
+.websim-chat-header .header-title { /* Added websim-chat-header title */
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 600;
+}
+
+.messages-header .header-right,
+.phone-header .header-right,
+.settings-header .header-right,
+.photos-header .header-right,
+.weather-header .header-right,
+.safari-header .header-right-icons,
+.music-header .header-right,
+.files-header .header-right,
+.appstore-header .header-right,
+.websim-chat-header .header-right { /* Added websim-chat-header right */
+    width: 60px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    font-size: 20px;
+}
+.safari-header .share-icon {
+    color: #007aff;
+    cursor: pointer;
+}
+
+.chat-messages,
+.call-chat-messages,
+.websim-chat-messages { /* Added websim-chat-messages */
+    flex-grow: 1;
+    padding: 10px 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.message-bubble {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+.user-message {
+    background-color: #007aff;
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.ai-message {
+    background-color: #e5e5ea;
+    color: #333;
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+}
+
+/* Websim Chat Bubbles */
+.websim-chat-message {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 18px;
+    word-wrap: break-word;
+    font-size: 14px;
+    line-height: 1.4;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    align-self: flex-start; /* Default to left */
+    background-color: #e5e5ea;
+    color: #333;
+}
+
+.websim-chat-message.self {
+    background-color: #007aff;
+    color: white;
+    align-self: flex-end;
+}
+
+.websim-chat-message .username {
+    font-weight: 600;
+    font-size: 12px;
+    margin-bottom: 2px;
+    color: #555; /* Default for others' messages */
+}
+
+.websim-chat-message.self .username {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+
+.typing-indicator {
+    background-color: #e5e5ea;
+    color: #333;
+    align-self: flex-start;
+    opacity: 0.7;
+    font-style: italic;
+    border-bottom-left-radius: 4px;
+}
+
+/* Safari specific typing indicator */
+.safari-typing-indicator {
+    color: #888;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+    opacity: 0.8;
+}
+
+/* App Store typing indicator */
+.appstore-typing-indicator {
+    color: #888;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+    opacity: 0.8;
+}
+
+/* WebSim Chat typing indicator */
+.websim-chat-typing-indicator {
+    background-color: #e5e5ea;
+    color: #333;
+    align-self: flex-start;
+    opacity: 0.7;
+    font-style: italic;
+    border-bottom-left-radius: 4px;
+}
+.websim-chat-typing-indicator .username {
+    font-weight: normal; /* Override username bold */
+    color: #888;
+}
+
+
+.message-input-container,
+.call-message-input-container,
+.websim-chat-input-container { /* Added websim-chat-input-container */
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 10px 15px;
+    display: flex;
+    align-items: flex-end;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    min-height: 50px;
+}
+
+#message-input,
+#call-message-input,
+#websim-chat-input { /* Added websim-chat-input */
+    flex-grow: 1;
+    border: none;
+    background-color: #f2f2f7;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 15px;
+    color: #333;
+    max-height: 100px;
+    overflow-y: auto;
+    resize: none;
+    margin-right: 10px;
+}
+
+#message-input::placeholder,
+#call-message-input::placeholder,
+#websim-chat-input::placeholder { /* Added websim-chat-input placeholder */
+    color: #8e8e93;
+}
+
+#message-input:focus,
+#call-message-input:focus,
+#websim-chat-input:focus { /* Added websim-chat-input focus */
+    outline: none;
+    box-shadow: 0 0 0 2px #007aff;
+}
+
+#send-button,
+#call-send-button,
+#websim-send-button { /* Added websim-send-button */
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 15px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#send-button:hover,
+#call-send-button:hover,
+#websim-send-button:hover { /* Added websim-send-button hover */
+    background-color: #0056b3;
+}
+
+#send-button:active,
+#call-send-button:active,
+#websim-send-button:active { /* Added websim-send-button active */
+    background-color: #004085;
+}
+
+/* Phone App Specific Styles */
+.contacts-list {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: #000; /* Dark background for contacts list */
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.contact-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(45deg, #007aff, #5ac8fa);
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+}
+
+.contact-info {
+    flex-grow: 1;
+    color: white;
+}
+
+.contact-name {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.contact-number {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.call-icon {
+    color: #34d399; /* Green for call */
+    font-size: 20px;
+}
+
+.call-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(180deg, #111 0%, #000 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Space out header, chat, and hangup */
+}
+
+.call-header {
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.call-contact-name {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.call-status {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* New styles for the call action area and buttons */
+.call-action-area {
+    position: relative;
+    width: 80px; /* Container size to hold both circles and effects */
+    height: 80px;
+    margin: 20px auto; /* Center the entire action area at the bottom */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hang-up-background-circle {
+    width: 50px; /* Slightly smaller than the main hang-up button */
+    height: 50px;
+    border-radius: 50%;
+    background-color: #990000; /* Darker red for the background circle */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1; /* Under the hang-up button */
+    box-shadow: 0 0 15px rgba(0,0,0,0.4); /* Subtle glow/shadow effect */
+}
+
+.hang-up-button {
+    width: 60px; /* Size of the red phone icon image */
+    height: 60px;
+    border-radius: 50%;
+    background-color: #ff3b30; /* Main red color for the button */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255, 59, 48, 0.4); /* Keep a shadow effect on the visible button */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2; /* On top of the background circle */
+    transition: transform 0.1s ease;
+    position: relative; /* Needed for pseudo-element positioning */
+    overflow: hidden; /* Ensure pseudo-element stays within bounds */
+}
+
+.hang-up-button::before {
+    content: '';
+    position: absolute;
+    width: 30px; /* Width of the phone receiver line */
+    height: 4px; /* Thickness of the line */
+    background-color: white;
+    border-radius: 2px; /* Rounded ends */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(135deg); /* Rotate for hang-up angle */
+}
+
+.hang-up-button:active {
+    transform: translate(-50%, -50%) scale(0.95);
+}
+
+/* Settings App specific styles */
+.settings-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background: #f2f2f7; /* Light background for settings */
+    color: #333;
+}
+
+.settings-group {
+    margin-top: 20px;
+    background-color: white;
+    border-radius: 10px;
+    margin: 15px;
+    overflow: hidden;
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+}
+
+.settings-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 15px;
+    border-bottom: 1px solid #e0e0e0;
+    font-size: 15px;
+}
+
+.settings-item:last-child {
+    border-bottom: none;
+}
+
+.toggle-switch {
+    position: relative;
+    width: 51px;
+    height: 31px;
+}
+
+.toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-label {
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e9e9eb;
+    border-radius: 31px;
+    transition: background-color 0.2s;
+}
+
+.toggle-label:before {
+    content: '';
+    position: absolute;
+    height: 27px;
+    width: 27px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-input:checked + .toggle-label {
+    background-color: #34c759;
+}
+
+.toggle-input:checked + .toggle-label:before {
+    transform: translateX(20px);
+}
+
+/* Photos App Specific Styles */
+.photos-app-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+}
+
+.photos-header {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 50px;
+    position: relative;
+    z-index: 10;
+}
+
+.photos-header .header-title {
+    flex-grow: 1;
+    text-align: center;
+    font-weight: 600;
+}
+
+.photos-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 5px; /* Smaller padding for grid layout */
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+}
+
+.photos-grid, .trash-bin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for photos */
+    gap: 3px; /* Small gap between photos */
+}
+
+.photo-item {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%; /* Creates a square aspect ratio */
+    overflow: hidden;
+    background-color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.photo-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Covers the area, cropping if necessary */
+    display: block;
+}
+
+.trash-empty-message {
+    color: #8e8e93;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+.bottom-tabs {
+    height: 60px;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: white;
+    font-size: 10px;
+    font-weight: 500;
+    padding-bottom: 5px; /* For home indicator space */
+    position: relative;
+    z-index: 10;
+}
+
+.tab-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+}
+
+.tab-item.active {
+    opacity: 1;
+    color: #007aff;
+}
+
+.tab-icon {
+    font-size: 22px;
+    margin-bottom: 2px;
+}
+
+.tab-label {
+    margin-top: 2px;
+}
+
+/* Context Menu Styles */
+.context-menu {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(15px);
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 20; /* Above everything else */
+    min-width: 150px;
+}
+
+.context-menu-item {
+    padding: 12px 15px;
+    color: #000;
+    font-size: 15px;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    transition: background-color 0.1s ease;
+}
+
+.context-menu-item:last-child {
+    border-bottom: none;
+}
+
+.context-menu-item:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.context-menu-item.delete {
+    color: #ff3b30;
+}
+
+.context-menu-item.recover {
+    color: #007aff;
+}
+
+/* Dark Mode Styles */
+.screen.dark-mode .settings-content {
+    background: linear-gradient(180deg, #333 0%, #111 100%);
+    color: white;
+}
+
+.screen.dark-mode .settings-group {
+    background-color: #2c2c2e; /* Darker background for group */
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.screen.dark-mode .settings-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .ai-message {
+    background-color: #2c2c2e; /* Darker bubble for AI messages */
+    color: white;
+}
+
+.screen.dark-mode .typing-indicator {
+    background-color: #2c2c2e;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.screen.dark-mode .message-input-container,
+.screen.dark-mode .call-message-input-container,
+.screen.dark-mode .websim-chat-input-container { /* Added websim chat dark mode */
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.screen.dark-mode #message-input,
+.screen.dark-mode #call-message-input,
+.screen.dark-mode #websim-chat-input { /* Added websim chat dark mode */
+    background-color: #3a3a3c;
+    color: white;
+}
+
+.screen.dark-mode #message-input::placeholder,
+.screen.dark-mode #call-message-input::placeholder,
+.screen.dark-mode #websim-chat-input::placeholder { /* Added websim chat dark mode */
+    color: #8e8e93;
+}
+
+.screen.dark-mode .contacts-list {
+    background: #000; /* Already dark, keep it */
+}
+
+.screen.dark-mode .contact-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .contact-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.screen.dark-mode .contact-info {
+    color: white;
+}
+
+.screen.dark-mode .contact-number {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.screen.dark-mode .call-screen {
+    background: linear-gradient(180deg, #111 0%, #000 100%); /* Already dark, keep it */
+}
+
+.screen.dark-mode .call-header {
+    background: rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: white;
+}
+
+.screen.dark-mode .call-status {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.screen.dark-mode .wallpaper {
+    background: linear-gradient(135deg, #1f2937 0%, #111827 100%); /* Darker wallpaper for dark mode */
+}
+
+/* Dark Mode specific styles for Photos app */
+.screen.dark-mode .photos-app-screen {
+    background: #000; /* Stays black */
+}
+
+.screen.dark-mode .photos-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .photos-grid,
+.screen.dark-mode .trash-bin-grid {
+    background-color: #000;
+}
+
+.screen.dark-mode .photo-item {
+    background-color: #2c2c2e;
+}
+
+.screen.dark-mode .bottom-tabs {
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .tab-item.active {
+    color: #0a84ff; /* Dark mode blue */
+}
+
+.screen.dark-mode .context-menu {
+    background-color: rgba(44, 44, 46, 0.85);
+}
+
+.screen.dark-mode .context-menu-item {
+    color: white;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .context-menu-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Weather App Specific Styles */
+.weather-app-screen {
+    background: #000; /* Default background if image fails */
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-header {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 50px;
+    position: relative;
+    z-index: 10;
+}
+
+.weather-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-image: url('/477e2b91c2d1d31245a25d0f0ce9571f.jpg'); /* Apply the background image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5); /* For readability on background */
+    padding-top: 20px; /* Space from header */
+    -webkit-overflow-scrolling: touch;
+}
+
+.current-weather {
+    text-align: center;
+    margin-bottom: 30px; /* Space between current and forecast sections */
+}
+
+.current-weather .location {
+    font-size: 28px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.current-weather .temperature {
+    font-size: 70px;
+    font-weight: 200; /* Light font weight for large number */
+    margin-bottom: 5px;
+}
+
+.current-weather .condition {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.current-weather .high-low {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.weather-forecast-sections {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(0, 0, 0, 0.2); /* Translucent background for forecast cards */
+    backdrop-filter: blur(10px);
+    margin: 0 15px 15px 15px; /* Margin for the card-like appearance */
+    border-radius: 15px;
+    overflow: hidden; /* Important for inner scrollable areas */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.section-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.hourly-forecast-section {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 5px; /* Small padding at bottom of section */
+}
+
+.hourly-forecast-scroll {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 10px 15px;
+    gap: 15px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none;  /* Hide scrollbar for IE/Edge */
+}
+
+.hourly-forecast-scroll::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+}
+
+.forecast-item {
+    flex-shrink: 0; /* Prevent items from shrinking */
+    min-width: 60px; /* Minimum width for each hourly item */
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.forecast-item span:nth-child(1) { /* Time/Day */
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.forecast-item span:nth-child(2) { /* Icon */
+    font-size: 24px;
+}
+
+.forecast-item span:nth-child(3) { /* Temperature (for hourly) */
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.daily-forecast-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.daily-forecast-list .forecast-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.daily-forecast-list .forecast-item:last-child {
+    border-bottom: none;
+}
+
+.daily-forecast-list .forecast-item span:nth-child(1) { /* Day */
+    flex-basis: 30%;
+    text-align: left;
+    font-weight: 500;
+}
+
+.daily-forecast-list .forecast-item span:nth-child(2) { /* Icon */
+    flex-basis: 30%;
+    text-align: center;
+    font-size: 24px;
+}
+
+.daily-forecast-list .forecast-item .low-temp,
+.daily-forecast-list .forecast-item .high-temp {
+    flex-basis: 20%;
+    text-align: right;
+    font-weight: 500;
+}
+
+.daily-forecast-list .forecast-item .low-temp {
+    opacity: 0.7; /* Slightly dimmer low temp */
+    margin-right: 5px;
+}
+
+/* Dark Mode specific styles for Weather app */
+.screen.dark-mode .weather-app-screen {
+    /* Background image is naturally dark, no change needed for `background` property */
+}
+
+.screen.dark-mode .weather-header {
+    background: rgba(255, 255, 255, 0.05); /* Slightly lighter background for dark mode header */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .weather-content {
+    /* Background image remains, no change */
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8); /* Stronger text shadow for contrast */
+}
+
+.screen.dark-mode .weather-forecast-sections {
+    background: rgba(255, 255, 255, 0.05); /* Lighter translucent background for dark mode forecast cards */
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.screen.dark-mode .section-title {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.5); /* Slightly dimmer title */
+}
+
+.screen.dark-mode .daily-forecast-list .forecast-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .daily-forecast-list .forecast-item .low-temp {
+    opacity: 0.5; /* Even dimmer low temp in dark mode */
+}
+
+/* Safari App Specific Styles */
+.safari-app-screen {
+    background-color: #f2f2f7; /* Light background for safari by default */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.safari-header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    height: 90px; /* Taller header to accommodate URL bar */
+    padding-top: 10px; /* Push content down from status bar */
+    padding-bottom: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+}
+
+.safari-header .back-button {
+    align-self: flex-start;
+    margin-bottom: 5px;
+}
+
+.safari-header .url-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #e9e9eb;
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: calc(100% - 30px); /* Adjust for padding on sides */
+    margin: 5px 15px 10px;
+    position: relative;
+}
+
+#safari-url-input {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    padding: 0;
+}
+
+#safari-url-input:focus {
+    outline: none;
+}
+
+#safari-url-input::placeholder {
+    color: #8e8e93;
+}
+
+.safari-header .header-right-icons {
+    position: absolute;
+    top: 50px; /* Position relative to header start */
+    right: 15px;
+    width: auto;
+    gap: 10px;
+}
+
+.safari-header .clear-input {
+    color: #8e8e93;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+    display: none; /* Hidden by default, shown by JS when text is typed */
+}
+
+.safari-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: white; /* Content background */
+    padding: 15px;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-overflow-scrolling: touch;
+}
+
+.safari-content h1, .safari-content h2, .safari-content h3 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+.safari-content p {
+    margin-bottom: 1em;
+}
+
+.safari-content ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-bottom: 1em;
+}
+
+.safari-content li {
+    margin-bottom: 0.5em;
+}
+
+.safari-search-result-item {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    color: #333;
+}
+.safari-search-result-item:last-child {
+    border-bottom: none;
+}
+.safari-search-result-item.error-message {
+    color: #ff3b30;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Safari Download Button */
+.download-button {
+    display: block;
+    width: calc(100% - 30px);
+    margin: 15px auto;
+    padding: 12px;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.download-button:hover {
+    background-color: #0056b3;
+}
+.download-button:active {
+    background-color: #004085;
+}
+
+.safari-bottom-bar {
+    height: 50px;
+    background-color: #f8f8f8;
+    border-top: 1px solid #ddd;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    color: #007aff;
+    padding-bottom: 5px; /* For home indicator space */
+    position: relative;
+    z-index: 10;
+    box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+}
+
+.bottom-bar-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    font-size: 24px;
+    opacity: 0.6;
+    transition: opacity 0.2s ease;
+    min-width: 50px;
+    height: 100%;
+    justify-content: center;
+}
+
+.bottom-bar-icon:active {
+    opacity: 1;
+}
+
+.bottom-bar-icon span {
+    font-size: 24px;
+    line-height: 1;
+}
+
+/* Safari Settings Modal */
+.safari-settings-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f2f2f7; /* Same as main settings app */
+    display: flex;
+    flex-direction: column;
+    z-index: 30; /* Higher than other app elements */
+}
+
+.safari-settings-modal .settings-header {
+    background-color: #f8f8f8; /* Match safari header */
+    border-bottom: 1px solid #ddd;
+}
+
+.safari-settings-modal .settings-header .done-button {
+    color: #007aff;
+    cursor: pointer;
+    font-weight: 400;
+    padding-left: 5px;
+    font-size: 15px;
+}
+
+.safari-settings-modal .settings-content {
+    background-color: #f2f2f7;
+    color: #333;
+}
+
+.safari-settings-modal .clear-history-button {
+    background: none;
+    border: none;
+    color: #ff3b30; /* Red color for destructive action */
+    font-size: 15px;
+    cursor: pointer;
+    padding: 0;
+}
+.safari-settings-modal .clear-history-button:active {
+    opacity: 0.7;
+}
+
+/* Safari Dark Mode Styles (app specific) */
+.safari-app-screen.dark-mode-safari {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.safari-app-screen.dark-mode-safari .safari-header {
+    background-color: #2c2c2e;
+    border-bottom-color: #3a3a3c;
+}
+
+.safari-app-screen.dark-mode-safari .url-bar-container {
+    background-color: #3a3a3c;
+}
+
+.safari-app-screen.dark-mode-safari #safari-url-input {
+    color: white;
+}
+
+.safari-app-screen.dark-mode-safari #safari-url-input::placeholder {
+    color: #8e8e93;
+}
+
+.safari-app-screen.dark-mode-safari .clear-input {
+    color: #8e8e93;
+}
+
+.safari-app-screen.dark-mode-safari .safari-content {
+    background-color: #121212;
+    color: white;
+}
+
+.safari-app-screen.dark-mode-safari .safari-default-page {
+    color: #888;
+}
+.safari-app-screen.dark-mode-safari .safari-default-page p {
+    color: #aaa;
+}
+
+.safari-app-screen.dark-mode-safari .safari-search-result-item {
+    color: white;
+    border-bottom-color: #2c2c2e;
+}
+
+.safari-app-screen.dark-mode-safari .safari-typing-indicator {
+    color: #888;
+}
+
+.safari-app-screen.dark-mode-safari .safari-bottom-bar {
+    background-color: #2c2c2e;
+    border-top-color: #3a3a3c;
+    color: #0a84ff; /* Dark mode blue for icons */
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal {
+    background-color: #1a1a1a;
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal .settings-header {
+    background-color: #2c2c2e;
+    border-bottom-color: #3a3a3c;
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal .settings-content {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal .settings-group {
+    background-color: #2c2c2e;
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal .settings-item {
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.safari-app-screen.dark-mode-safari .safari-settings-modal .clear-history-button {
+    color: #ff453a; /* Darker red for dark mode clear history */
+}
+
+/* Music App Specific Styles */
+.music-app-screen {
+    background: linear-gradient(180deg, #2a2a2a 0%, #1a1a1a 100%); /* Dark gradient background */
+    color: white;
+    text-align: center;
+    padding-top: 50px; /* Space for header */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden; /* Important for flying cat */
+}
+
+/* New: Styles for the joke content */
+.music-joke-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+    position: relative; /* For absolute positioning of cat */
+}
+
+.joke-message {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.5;
+    text-align: center;
+    max-width: 80%;
+    z-index: 2; /* Above the cat gif */
+}
+
+.flying-cat-gif {
+    position: absolute;
+    width: 150px; /* Adjust size as needed */
+    height: auto;
+    opacity: 0.8;
+    z-index: 1;
+    animation: flyAndHover 10s ease-in-out infinite;
+}
+
+/* Keyframes for the flying and hovering animation */
+@keyframes flyAndHover {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.8; }
+    25% { transform: translate(20px, -30px) scale(1.05) rotate(5deg); opacity: 0.9; }
+    50% { transform: translate(-20px, 20px) scale(1) rotate(-5deg); opacity: 0.8; }
+    75% { transform: translate(10px, -10px) scale(0.95) rotate(2deg); opacity: 0.7; }
+    100% { transform: translate(0, 0) scale(1) rotate(0deg); opacity: 0.8; }
+}
+
+/* Dark Mode specific styles for Music app */
+.screen.dark-mode .music-app-screen {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+}
+
+.screen.dark-mode .music-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .joke-message {
+    color: white;
+}
+
+/* Files App Specific Styles */
+.files-app-screen {
+    background-color: #1a1a1a; /* Dark background */
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+.files-header {
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(20px);
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 50px;
+    position: relative;
+    z-index: 10;
+}
+
+.files-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.files-list {
+    display: flex;
+    flex-direction: column;
+    background-color: #2c2c2e; /* Card background */
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.file-item:last-child {
+    border-bottom: none;
+}
+
+.file-item:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.file-item-icon {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin-right: 15px;
+}
+
+.file-item-name {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.no-files-message {
+    color: #8e8e93;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Phone Crash Styles */
+.screen.phone-crashed {
+    background: #000; /* Black screen */
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    flex-direction: column;
+    animation: screen-glitch 0.2s steps(2, end) infinite, screen-flicker 0.1s infinite;
+    pointer-events: none; /* Disable interaction until restart button appears */
+}
+
+.screen.phone-crashed::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: repeating-linear-gradient(
+        transparent 0,
+        rgba(255, 0, 0, 0.1) 1px,
+        transparent 2px,
+        rgba(0, 255, 0, 0.1) 3px,
+        transparent 4px,
+        rgba(0, 0, 255, 0.1) 5px,
+        transparent 6px
+    );
+    animation: scanline 0.5s linear infinite;
+}
+
+.crash-screen {
+    position: relative;
+    z-index: 100;
+    color: white;
+    text-shadow: 0 0 5px red, 0 0 10px red;
+    font-family: 'monospace', sans-serif;
+    padding: 20px;
+}
+
+.crash-text {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    animation: text-flicker 0.1s infinite;
+    color: red;
+}
+
+.crash-subtext {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #bbb;
+}
+
+.crash-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 0, 0, 0.1);
+    transform: scaleY(0);
+    animation: random-glitch 0.5s infinite;
+}
+
+.restart-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007aff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease;
+    pointer-events: auto; /* Re-enable pointer events for the button */
+}
+
+.restart-button:hover {
+    background-color: #0056b3;
+}
+
+@keyframes screen-glitch {
+    0% { transform: translate(0, 0); }
+    10% { transform: translate(-1px, 1px); }
+    20% { transform: translate(1px, -1px); }
+    30% { transform: translate(-1px, 1px); }
+    40% { transform: translate(1px, -1px); }
+    50% { transform: translate(0, 0); }
+    100% { transform: translate(0, 0); }
+}
+
+@keyframes screen-flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.9; }
+    100% { opacity: 1; }
+}
+
+@keyframes scanline {
+    0% { transform: translateY(0%); }
+    100% { transform: translateY(100%); }
+}
+
+@keyframes text-flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow: 0 0 4px #e74c3c, 0 0 15px #e74c3c;
+    }
+    20%, 24%, 55% {        
+        text-shadow: none;
+    }
+}
+
+@keyframes random-glitch {
+    0% { transform: scaleY(0) translateY(0); opacity: 0; }
+    20% { transform: scaleY(0.1) translateY(50px); opacity: 0.5; }
+    40% { transform: scaleY(0) translateY(100px); opacity: 0; }
+    60% { transform: scaleY(0.2) translateY(200px); opacity: 0.6; }
+    80% { transform: scaleY(0) translateY(150px); opacity: 0; }
+    100% { transform: scaleY(0) translateY(0); opacity: 0; }
+}
+
+@media (max-width: 480px) {
+    .iphone-frame {
+        width: 300px;
+        height: 620px;
+        transform: none;
+    }
+
+    .iphone-frame:hover {
+        transform: none;
+    }
+}
+
+/* Power Menu Styles */
+.power-menu-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50; /* Higher than app screens and context menus */
+}
+
+.power-menu {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    width: 80%; /* Adjust as needed */
+    max-width: 250px;
+}
+
+.power-menu-button {
+    background-color: rgba(118, 118, 128, 0.24); /* iOS button gray */
+    color: #000;
+    border: none;
+    padding: 12px 15px;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.2s ease;
+}
+
+.power-menu-button:hover {
+    background-color: rgba(118, 118, 128, 0.36);
+}
+.power-menu-button:active {
+    background-color: rgba(118, 118, 128, 0.48);
+}
+
+.power-menu-button .power-icon,
+.power-menu-button .restart-icon,
+.power-menu-button .reset-icon,
+.power-menu-button .damage-icon {
+    width: 20px;
+    height: 20px;
+    background-color: currentColor; /* Use button's text color for icon */
+    mask-size: contain;
+    mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+}
+
+.power-menu-button.shutdown { color: #ff3b30; }
+.power-menu-button.shutdown .power-icon {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm0 1.5a7.5 7.5 0 1 1 0 15A7.5 7.5 0 0 1 12 4.5zM12 5V12h1.5V5H12z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3zm0 1.5a7.5 7.5 0 1 1 0 15A7.5 7.5 0 0 1 12 4.5zM12 5V12h1.5V5H12z"/></svg>');
+}
+
+.power-menu-button.restart { color: #007aff; }
+.power-menu-button.restart .restart-icon {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-9 9H1.5l2.5 2.5 2.5-2.5H4.5a7.5 7.5 0 1 1 7.5 7.5V22.5A9 9 0 0 0 12 3z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3a9 9 0 0 0-9 9H1.5l2.5 2.5 2.5-2.5H4.5a7.5 7.5 0 1 1 7.5 7.5V22.5A9 9 0 0 0 12 3z"/></svg>');
+}
+
+.power-menu-button.factory-reset { color: #5856d6; } /* Purple-ish blue */
+.power-menu-button.factory-reset .reset-icon {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5V5m0 16.5V19m-4.5-9H6m-2.5 0H1.5M16.5 10H18m2.5 0H22.5M12 10a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5V5m0 16.5V19m-4.5-9H6m-2.5 0H1.5M16.5 10H18m2.5 0H22.5M12 10a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>');
+}
+
+.power-menu-button.damage-detector { color: #34c759; } /* Green */
+.power-menu-button.damage-detector .damage-icon {
+    mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 1.5a8.5 8.5 0 1 1 0 17A8.5 8.5 0 0 1 12 3.5zm-.75 4.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0zM11.5 10.25a.75.75 0 0 0 1.5 0V16.5a.75.75 0 0 0-1.5 0V10.25z"/></svg>');
+    -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm0 1.5a8.5 8.5 0 1 1 0 17A8.5 8.5 0 0 1 12 3.5zm-.75 4.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0zM11.5 10.25a.75.75 0 0 0 1.5 0V16.5a.75.75 0 0 0-1.5 0V10.25z"/></svg>');
+}
+
+/* Dark mode for power menu */
+.screen.dark-mode + .power-menu-overlay .power-menu {
+    background: rgba(44, 44, 46, 0.9);
+}
+
+.screen.dark-mode + .power-menu-overlay .power-menu-button {
+    background-color: rgba(118, 118, 128, 0.36);
+    color: white;
+}
+
+.screen.dark-mode + .power-menu-overlay .power-menu-button:hover {
+    background-color: rgba(118, 118, 128, 0.48);
+}
+.screen.dark-mode + .power-menu-overlay .power-menu-button:active {
+    background-color: rgba(118, 118, 128, 0.6);
+}
+
+/* Factory Reset Loading Screen */
+.factory-reset-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #000; /* Solid black background */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    z-index: 100; /* Above all other app content and power menu */
+    text-align: center;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.loading-spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid #007aff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+#loading-message {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* App Store Specific Styles */
+.appstore-app-screen {
+    background-color: #f2f2f7; /* Light background for app store */
+    color: #333;
+    display: flex;
+    flex-direction: column;
+}
+
+.appstore-header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    padding-top: 10px; /* Push content down from status bar */
+    padding-bottom: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    height: 90px;
+}
+
+.appstore-header .back-button {
+    align-self: flex-start;
+    margin-bottom: 5px;
+    font-size: 15px; /* Smaller back button text */
+}
+
+.appstore-header .header-title {
+    font-size: 30px; /* Larger title for "App Store" */
+    font-weight: 700;
+    text-align: left;
+    padding: 0 15px 10px;
+    flex-grow: 0;
+    width: 100%;
+}
+
+.appstore-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    background-color: white;
+    padding: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.appstore-search-bar-container {
+    display: flex;
+    align-items: center;
+    background-color: #e9e9eb;
+    border-radius: 10px;
+    padding: 5px 10px;
+    width: 100%;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+#appstore-search-input {
+    flex-grow: 1;
+    border: none;
+    background: transparent;
+    font-size: 15px;
+    color: #333;
+    padding: 0;
+}
+
+#appstore-search-input:focus {
+    outline: none;
+}
+
+#appstore-search-input::placeholder {
+    color: #8e8e93;
+}
+
+.appstore-search-bar-container .clear-input {
+    color: #8e8e93;
+    font-size: 20px;
+    cursor: pointer;
+    margin-left: 5px;
+    display: none;
+}
+
+.appstore-content h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    margin-top: 25px;
+}
+
+.appstore-categories {
+    margin-bottom: 30px;
+}
+
+.category-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.category-item {
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    padding: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #007aff; /* Apple blue */
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.category-item:hover {
+    background-color: #e9e9eb;
+}
+
+.featured-app-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-item {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.app-item:last-child {
+    border-bottom: none;
+}
+
+.app-item-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    object-fit: cover;
+    margin-right: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.app-item-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.app-item-name {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+}
+
+.app-item-developer {
+    font-size: 13px;
+    color: #8e8e93;
+    margin-bottom: 5px;
+}
+
+.app-item-rating {
+    font-size: 12px;
+    color: #fbbf24; /* Yellow for stars */
+}
+
+.app-item-install-button {
+    background-color: #007aff;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0; /* Prevent button from shrinking */
+}
+
+.app-item-install-button:hover {
+    background-color: #0056b3;
+}
+.app-item-install-button:active {
+    background-color: #004085;
+}
+
+.appstore-search-results .app-item {
+    padding: 10px 0; /* Adjust padding for search results */
+}
+
+.appstore-search-results .no-results-message {
+    color: #8e8e93;
+    font-size: 14px;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Dark Mode for App Store */
+.screen.dark-mode .appstore-app-screen {
+    background-color: #1a1a1a;
+    color: white;
+}
+
+.screen.dark-mode .appstore-header {
+    background-color: #2c2c2e;
+    border-bottom-color: #3a3a3c;
+    color: white;
+}
+.screen.dark-mode .appstore-header .back-button {
+    color: #0a84ff; /* Dark mode blue */
+}
+
+.screen.dark-mode .appstore-search-bar-container {
+    background-color: #3a3a3c;
+}
+
+.screen.dark-mode #appstore-search-input {
+    color: white;
+}
+
+.screen.dark-mode #appstore-search-input::placeholder {
+    color: #8e8e93;
+}
+
+.screen.dark-mode .appstore-search-bar-container .clear-input {
+    color: #8e8e93;
+}
+
+.screen.dark-mode .appstore-content {
+    background-color: #121212;
+    color: white;
+}
+
+.screen.dark-mode .appstore-content h2 {
+    color: white;
+}
+
+.screen.dark-mode .category-item {
+    background-color: #2c2c2e;
+    color: #0a84ff; /* Dark mode blue */
+}
+
+.screen.dark-mode .category-item:hover {
+    background-color: #3a3a3c;
+}
+
+.screen.dark-mode .app-item {
+    border-bottom-color: #2c2c2e;
+}
+
+.screen.dark-mode .app-item-name {
+    color: white;
+}
+
+.screen.dark-mode .app-item-developer {
+    color: #8e8e93;
+}
+
+.screen.dark-mode .app-item-install-button {
+    background-color: #0a84ff;
+}
+
+.screen.dark-mode .app-item-install-button:hover {
+    background-color: #006ee6;
+}
+.screen.dark-mode .app-item-install-button:active {
+    background-color: #0056b3;
+}
+
+.screen.dark-mode .appstore-search-results .no-results-message {
+    color: #8e8e93;
+}
+
+/* Dark Mode for Websim Chat */
+.screen.dark-mode .websim-chat-app-screen {
+    background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+    color: white;
+}
+
+.screen.dark-mode .websim-chat-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.screen.dark-mode .websim-chat-header .back-button {
+    color: #0a84ff; /* Dark mode blue */
+}
+
+.screen.dark-mode .websim-chat-message {
+    background-color: #2c2c2e;
+    color: white;
+}
+
+.screen.dark-mode .websim-chat-message.self {
+    background-color: #0a84ff;
+    color: white;
+}
+
+.screen.dark-mode .websim-chat-message .username {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.screen.dark-mode .websim-chat-typing-indicator {
+    background-color: #2c2c2e;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.screen.dark-mode .websim-chat-input-container {
+    background: rgba(255, 255, 255, 0.05);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.screen.dark-mode #websim-chat-input {
+    background-color: #3a3a3c;
+    color: white;
+}
+
+.screen.dark-mode #websim-chat-input::placeholder {
+    color: #8e8e93;
+}
+
+.screen.dark-mode #websim-send-button {
+    background-color: #0a84ff;
+}
+
+.screen.dark-mode #websim-send-button:hover {
+    background-color: #006ee6;
+}
+.screen.dark-mode #websim-send-button:active {
+    background-color: #0056b3;
+}

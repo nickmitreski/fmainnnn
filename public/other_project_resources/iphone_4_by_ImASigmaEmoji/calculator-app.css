@@ -1,0 +1,88 @@
+/* Calculator App */
+.calculator-app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
+    background-color: #000; /* Dark calculator background */
+    border-radius: 10px;
+}
+
+.calculator-display {
+    width: 100%;
+    height: 60px;
+    background-color: #000;
+    color: #fff;
+    font-size: 48px;
+    text-align: right;
+    padding: 0 10px;
+    box-sizing: border-box;
+    border: none;
+    margin-bottom: 10px;
+}
+
+.calculator-buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    width: 100%;
+}
+
+.calculator-buttons button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    font-size: 28px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.1s ease;
+}
+
+.calculator-buttons button:nth-child(1), /* AC */
+.calculator-buttons button:nth-child(2), /* +/- */
+.calculator-buttons button:nth-child(3) { /* % */
+    background-color: #a6a6a6; /* Light gray */
+    color: #000;
+}
+
+.calculator-buttons button:nth-child(1):active,
+.calculator-buttons button:nth-child(2):active,
+.calculator-buttons button:nth-child(3):active {
+    background-color: #d9d9d9;
+}
+
+.calculator-buttons button.operator,
+.calculator-buttons button.equals {
+    background-color: #ff9500; /* Orange */
+    color: #fff;
+}
+
+.calculator-buttons button.operator:active,
+.calculator-buttons button.equals:active {
+    background-color: #ffa52f;
+}
+
+.calculator-buttons button:not(.operator):not(.equals):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)) {
+    background-color: #333; /* Dark gray for numbers */
+    color: #fff;
+}
+
+.calculator-buttons button:not(.operator):not(.equals):not(:nth-child(1)):not(:nth-child(2)):not(:nth-child(3)):active {
+    background-color: #666;
+}
+
+.calculator-buttons .zero {
+    grid-column: span 2;
+    width: 130px; /* Wider for zero button */
+    border-radius: 30px;
+    justify-content: flex-start;
+    padding-left: 25px;
+    box-sizing: border-box;
+}

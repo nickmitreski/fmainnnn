@@ -1,0 +1,678 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gemini 1.0</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="phone">
+        <div class="inner-bezel">
+            <div class="screen">
+                <div class="status-bar">
+                    <div class="time-and-date">
+                        <span id="time"></span>
+                        <span id="date"></span>
+                    </div>
+                    <div class="status-icons">
+                        <img id="start-menu-button" src="icon-start-menu.png" alt="Start Menu" title="Power Options">
+                        <span id="airplane-icon" style="display: none;">✈️</span>
+                        <span id="wifi-icon">📶</span>
+                        <span id="wifi-text">Wi-Fi</span>
+                        <img id="battery-icon" src="battery_full.png" alt="Battery">
+                    </div>
+                </div>
+
+                <div class="app-grid">
+                    <div class="app-icon" id="photos-app">
+                        <img src="icon-photos.png" alt="Photos">
+                        <span>Photos</span>
+                    </div>
+                     <div class="app-icon" id="music-app">
+                        <img src="icon-music.png" alt="Music">
+                        <span>Music</span>
+                    </div>
+                     <div class="app-icon" id="settings-app">
+                        <img src="icon-settings.png" alt="Settings">
+                        <span>Settings</span>
+                    </div>
+                     <div class="app-icon" id="maps-app">
+                        <img src="icon-maps.png" alt="Maps">
+                        <span>Maps</span>
+                    </div>
+                    <div class="app-icon" id="google-app">
+                        <img src="icon-google.png" alt="Google">
+                        <span>Google</span>
+                    </div>
+                    <div class="app-icon" id="paint-app">
+                        <img src="icon-paint.png" alt="Paint">
+                        <span>Paint</span>
+                    </div>
+                    <div class="app-icon" id="files-app">
+                        <img src="icon-files.png" alt="Files">
+                        <span>Files</span>
+                    </div>
+                    <div class="app-icon" id="clock-app">
+                        <img src="icon-clock.png" alt="Clock">
+                        <span>Clock</span>
+                    </div>
+                    <div class="app-icon" id="calculator-app">
+                        <img src="icon-calculator.png" alt="Calculator">
+                        <span>Calculator</span>
+                    </div>
+                    <div class="app-icon" id="frequency-app">
+                        <img src="icon-frequency.png" alt="Frequency">
+                        <span>Frequency</span>
+                    </div>
+                    <div class="app-icon" id="camera-app">
+                        <img src="icon-camera.png" alt="Camera">
+                        <span>Camera</span>
+                    </div>
+                    <div class="app-icon" id="weather-app">
+                        <img src="icon-weather.png" alt="Weather">
+                        <span>Weather</span>
+                    </div>
+                    <div class="app-icon" id="notes-app">
+                        <img src="icon-notes.png" alt="Notes">
+                        <span>Notes</span>
+                    </div>
+                     <div class="app-icon" id="tictactoe-app">
+                        <img src="icon-tictactoe.png" alt="Tic-Tac-Toe">
+                        <span>Tic-Tac-Toe</span>
+                    </div>
+                     <div class="app-icon" id="flashlight-app">
+                        <img src="icon-flashlight.png" alt="Flashlight">
+                        <span>Flashlight</span>
+                    </div>
+                    <div class="app-icon" id="incredibox-app">
+                        <img src="icon-incredibox.png" alt="Incredibox">
+                        <span>Incredibox</span>
+                    </div>
+                    <div class="app-icon" id="voicerecorder-app">
+                        <img src="icon-voicerecorder.png" alt="Voice Recorder">
+                        <span>Voice Recorder</span>
+                    </div>
+                    <div class="app-icon" id="gemini-app">
+                        <img src="icon-gemini.png" alt="Gemini">
+                        <span>Gemini</span>
+                    </div>
+                     <div class="app-icon" id="app-store-app">
+                        <img src="icon-appstore.png" alt="App Store">
+                        <span>App Store</span>
+                    </div>
+                     <div class="app-icon" id="snake-app">
+                        <img src="icon-snake.png" alt="Snake">
+                        <span>Snake</span>
+                    </div>
+                </div>
+
+                <div class="dock">
+                    <div class="app-icon">
+                        <img src="icon-phone.png" alt="Phone">
+                    </div>
+                    <div class="app-icon">
+                        <img src="icon-messages.png" alt="Messages">
+                    </div>
+                    <div class="app-icon" id="browser-app">
+                        <img src="icon-browser.png" alt="Browser">
+                    </div>
+                    <div class="app-icon" id="app-drawer-icon">
+                        <img src="icon-drawer.png" alt="App Drawer">
+                    </div>
+                </div>
+
+                <div class="settings-screen" id="settings-screen">
+                    <div class="settings-header">
+                        <button id="settings-back-btn" class="settings-back-btn">&lt;</button>
+                        <h2>Settings</h2>
+                    </div>
+                    <div class="settings-content">
+                        <div class="settings-item">
+                            <span>Airplane Mode</span>
+                            <div class="setting-with-toggle">
+                                <span class="setting-value" id="airplane-mode-status">disabled</span>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="airplane-mode-toggle">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-item wifi-setting-item">
+                            <span>Wi-Fi</span>
+                            <span class="setting-value" id="wifi-setting-value">On &gt;</span>
+                        </div>
+                        <div class="settings-item">
+                            <span>Bluetooth</span>
+                            <span class="setting-value">Off &gt;</span>
+                        </div>
+                        <div class="settings-item">
+                            <span>Display</span>
+                            <span class="setting-value">&gt;</span>
+                        </div>
+                        <div class="settings-item sound-control">
+                            <span>Volume</span>
+                            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.5">
+                        </div>
+                        <div class="settings-item">
+                            <span>Wallpaper</span>
+                            <span class="setting-value">&gt;</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="google-screen" id="google-screen">
+                    <div class="google-header">
+                        <button id="google-back-btn" class="google-back-btn">&lt;</button>
+                        <h2>Google</h2>
+                    </div>
+                    <div class="google-content">
+                        <iframe src="https://www.google.com/webhp?igu=1" frameborder="0" allow="fullscreen"></iframe>
+                    </div>
+                </div>
+
+                <div class="paint-screen" id="paint-screen">
+                    <div class="paint-header">
+                        <button id="paint-back-btn" class="paint-back-btn">&lt;</button>
+                        <h2>Paint</h2>
+                    </div>
+                    <div class="paint-controls">
+                        <input type="color" id="color-picker" title="Color Picker" value="#ffffff">
+                        <input type="range" id="brush-size" min="1" max="50" value="5" title="Brush Size">
+                        <button id="clear-canvas-btn">Clear</button>
+                        <label for="image-loader" class="image-loader-label">Import</label>
+                        <input type="file" id="image-loader" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="paint-area">
+                        <canvas id="paint-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="files-screen" id="files-screen">
+                    <div class="files-header">
+                        <button id="files-back-btn" class="files-back-btn">&lt;</button>
+                        <h2>Files</h2>
+                    </div>
+                    <div class="files-content">
+                        <label for="file-uploader" class="file-uploader-label">Upload File</label>
+                        <input type="file" id="file-uploader" style="display: none;" multiple>
+                        <ul id="file-list">
+                            <!-- Uploaded files will be listed here -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="clock-screen" id="clock-screen">
+                    <div class="clock-header">
+                        <button id="clock-back-btn" class="clock-back-btn">&lt;</button>
+                        <h2>Clock</h2>
+                    </div>
+                    <div class="clock-content">
+                        <div class="time-display" id="clock-time-display">12:00:00</div>
+                        <div class="date-display" id="clock-date-display">Monday, January 1</div>
+                    </div>
+                </div>
+
+                <div class="calculator-screen" id="calculator-screen">
+                     <div class="calculator-header">
+                        <button id="calculator-back-btn" class="calculator-back-btn">&lt;</button>
+                        <h2>Calculator</h2>
+                    </div>
+                    <div class="calculator-content">
+                        <div class="calculator-display">
+                            <div class="calculator-expression" id="calc-expression"></div>
+                            <div class="calculator-result" id="calc-result">0</div>
+                        </div>
+                        <div class="calculator-buttons">
+                            <button class="calc-btn function" id="calc-mode">RAD</button>
+                            <button class="calc-btn function">sin</button>
+                            <button class="calc-btn function">cos</button>
+                            <button class="calc-btn function">tan</button>
+                            <button class="calc-btn function">arcsin</button>
+                            
+                            <button class="calc-btn function">!</button>
+                            <button class="calc-btn function">ln</button>
+                            <button class="calc-btn function">log</button>
+                            <button class="calc-btn function">^</button>
+                            <button class="calc-btn function">arccos</button>
+
+                            <button class="calc-btn function">π</button>
+                            <button class="calc-btn number">7</button>
+                            <button class="calc-btn number">8</button>
+                            <button class="calc-btn number">9</button>
+                            <button class="calc-btn function">arctan</button>
+                            
+                            <button class="calc-btn function">√</button>
+                            <button class="calc-btn number">4</button>
+                            <button class="calc-btn number">5</button>
+                            <button class="calc-btn number">6</button>
+                            <button class="calc-btn operator">×</button>
+                            
+                            <button class="calc-btn operator" id="calc-clear">C</button>
+                            <button class="calc-btn number">1</button>
+                            <button class="calc-btn number">2</button>
+                            <button class="calc-btn number">3</button>
+                            <button class="calc-btn operator">÷</button>
+
+                            <button class="calc-btn operator" id="calc-del">DEL</button>
+                            <button class="calc-btn number">0</button>
+                            <button class="calc-btn number">.</button>
+                            <button class="calc-btn operator">+</button>
+                            <button class="calc-btn operator">-</button>
+                            
+                            <button class="calc-btn operator wide" id="calc-equals">=</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="frequency-screen" id="frequency-screen">
+                    <div class="frequency-header">
+                        <button id="frequency-back-btn" class="frequency-back-btn">&lt;</button>
+                        <h2>Frequency Player</h2>
+                    </div>
+                    <div class="frequency-content">
+                        <div class="waveform-selector">
+                            <button class="waveform-btn active" data-wave="sine">Sine</button>
+                            <button class="waveform-btn" data-wave="square">Square</button>
+                            <button class="waveform-btn" data-wave="triangle">Triangle</button>
+                            <button class="waveform-btn" data-wave="sawtooth">Sawtooth</button>
+                        </div>
+                        <div class="freq-slider-container">
+                            <input type="range" id="freq-slider" min="20" max="8000" value="440" class="freq-slider">
+                            <div id="freq-display" class="freq-display">440 Hz</div>
+                        </div>
+                        <button id="play-stop-btn" class="play-stop-btn">Play</button>
+                    </div>
+                </div>
+
+                <div class="calendar-screen" id="calendar-screen">
+                    <div class="calendar-header">
+                        <button id="calendar-back-btn" class="calendar-back-btn">&lt;</button>
+                        <h2>Calendar</h2>
+                    </div>
+                    <div class="calendar-content">
+                        <div class="calendar-month-header">
+                            <span id="calendar-month-year">Month Year</span>
+                        </div>
+                        <div class="calendar-grid-header">
+                            <div class="calendar-day-name">Sun</div>
+                            <div class="calendar-day-name">Mon</div>
+                            <div class="calendar-day-name">Tue</div>
+                            <div class="calendar-day-name">Wed</div>
+                            <div class="calendar-day-name">Thu</div>
+                            <div class="calendar-day-name">Fri</div>
+                            <div class="calendar-day-name">Sat</div>
+                        </div>
+                        <div class="calendar-grid-body" id="calendar-grid-body">
+                            <!-- Dates will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="browser-screen" id="browser-screen">
+                    <div class="browser-header">
+                        <button id="browser-back-btn" class="browser-back-btn">&lt;</button>
+                        <h2>Browser</h2>
+                    </div>
+                    <div class="browser-controls">
+                        <button id="browser-reload-btn">↻</button>
+                        <input type="text" id="browser-url-input" placeholder="https://example.com">
+                        <button id="browser-go-btn">Go</button>
+                    </div>
+                    <div class="browser-content">
+                        <iframe id="browser-iframe" src="https://www.google.com/webhp?igu=1" frameborder="0" allow="fullscreen"></iframe>
+                    </div>
+                </div>
+
+                <div class="maps-screen" id="maps-screen">
+                    <div class="maps-header">
+                        <button id="maps-back-btn" class="maps-back-btn">&lt;</button>
+                        <h2>Maps</h2>
+                    </div>
+                    <div class="maps-content">
+                        <iframe src="https://www.openstreetmap.org/export/embed.html?bbox=-122.42,37.77,-122.41,37.78" frameborder="0" allow="fullscreen"></iframe>
+                    </div>
+                </div>
+
+                <div class="photos-screen" id="photos-screen">
+                    <div class="photos-header">
+                        <button id="photos-back-btn" class="photos-back-btn">&lt;</button>
+                        <h2>Photos</h2>
+                    </div>
+                    <div class="photos-content">
+                        <div class="photos-grid" id="photos-grid">
+                            <!-- Photos will be populated by JS -->
+                        </div>
+                        <div id="no-photos-message" style="display: none;">
+                            <p>No photos yet.</p>
+                            <p>Take a picture with the Camera app or upload one in the Files app.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="music-screen" id="music-screen">
+                    <div class="music-header">
+                        <button id="music-back-btn" class="music-back-btn">&lt;</button>
+                        <h2>Music</h2>
+                    </div>
+                    <div class="music-content">
+                        <div class="music-player">
+                            <div class="album-art-wrapper">
+                                <img id="album-art" src="icon-music.png" alt="Album Art">
+                            </div>
+                            <div class="song-info">
+                                <h3 id="song-title">Select a song</h3>
+                                <p id="song-artist">Phone Tunes</p>
+                            </div>
+                            <div class="progress-container">
+                                <div class="progress-bar" id="progress-bar"></div>
+                            </div>
+                             <div class="time-stamps">
+                                <span id="current-time">0:00</span>
+                                <span id="total-time">0:00</span>
+                            </div>
+                            <div class="music-controls">
+                                <button id="prev-btn">⏮</button>
+                                <button id="play-pause-btn">▶</button>
+                                <button id="next-btn">⏭</button>
+                            </div>
+                            <div class="music-upload">
+                                <label for="audio-uploader" class="audio-uploader-label">Upload Song</label>
+                                <input type="file" id="audio-uploader" accept="audio/*" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="playlist" id="playlist">
+                            <!-- Playlist will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="camera-screen" id="camera-screen">
+                    <div class="camera-header">
+                        <button id="camera-back-btn" class="camera-back-btn">&lt;</button>
+                        <h2>Camera</h2>
+                    </div>
+                    <div class="camera-content">
+                        <video id="camera-feed" autoplay playsinline></video>
+                        <canvas id="camera-canvas" style="display: none;"></canvas>
+                        <div class="camera-controls">
+                            <button id="shutter-btn"></button>
+                            <button id="flip-camera-btn">🔄</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-drawer-screen" id="app-drawer-screen">
+                    <div class="app-drawer-header">
+                        <button id="app-drawer-back-btn" class="app-drawer-back-btn">&lt;</button>
+                        <h2>All Apps</h2>
+                    </div>
+                    <div class="app-drawer-content" id="app-drawer-list">
+                        <!-- App list will be populated by JS -->
+                    </div>
+                </div>
+
+                <div class="weather-screen" id="weather-screen">
+                    <div class="weather-header">
+                        <button id="weather-back-btn" class="weather-back-btn">&lt;</button>
+                        <h2>Weather</h2>
+                    </div>
+                    <div class="weather-content">
+                        <div class="weather-location">Your City</div>
+                        <div class="weather-main">
+                            <div class="weather-temp">25°</div>
+                            <div class="weather-condition">Sunny</div>
+                        </div>
+                        <div class="weather-details">
+                            <span>H:28° L:18°</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="notes-screen" id="notes-screen">
+                    <div class="notes-header">
+                        <button id="notes-back-btn" class="notes-back-btn">&lt;</button>
+                        <h2>Notes</h2>
+                    </div>
+                    <div class="notes-content">
+                        <textarea id="notes-textarea" placeholder="Start typing..."></textarea>
+                    </div>
+                </div>
+
+                <div class="tictactoe-screen" id="tictactoe-screen">
+                    <div class="tictactoe-header">
+                        <button id="tictactoe-back-btn" class="tictactoe-back-btn">&lt;</button>
+                        <h2>Tic-Tac-Toe</h2>
+                        <button id="tictactoe-restart-btn">Restart</button>
+                    </div>
+                    <div class="tictactoe-content">
+                        <div id="tictactoe-status">Player X's turn</div>
+                        <div id="tictactoe-grid">
+                            <div class="tictactoe-cell" data-index="0"></div>
+                            <div class="tictactoe-cell" data-index="1"></div>
+                            <div class="tictactoe-cell" data-index="2"></div>
+                            <div class="tictactoe-cell" data-index="3"></div>
+                            <div class="tictactoe-cell" data-index="4"></div>
+                            <div class="tictactoe-cell" data-index="5"></div>
+                            <div class="tictactoe-cell" data-index="6"></div>
+                            <div class="tictactoe-cell" data-index="7"></div>
+                            <div class="tictactoe-cell" data-index="8"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flashlight-screen" id="flashlight-screen">
+                    <div class="flashlight-header">
+                        <button id="flashlight-back-btn" class="flashlight-back-btn">&lt;</button>
+                    </div>
+                    <div class="flashlight-content" id="flashlight-content">
+                        <div class="flashlight-button-wrapper">
+                            <button id="flashlight-toggle-btn" class="power-icon"></button>
+                            <span id="flashlight-text">Tap to turn on</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="incredibox-screen" id="incredibox-screen">
+                     <div class="incredibox-header">
+                        <button id="incredibox-back-btn" class="incredibox-back-btn">&lt;</button>
+                        <h2>Incredibox</h2>
+                    </div>
+                    <div class="incredibox-content">
+                        <div class="incredibox-stage" id="incredibox-stage">
+                            <!-- Characters will be populated by JS -->
+                        </div>
+                         <div class="incredibox-sound-tray" id="incredibox-sound-tray">
+                            <!-- Sound icons will be populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="voicerecorder-screen" id="voicerecorder-screen">
+                    <div class="voicerecorder-header">
+                        <button id="voicerecorder-back-btn" class="voicerecorder-back-btn">&lt;</button>
+                        <h2>Voice Recorder</h2>
+                    </div>
+                    <div class="voicerecorder-tabs">
+                        <button id="tab-record" class="voicerecorder-tab active">Record</button>
+                        <button id="tab-tts" class="voicerecorder-tab">Text to Speech</button>
+                    </div>
+                    <div class="voicerecorder-content">
+                        <div id="record-panel" class="voicerecorder-panel active">
+                            <button id="record-btn">🎤</button>
+                            <div id="record-timer">00:00</div>
+                            <div id="recording-list"></div>
+                        </div>
+                        <div id="tts-panel" class="voicerecorder-panel">
+                            <textarea id="tts-input" placeholder="Type text to convert to speech..."></textarea>
+                            <div class="tts-controls">
+                                <select id="tts-voice-select">
+                                    <option value="en-male">English (Male)</option>
+                                    <option value="en-female">English (Female)</option>
+                                    <option value="es-male">Spanish (Male)</option>
+                                    <option value="es-female">Spanish (Female)</option>
+                                    <option value="fr-male">French (Male)</option>
+                                    <option value="fr-female">French (Female)</option>
+                                    <option value="de-male">German (Male)</option>
+                                    <option value="de-female">German (Female)</option>
+                                    <option value="it-male">Italian (Male)</option>
+                                    <option value="it-female">Italian (Female)</option>
+                                    <option value="pt-male">Portuguese (Male)</option>
+                                    <option value="pt-female">Portuguese (Female)</option>
+                                </select>
+                                <button id="tts-generate-btn">Generate</button>
+                            </div>
+                            <div id="tts-audio-player"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="gemini-screen" id="gemini-screen">
+                    <div class="gemini-header">
+                        <button id="gemini-back-btn" class="gemini-back-btn">&lt;</button>
+                        <h2>Gemini Assistant</h2>
+                    </div>
+                    <div class="gemini-chat-container" id="gemini-chat-container">
+                        <!-- Chat messages will be appended here -->
+                    </div>
+                    <div class="gemini-input-area">
+                        <input type="text" id="gemini-input" placeholder="Ask Gemini...">
+                        <button id="gemini-send-btn">➤</button>
+                    </div>
+                </div>
+
+                <div class="start-menu-screen" id="start-menu-screen">
+                    <div class="start-menu-header">
+                        <button id="start-menu-back-btn" class="start-menu-back-btn">&lt;</button>
+                        <h2>Power Options</h2>
+                    </div>
+                    <div class="start-menu-content" id="power-options-content">
+                       <button class="power-option-btn" id="shutdown-btn">
+                            <span class="power-icon-symbol">⏻</span> Shutdown
+                        </button>
+                        <button class="power-option-btn" id="restart-btn">
+                            <span class="power-icon-symbol">🔄</span> Restart
+                        </button>
+                        <button class="power-option-btn" id="emergency-btn">
+                            <span class="power-icon-symbol">🆘</span> Emergency Service
+                        </button>
+                    </div>
+                </div>
+
+                <div class="emergency-screen" id="emergency-screen">
+                    <div class="emergency-header">
+                        <button id="emergency-back-btn" class="emergency-back-btn">&lt;</button>
+                        <h2>Emergency Call</h2>
+                    </div>
+                    <div class="emergency-content">
+                        <div class="emergency-display" id="emergency-display"></div>
+                        <div class="emergency-keypad">
+                            <button class="keypad-btn">1</button>
+                            <button class="keypad-btn">2</button>
+                            <button class="keypad-btn">3</button>
+                            <button class="keypad-btn">4</button>
+                            <button class="keypad-btn">5</button>
+                            <button class="keypad-btn">6</button>
+                            <button class="keypad-btn">7</button>
+                            <button class="keypad-btn">8</button>
+                            <button class="keypad-btn">9</button>
+                            <button class="keypad-btn">*</button>
+                            <button class="keypad-btn">0</button>
+                            <button class="keypad-btn">#</button>
+                        </div>
+                        <div class="emergency-controls">
+                             <div class="spacer"></div>
+                            <button class="emergency-call-btn" id="emergency-call-btn">📞</button>
+                            <button class="emergency-delete-btn" id="emergency-delete-btn">⌫</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="snake-screen" id="snake-screen">
+                    <div class="snake-header">
+                        <button id="snake-back-btn" class="snake-back-btn">&lt;</button>
+                        <h2>Snake</h2>
+                        <div class="snake-controls">
+                            <input type="color" id="snake-color-picker" title="Snake Color" value="#34c759">
+                            <button id="snake-peace-mode-btn">Peace: OFF</button>
+                            <div id="snake-score">Score: 0</div>
+                             <button id="snake-restart-btn">Restart</button>
+                        </div>
+                    </div>
+                    <div class="snake-game-area">
+                        <canvas id="snake-canvas"></canvas>
+                         <div id="snake-game-over" style="display: none;">
+                            Game Over
+                        </div>
+                        <div class="snake-dpad">
+                            <button id="snake-btn-up" class="dpad-btn">▲</button>
+                            <button id="snake-btn-left" class="dpad-btn">◀</button>
+                            <button id="snake-btn-right" class="dpad-btn">▶</button>
+                            <button id="snake-btn-down" class="dpad-btn">▼</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="app-store-screen" id="app-store-screen">
+                    <div class="app-store-header">
+                        <button id="app-store-back-btn" class="app-store-back-btn">&lt;</button>
+                        <h2>App Store</h2>
+                    </div>
+                    <div class="app-store-content">
+                        <div class="app-listing">
+                            <img src="icon-weather.png" alt="Weather App Icon" class="app-listing-icon">
+                            <div class="app-listing-info">
+                                <h3>Hyper Weather</h3>
+                                <span>Get hyper-local forecasts</span>
+                            </div>
+                            <button class="install-btn">GET</button>
+                        </div>
+                        <div class="app-listing">
+                            <img src="icon-notes.png" alt="Notes App Icon" class="app-listing-icon">
+                            <div class="app-listing-info">
+                                <h3>QuickNote Pro</h3>
+                                <span>Capture your thoughts instantly</span>
+                            </div>
+                            <button class="install-btn">GET</button>
+                        </div>
+                         <div class="app-listing">
+                            <img src="icon-music.png" alt="Music App Icon" class="app-listing-icon">
+                            <div class="app-listing-info">
+                                <h3>Rhythm Box</h3>
+                                <span>Your personal music stream</span>
+                            </div>
+                            <button class="install-btn">GET</button>
+                        </div>
+                        <div class="app-listing">
+                            <img src="icon-snake.png" alt="Snake App Icon" class="app-listing-icon">
+                            <div class="app-listing-info">
+                                <h3>Snake 2D</h3>
+                                <span>The classic returns</span>
+                            </div>
+                            <button class="install-btn installed">INSTALLED</button>
+                        </div>
+                         <div class="app-listing">
+                            <img src="icon-paint.png" alt="Paint App Icon" class="app-listing-icon">
+                            <div class="app-listing-info">
+                                <h3>Pixel Painter</h3>
+                                <span>Create amazing art</span>
+                            </div>
+                            <button class="install-btn installed">INSTALLED</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="folder-view" id="folder-view">
+                    <div class="folder-view-content">
+                        <div class="folder-apps-grid" id="folder-apps-grid">
+                            <!-- Apps inside the folder will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                <div id="shutdown-overlay"></div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,467 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iPhone Emulator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="emulator-container">
+        <div class="iphone-frame">
+            <div class="screen-bezel">
+                <div class="notch">
+                    <div class="speaker"></div>
+                    <div class="camera"></div>
+                </div>
+                <div class="screen">
+                    <div class="status-bar">
+                        <div class="status-left">
+                            <span class="time">9:41</span>
+                        </div>
+                        <div class="status-right">
+                            <div class="signal-bars">
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                                <div class="bar"></div>
+                            </div>
+                            <div class="wifi-icon">📶</div>
+                            <div class="battery">
+                                <div class="battery-level"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="app-container">
+                        <div class="wallpaper"></div>
+                        <div class="home-screen">
+                            <div class="app-grid">
+                                <!-- App icons will be dynamically injected here by JavaScript -->
+                            </div>
+                            <div class="dock">
+                                <div class="app-icon" data-app="phone">
+                                    <div class="icon-bg phone-icon">
+                                        <img src="phone" alt="Phone Icon">
+                                    </div>
+                                </div>
+                                <div class="app-icon" data-app="safari">
+                                    <div class="icon-bg safari-icon">
+                                        <img src="safari.jpeg" alt="Safari Icon">
+                                    </div>
+                                </div>
+                                <div class="app-icon" data-app="messages">
+                                    <div class="icon-bg messages-icon">
+                                        <img src="messages.png" alt="Messages Icon">
+                                    </div>
+                                </div>
+                                <div class="app-icon" data-app="music">
+                                    <div class="icon-bg music-icon">
+                                        <img src="Music.png" alt="Music Icon">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="messages-app-screen" style="display: none;">
+                            <div class="messages-header">
+                                <span class="back-button">‹ Messages</span>
+                                <div class="header-title">AI Assistant</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="chat-messages">
+                                <!-- Messages will be injected here by JS -->
+                            </div>
+                            <div class="message-input-container">
+                                <textarea id="message-input" placeholder="iMessage"></textarea>
+                                <button id="send-button">Send</button>
+                            </div>
+                        </div>
+                        <div class="phone-app-screen" style="display: none;">
+                            <div class="phone-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Contacts</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="contacts-list">
+                                <div class="contact-item" data-contact-name="Alice">
+                                    <div class="contact-avatar">A</div>
+                                    <div class="contact-info">
+                                        <div class="contact-name">Alice</div>
+                                        <div class="contact-number">Mobile</div>
+                                    </div>
+                                    <div class="call-icon">📞</div>
+                                </div>
+                                <div class="contact-item" data-contact-name="Bob">
+                                    <div class="contact-avatar">B</div>
+                                    <div class="contact-info">
+                                        <div class="contact-name">Bob</div>
+                                        <div class="contact-number">Mobile</div>
+                                    </div>
+                                    <div class="call-icon">📞</div>
+                                </div>
+                                <div class="contact-item" data-contact-name="Charlie">
+                                    <div class="contact-avatar">C</div>
+                                    <div class="contact-info">
+                                        <div class="contact-name">Charlie</div>
+                                        <div class="contact-number">Mobile</div>
+                                    </div>
+                                    <div class="call-icon">📞</div>
+                                </div>
+                            </div>
+                            <div class="call-screen" style="display: none;">
+                                <div class="call-header">
+                                    <div class="call-contact-name"></div>
+                                    <div class="call-status">Calling...</div>
+                                </div>
+                                <div class="call-chat-messages">
+                                    <!-- Call messages will be injected here by JS -->
+                                </div>
+                                <div class="call-message-input-container">
+                                    <textarea id="call-message-input" placeholder="Say something..."></textarea>
+                                    <button id="call-send-button">Send</button>
+                                </div>
+                                <div class="call-action-area">
+                                    <div class="hang-up-background-circle"></div>
+                                    <button class="hang-up-button">
+                                        <!-- The hang-up icon will now be modeled using CSS, no image needed -->
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="photos-app-screen" style="display: none;">
+                            <div class="photos-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Photos</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="photos-content">
+                                <div class="photos-grid">
+                                    <!-- Photos will be injected here by JS -->
+                                </div>
+                                <div class="trash-bin-screen" style="display: none;">
+                                    <div class="trash-empty-message" style="display: none;">No photos in Recently Deleted.</div>
+                                    <div class="trash-bin-grid">
+                                        <!-- Deleted photos will be injected here by JS -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottom-tabs">
+                                <div class="tab-item active" data-tab="photos">
+                                    <span class="tab-icon">📸</span>
+                                    <span class="tab-label">Photos</span>
+                                </div>
+                                <div class="tab-item" data-tab="trash">
+                                    <span class="tab-icon">🗑️</span>
+                                    <span class="tab-label">Recently Deleted</span>
+                                </div>
+                            </div>
+                            <div id="photo-context-menu" class="context-menu" style="display: none;">
+                                <div class="context-menu-item" data-action="set-wallpaper">Set as Wallpaper</div>
+                                <div class="context-menu-item delete" data-action="delete">Delete Photo</div>
+                            </div>
+                            <div id="trash-context-menu" class="context-menu" style="display: none;">
+                                <div class="context-menu-item recover" data-action="recover">Recover Photo</div>
+                            </div>
+                        </div>
+                        <div class="settings-app-screen" style="display: none;">
+                            <div class="settings-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Settings</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="settings-content">
+                                <div class="settings-group">
+                                    <div class="settings-item">
+                                        <span>Display & Brightness</span>
+                                        <div class="toggle-switch">
+                                            <input type="checkbox" id="darkModeToggle" class="toggle-input">
+                                            <label for="darkModeToggle" class="toggle-label"></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="weather-app-screen" style="display: none;">
+                            <div class="weather-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Weather</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="weather-content">
+                                <div class="current-weather">
+                                    <div class="location">Cupertino</div>
+                                    <div class="temperature">24°</div>
+                                    <div class="condition">Mostly Sunny</div>
+                                    <div class="high-low">H:28° L:15°</div>
+                                </div>
+                                <div class="weather-forecast-sections">
+                                    <div class="hourly-forecast-section">
+                                        <div class="section-title">HOURLY FORECAST</div>
+                                        <div class="hourly-forecast-scroll">
+                                            <div class="forecast-item">
+                                                <span>10AM</span>
+                                                <span>☀️</span>
+                                                <span>22°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>11AM</span>
+                                                <span>🌤️</span>
+                                                <span>24°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>12PM</span>
+                                                <span>☁️</span>
+                                                <span>25°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>1PM</span>
+                                                <span>🌦️</span>
+                                                <span>23°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>2PM</span>
+                                                <span>🌧️</span>
+                                                <span>20°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>3PM</span>
+                                                <span>⛈️</span>
+                                                <span>19°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>4PM</span>
+                                                <span>⚡</span>
+                                                <span>18°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>5PM</span>
+                                                <span>🌪️</span>
+                                                <span>17°</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="daily-forecast-section">
+                                        <div class="section-title">DAILY FORECAST</div>
+                                        <div class="daily-forecast-list">
+                                            <div class="forecast-item">
+                                                <span>Today</span>
+                                                <span>☀️</span>
+                                                <span class="low-temp">15°</span><span class="high-temp">28°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>Tomorrow</span>
+                                                <span>☁️</span>
+                                                <span class="low-temp">16°</span><span class="high-temp">25°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>Mon</span>
+                                                <span>🌧️</span>
+                                                <span class="low-temp">12°</span><span class="high-temp">20°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>Tue</span>
+                                                <span>❄️</span>
+                                                <span class="low-temp">5°</span><span class="high-temp">10°</span>
+                                            </div>
+                                            <div class="forecast-item">
+                                                <span>Wed</span>
+                                                <span>💨</span>
+                                                <span class="low-temp">10°</span><span class="high-temp">18°</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- New Safari App Screen -->
+                        <div class="safari-app-screen" style="display: none;">
+                            <div class="safari-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="url-bar-container">
+                                    <input type="text" id="safari-url-input" placeholder="Search or enter website name">
+                                    <span class="clear-input" id="safari-clear-input">×</span>
+                                </div>
+                                <div class="header-right-icons">
+                                    <span class="share-icon">📤</span>
+                                </div>
+                            </div>
+                            <div class="safari-content">
+                                <div class="safari-default-page" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; height: 100%; color: #888;">
+                                    <span style="font-size: 60px; margin-bottom: 20px;">🧭</span>
+                                    <p style="font-size: 20px; font-weight: 600; margin-bottom: 10px;">Welcome to Safari</p>
+                                    <p style="font-size: 14px; color: #aaa;">Use the search bar above to ask a question or search the web.</p>
+                                </div>
+                                <div class="safari-search-results" style="display: none;">
+                                    <!-- Search results dynamically inserted here -->
+                                </div>
+                            </div>
+                            <div class="safari-bottom-bar">
+                                <div class="bottom-bar-icon" data-action="safari-back">
+                                    <span>&lt;</span>
+                                </div>
+                                <div class="bottom-bar-icon" data-action="safari-forward">
+                                    <span>&gt;</span>
+                                </div>
+                                <div class="bottom-bar-icon" data-action="safari-share">
+                                    <span>📤</span>
+                                </div>
+                                <div class="bottom-bar-icon" data-action="safari-tabs">
+                                    <span>📄</span>
+                                </div>
+                                <div class="bottom-bar-icon" data-action="safari-settings">
+                                    <span>⚙️</span>
+                                </div>
+                            </div>
+
+                            <!-- Safari Settings Modal -->
+                            <div class="safari-settings-modal" style="display: none;">
+                                <div class="settings-header">
+                                    <span class="done-button" id="safari-settings-done">Done</span>
+                                    <div class="header-title">Safari Settings</div>
+                                </div>
+                                <div class="settings-content">
+                                    <div class="settings-group">
+                                        <div class="settings-item">
+                                            <span>Private Browsing</span>
+                                            <div class="toggle-switch">
+                                                <input type="checkbox" id="safariPrivateBrowsing" class="toggle-input">
+                                                <label for="safariPrivateBrowsing" class="toggle-label"></label>
+                                            </div>
+                                        </div>
+                                        <div class="settings-item">
+                                            <span>Clear History & Website Data</span>
+                                            <button class="clear-history-button" id="safari-clear-history">Clear History</button>
+                                        </div>
+                                    </div>
+                                    <div class="settings-group">
+                                        <div class="settings-item">
+                                            <span>Safari Dark Mode</span>
+                                            <div class="toggle-switch">
+                                                <input type="checkbox" id="safariDarkModeToggle" class="toggle-input">
+                                                <label for="safariDarkModeToggle" class="toggle-label"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Music App Screen -->
+                        <div class="music-app-screen" style="display: none;">
+                            <div class="music-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Now Playing</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="music-joke-content">
+                                <p class="joke-message">Man, I'm tired of people just not focusing on other things but music. Like you want it, I am shuting the app .</p>
+                                <img src="suit-cat-semga.gif" alt="Cat in a Suit" class="flying-cat-gif">
+                            </div>
+                        </div>
+                        <!-- New Files App Screen -->
+                        <div class="files-app-screen" style="display: none;">
+                            <div class="files-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">Browse</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="files-content">
+                                <div class="files-list" id="files-list">
+                                    <!-- Files will be injected here by JS -->
+                                </div>
+                                <div class="no-files-message" style="display: none;">No files downloaded.</div>
+                            </div>
+                        </div>
+                        <!-- New App Store App Screen -->
+                        <div class="appstore-app-screen" style="display: none;">
+                            <div class="appstore-header">
+                                <span class="back-button">‹ Today</span>
+                                <div class="header-title">App Store</div>
+                                <div class="header-right"></div>
+                            </div>
+                            <div class="appstore-content">
+                                <div class="appstore-search-bar-container">
+                                    <input type="text" id="appstore-search-input" placeholder="Search for Apps">
+                                    <span class="clear-input" id="appstore-clear-input">×</span>
+                                </div>
+                                <div class="appstore-categories">
+                                    <h2>Categories</h2>
+                                    <div class="category-grid">
+                                        <div class="category-item">Games</div>
+                                        <div class="category-item">Productivity</div>
+                                        <div class="category-item">Social</div>
+                                        <div class="category-item">Entertainment</div>
+                                        <div class="category-item">Education</div>
+                                        <div class="category-item">Health & Fitness</div>
+                                    </div>
+                                </div>
+                                <div class="appstore-featured-apps">
+                                    <h2>Featured Apps</h2>
+                                    <div class="featured-app-list" id="appstore-featured-list">
+                                        <!-- Featured apps injected here by JS -->
+                                    </div>
+                                </div>
+                                <div class="appstore-search-results" style="display: none;">
+                                    <!-- Search results dynamically inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- New WebSim Chat App Screen -->
+                        <div class="websim-chat-app-screen" style="display: none;">
+                            <div class="websim-chat-header">
+                                <span class="back-button">‹ Home</span>
+                                <div class="header-title">WebSim Chat</div>
+                                <div class="header-right">
+                                    <span class="chat-members-count"></span>
+                                </div>
+                            </div>
+                            <div class="websim-chat-messages">
+                                <!-- Chat messages will be injected here by JS -->
+                            </div>
+                            <div class="websim-chat-input-container">
+                                <textarea id="websim-chat-input" placeholder="iMessage"></textarea>
+                                <button id="websim-send-button">Send</button>
+                            </div>
+                        </div>
+                        <div class="home-indicator"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="side-buttons">
+                <div class="volume-up"></div>
+                <div class="volume-down"></div>
+                <div class="mute-switch"></div>
+            </div>
+            <div class="power-button"></div>
+        </div>
+    </div>
+
+    <!-- Power Menu Overlay -->
+    <div class="power-menu-overlay" style="display: none;">
+        <div class="power-menu">
+            <button class="power-menu-button shutdown" data-action="shutdown">
+                <span class="power-icon"></span> Shutdown
+            </button>
+            <button class="power-menu-button restart" data-action="restart">
+                <span class="restart-icon"></span> Restart
+            </button>
+            <button class="power-menu-button factory-reset" data-action="factory-reset">
+                <span class="reset-icon"></span> Factory Reset
+            </button>
+            <button class="power-menu-button damage-detector" data-action="damage-detector">
+                <span class="damage-icon"></span> Damage Detector
+            </button>
+        </div>
+    </div>
+
+    <!-- Factory Reset Loading Screen -->
+    <div class="factory-reset-loading" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p id="loading-message">Preparing for reset...</p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

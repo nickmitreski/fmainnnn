@@ -1,0 +1,5 @@
+dist/*
+libraries/*
+pwabuilder-sw.js
+postcss.config.js
+tailwind.config.js

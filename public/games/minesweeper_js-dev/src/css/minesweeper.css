@@ -1,0 +1,296 @@
+#game {
+  background-color: #c0c0c0;
+  float: left;
+}
+
+.row {
+  display: flex;
+}
+
+.gameBlock {
+  display: table-row;
+  height: 16px;
+  width: 16px;
+  float: left;
+}
+
+.display {
+  width: 39px;
+  height: 23px;
+  margin-top: 4px;
+  margin-bottom: 5px;
+}
+
+.clicked {
+  pointer-events: none;
+}
+
+.timer {
+  float: left;
+  margin-right: 10px;
+}
+
+.points {
+  float: left;
+  margin-left: 10px;
+}
+
+.dark .gamebar {
+  background-color: #27272a;
+}
+
+.gamebar {
+  height: 32px;
+  background-color: #c0c0c0;
+}
+
+.top-border {
+  height: 10px;
+}
+
+.btn {
+  width: 26px;
+  height: 26px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  float: left;
+}
+
+.digit {
+  float: left;
+  height: 23px;
+  width: 13px;
+}
+
+.dark .sprite {
+  background-image: url(/assets/sprites/spritesheet-dark.png);
+}
+
+.sprite {
+  background-image: url(/assets/sprites/spritesheet.png);
+  background-repeat: no-repeat;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  float: left;
+}
+
+.sprite-0 {
+  background-position: 0 0;
+}
+
+.sprite-1 {
+  background-position: -16px 0;
+}
+
+.sprite-2 {
+  background-position: -32px 0;
+}
+
+.sprite-3 {
+  background-position: -48px 0;
+}
+
+.sprite-4 {
+  background-position: -64px 0;
+}
+
+.sprite-5 {
+  background-position: -80px 0;
+}
+
+.sprite-6 {
+  background-position: 0 -16px;
+}
+
+.sprite-7 {
+  background-position: -16px -16px;
+}
+
+.sprite-8 {
+  background-position: -32px -16px;
+}
+
+.sprite-blank {
+  background-position: -48px -16px;
+}
+
+.dark .sprite-blank:hover {
+  opacity: 90%;
+}
+
+.sprite-blank:hover {
+  background-position: -64px -16px;
+}
+
+.sprite-bomb-grey {
+  background-position: -80px -16px;
+}
+
+.sprite-bomb-red {
+  background-position: 0 -32px;
+}
+
+.sprite-border-bl {
+  width: 10px;
+  height: 10px;
+  background-position: -96px 0;
+}
+
+.sprite-border-br {
+  width: 10px;
+  height: 10px;
+  background-position: -96px -10px;
+}
+
+.sprite-border-horizontal {
+  width: 16px;
+  height: 10px;
+  background-position: -16px -32px;
+}
+
+.sprite-border-il {
+  width: 10px;
+  height: 10px;
+  background-position: -96px -20px;
+}
+
+.sprite-border-ir {
+  width: 10px;
+  height: 10px;
+  background-position: -96px -30px;
+}
+
+.sprite-border-tl {
+  width: 10px;
+  height: 10px;
+  background-position: -32px -40px;
+}
+
+.sprite-border-tr {
+  width: 10px;
+  height: 10px;
+  background-position: -42px -40px;
+}
+
+.sprite-border-vertical {
+  width: 10px;
+  height: 16px;
+  background-position: -52px -40px;
+}
+
+.sprite-border-vertical-32 {
+  background-position: -104px -92px;
+  width: 10px;
+  height: 32px;
+}
+
+.sprite-btn-click {
+  width: 26px;
+  height: 26px;
+  background-position: -62px -32px;
+}
+
+.sprite-btn-cool {
+  width: 26px;
+  height: 26px;
+  background-position: 0 -58px;
+}
+
+.sprite-btn-dead {
+  width: 26px;
+  height: 26px;
+  background-position: -26px -58px;
+}
+
+.sprite-btn-smiley {
+  width: 26px;
+  height: 26px;
+  background-position: -52px -58px;
+}
+
+.sprite-btn-wow {
+  width: 26px;
+  height: 26px;
+  background-position: -78px -58px;
+}
+
+.sprite-d-blank {
+  width: 13px;
+  height: 23px;
+  background-position: 0 -84px;
+}
+
+.sprite-d-minus {
+  width: 13px;
+  height: 23px;
+  background-position: -13px -84px;
+}
+
+.sprite-d0 {
+  width: 13px;
+  height: 23px;
+  background-position: -26px -84px;
+}
+
+.sprite-d1 {
+  width: 13px;
+  height: 23px;
+  background-position: -39px -84px;
+}
+
+.sprite-d2 {
+  width: 13px;
+  height: 23px;
+  background-position: -52px -84px;
+}
+
+.sprite-d3 {
+  width: 13px;
+  height: 23px;
+  background-position: -65px -84px;
+}
+
+.sprite-d4 {
+  width: 13px;
+  height: 23px;
+  background-position: -78px -84px;
+}
+
+.sprite-d5 {
+  width: 13px;
+  height: 23px;
+  background-position: -91px -84px;
+}
+
+.sprite-d6 {
+  width: 13px;
+  height: 23px;
+  background-position: -106px 0;
+}
+
+.sprite-d7 {
+  width: 13px;
+  height: 23px;
+  background-position: -106px -23px;
+}
+
+.sprite-d8 {
+  width: 13px;
+  height: 23px;
+  background-position: -104px -46px;
+}
+
+.sprite-d9 {
+  width: 13px;
+  height: 23px;
+  background-position: -104px -69px;
+}
+
+.sprite-flag {
+  background-position: -16px -108px;
+}
+
+.sprite-no-bomb {
+  background-position: 0 -108px;
+}
