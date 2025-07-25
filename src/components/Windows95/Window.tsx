@@ -27,16 +27,6 @@ const Window: React.FC<WindowProps> = ({
   className,
   isResizable = true
 }) => {
-  // Debug log for Winamp window content
-  if (id === 'winamp') {
-    console.log('[DEBUG] Window.tsx Winamp content:', content);
-  }
-  // Add unique class for Winamp window
-  const windowClass = `win95-window${id === 'winamp' ? ' winamp-window' : ''}${className ? ' ' + className : ''}`;
-  // Prevent rendering a blank Winamp window
-  if (id === 'winamp' && !content) {
-    return null;
-  }
   const { moveWindow, resizeWindow, focusWindow, bringToFront, windows } = useWindowManager();
   const { playMaximize, playMinimize } = useSoundEffects();
   const windowRef = useRef<HTMLDivElement>(null);
@@ -49,6 +39,8 @@ const Window: React.FC<WindowProps> = ({
     position: { x: number; y: number };
     size: { width: number; height: number };
   } | null>(null);
+  const [dragStartX, setDragStartX] = useState(0);
+  const [dragStartY, setDragStartY] = useState(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -84,10 +76,23 @@ const Window: React.FC<WindowProps> = ({
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [isDragging, isResizing, id, position.x, position.y, moveWindow, resizeWindow]);
+  }, [isDragging, isResizing, id, position.x, position.y, moveWindow, resizeWindow, dragStartX, dragStartY]);
 
-  const [dragStartX, setDragStartX] = useState(0);
-  const [dragStartY, setDragStartY] = useState(0);
+  useEffect(() => {
+    // Focus window when mounted
+    focusWindow(id);
+  }, [id, focusWindow]);
+
+  // Debug logging for Winamp content
+  if (title === 'Winamp' && content) {
+    // Content is available, proceed normally
+  }
+  // Add unique class for Winamp window
+  const windowClass = `win95-window${id === 'winamp' ? ' winamp-window' : ''}${className ? ' ' + className : ''}`;
+  // Prevent rendering a blank Winamp window
+  if (id === 'winamp' && !content) {
+    return null;
+  }
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.button !== 0) return; // Only handle left click
@@ -148,11 +153,6 @@ const Window: React.FC<WindowProps> = ({
       onClose();
     }
   };
-
-  useEffect(() => {
-    // Focus window when mounted
-    focusWindow(id);
-  }, [id, focusWindow]);
 
   if (isMinimized) {
     return null;

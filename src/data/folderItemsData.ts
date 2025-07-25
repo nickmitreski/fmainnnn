@@ -1,6 +1,8 @@
 import React from 'react';
 import ComingSoonPopup from '../components/ComingSoonPopup';
 
+
+
 export interface FolderItem {
   name: string;
   icon: string;
@@ -11,7 +13,7 @@ export interface FolderItem {
   openOnSingleClick?: boolean; // Add optional property for single-click behavior
   component?: React.ComponentType<any>; // Use a more general type to allow different component types
   defaultSize?: { width: number; height: number }; // Add optional defaultSize property
-}
+};
 
 export const games: FolderItem[] = [
   {
@@ -19,42 +21,42 @@ export const games: FolderItem[] = [
     icon: '/Freecell1_32x32_4.png', // Updated to Freecell logo
     path: '/games/FreecellJS-master/FreecellJS.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 600 }
+    defaultSize: { width: 900, height: 600 },
   },
   {
     name: 'Solitaire',
     icon: '/sollitaire.png', // Updated to new Solitaire icon and moved up
     path: '/games/solitaire-minesweeper/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
     name: 'Duck Hunt',
     icon: '/duckhunt.png',
     path: '/games/DuckHunt-JS-master/dist/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 800, height: 600 }
+    defaultSize: { width: 800, height: 600 },
   },
   {
     name: 'Super Mario',
     icon: '/mario.png',
     path: '/games/mario-master-2/indexmario.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
     name: 'Doom',
     icon: '/doom.png', // Updated to new Doom icon
     path: '/games/doom/doom.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
     name: 'Diablo',
     icon: '/diablo.png', // Updated to new Diablo icon
     path: '/games/diablo/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
     name: 'Mortal Kombat',
@@ -62,21 +64,21 @@ export const games: FolderItem[] = [
     isBuiltIn: true,
     appId: 'comingSoonMortalKombat',
     component: ComingSoonPopup,
-    defaultSize: { width: 400, height: 200 }
+    defaultSize: { width: 600, height: 400 },
   },
   {
     name: 'Tower Defense',
     icon: '/games/military_tower_defense/army_game.png',
     path: '/games/military_tower_defense/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 1200, height: 800 }
+    defaultSize: { width: 1200, height: 800 },
   },
   {
     name: 'Donkey Kong',
     icon: '/donkeykong.png',
     path: '/games/donkeykongbananza/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
     name: 'Street Fighter',
@@ -84,7 +86,7 @@ export const games: FolderItem[] = [
     isBuiltIn: true,
     appId: 'comingSoonStreetFighter',
     component: ComingSoonPopup,
-    defaultSize: { width: 400, height: 200 }
+    defaultSize: { width: 600, height: 400 },
   },
   {
     name: 'NBA Jam',
@@ -92,7 +94,7 @@ export const games: FolderItem[] = [
     isBuiltIn: true,
     appId: 'comingSoonNBAJam',
     component: ComingSoonPopup,
-    defaultSize: { width: 400, height: 200 }
+    defaultSize: { width: 600, height: 400 },
   },
   {
     name: 'Legend of Zelda',
@@ -100,35 +102,36 @@ export const games: FolderItem[] = [
     isBuiltIn: true,
     appId: 'comingSoonZelda',
     component: ComingSoonPopup,
-    defaultSize: { width: 400, height: 200 }
+    defaultSize: { width: 600, height: 400 },
   },
   {
     name: 'Prince of Persia',
     icon: '/princeofpersia.png', // Updated to new Prince of Persia icon
     path: '/games/PrinceJS-master/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
   {
-    name: 'Tetris',
-    icon: '/tetris.png',
-    path: '/games/08-Tetris-Game/index.html',
-    isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    name: 'C&C Red Alert',
+    icon: '/Red_Alert.png',
+    isBuiltIn: true,
+    appId: 'comingSoonRedAlert',
+    component: ComingSoonPopup, // Will be replaced with a custom email form component
+    defaultSize: { width: 600, height: 400 },
   },
   {
     name: 'Sonic',
     icon: '/sonic.png',
     path: '/games/sonic_mega_classic_collection/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 1200, height: 800 }
+    defaultSize: { width: 1200, height: 800 },
   },
   {
     name: 'Pac-Man',
     icon: '/pacman.png',
     path: '/games/pacman/index.html',
     isBuiltIn: false,
-    defaultSize: { width: 900, height: 700 }
+    defaultSize: { width: 900, height: 700 },
   },
 ];
 
@@ -197,21 +200,21 @@ export const mediaItems: FolderItem[] = [
     icon: '/promovids.png',
     path: 'https://file.garden/Zxsc5-9aojhlnJO6/news_promo.mp4',
     isBuiltIn: false,
-    defaultSize: { width: 1200, height: 800 }
+    defaultSize: { width: 1200, height: 800 },
   },
   {
     name: 'Promo.mp4',
     icon: '/promovids.png',
     path: 'https://file.garden/Zxsc5-9aojhlnJO6/flashforowarddraft.mp4',
     isBuiltIn: false,
-    defaultSize: { width: 1200, height: 800 }
+    defaultSize: { width: 1200, height: 800 },
   },
   {
     name: 'Content',
     icon: '/promovids.png',
     path: 'https://file.garden/Zxsc5-9aojhlnJO6/content_promo.mp4',
     isBuiltIn: false,
-    defaultSize: { width: 1200, height: 800 }
+    defaultSize: { width: 1200, height: 800 },
   }
 ];
 

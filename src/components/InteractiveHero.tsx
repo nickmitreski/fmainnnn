@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useRef, useCallback, memo } from 'react';
+import { motion, AnimatePresence, MotionProps } from 'framer-motion';
 import { HoverBorderGradient } from './ui/hover-border-gradient';
 
 const cn = (...classes: (string | undefined | null | boolean)[]) => classes.filter(Boolean).join(' ');
@@ -7,32 +7,26 @@ const cn = (...classes: (string | undefined | null | boolean)[]) => classes.filt
 interface RotatingTextProps {
   texts: string[];
   mainClassName?: string;
-  staggerFrom?: "first" | "last" | "center" | "random" | number;
-  initial?: any;
-  animate?: any;
-  exit?: any;
+  initial?: MotionProps['initial'];
+  animate?: MotionProps['animate'];
+  exit?: MotionProps['exit'];
   staggerDuration?: number;
-  transition?: any;
+  transition?: MotionProps['transition'];
   rotationInterval?: number;
-  splitBy?: "characters" | "words" | "lines" | string;
   auto?: boolean;
-  loop?: boolean;
 }
 
-const RotatingText = React.forwardRef<any, RotatingTextProps>((props, ref) => {
+const RotatingText = React.forwardRef<HTMLDivElement, RotatingTextProps>((props) => {
   const {
     texts,
     mainClassName,
-    staggerFrom = "last",
     initial = { y: "100%", opacity: 0 },
     animate = { y: 0, opacity: 1 },
     exit = { y: "-100%", opacity: 0 },
     staggerDuration = 0.03,
     transition = { type: "spring", damping: 20, stiffness: 300 },
     rotationInterval = 3500,
-    splitBy = "characters",
-    auto = true,
-    loop = true
+    auto = true
   } = props;
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -86,12 +80,11 @@ const RotatingText = React.forwardRef<any, RotatingTextProps>((props, ref) => {
 
 RotatingText.displayName = 'RotatingText';
 
-const InteractiveHero: React.FC = () => {
+const InteractiveHero: React.FC = memo(() => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const dotsRef = useRef<any[]>([]);
   const mousePositionRef = useRef<{ x: number | null; y: number | null }>({ x: null, y: null });
   const [showVideo, setShowVideo] = useState(false);
-  const [showWorkPopup, setShowWorkPopup] = useState(false);
+  const [showFakeNewsVideo, setShowFakeNewsVideo] = useState(false);
 
   const handleMouseMove = useCallback((event: MouseEvent) => {
     const canvas = canvasRef.current;
@@ -131,7 +124,6 @@ const InteractiveHero: React.FC = () => {
             <RotatingText
               texts={rotatingTexts}
               mainClassName="mx-1"
-              staggerFrom="last"
               rotationInterval={3500}
             />
           </div>
@@ -152,14 +144,14 @@ const InteractiveHero: React.FC = () => {
               watch video
             </HoverBorderGradient>
           </div>
-          
-          <div onClick={() => window.location.href = '#work'} className="cursor-pointer">
+
+          <div onClick={() => setShowFakeNewsVideo(true)} className="cursor-pointer">
             <HoverBorderGradient
               className="text-xl font-light tracking-tight"
               containerClassName="scale-110"
               duration={1.5}
             >
-              latest work
+              fake news
             </HoverBorderGradient>
           </div>
         </motion.div>
@@ -196,9 +188,40 @@ const InteractiveHero: React.FC = () => {
             </motion.div>
           </motion.div>
         )}
+
+        {showFakeNewsVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center p-4"
+            onClick={() => setShowFakeNewsVideo(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                className="absolute top-2 right-2 text-white text-2xl z-10"
+                onClick={() => setShowFakeNewsVideo(false)}
+              >
+                &times;
+              </button>
+              <video
+                src="https://file.garden/Zxsc5-9aojhlnJO6/fake_news.mp4"
+                controls
+                autoPlay
+                className="max-w-full max-h-screen"
+              />
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
-};
+});
 
 export default InteractiveHero;

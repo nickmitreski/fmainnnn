@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { supabase } from '../../../lib/supabase';
-import { callDeepseek } from '../../../lib/llm';
+import { callOpenAI } from '../../../lib/llm';
 import { Send } from 'lucide-react';
 
 interface ChatMessage {
@@ -92,7 +92,7 @@ const ModernChatbot: React.FC = () => {
       ];
       
       // Call the AI
-      const response = await callDeepseek(input, contextWithSystem);
+      const response = await callOpenAI(input, contextWithSystem);
       
       // Add assistant response
       const assistantMessage: ChatMessage = { role: 'assistant', content: response };

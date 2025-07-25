@@ -20,7 +20,7 @@ const AppIcon: React.FC<AppIconProps> = ({
   isSelected,
   imageIcon
 }) => {
-  const IconComponent = Icons[icon as keyof typeof Icons] as React.ComponentType<any>;
+  const IconComponent = Icons[icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
 
   return (
     <motion.button
@@ -33,7 +33,7 @@ const AppIcon: React.FC<AppIconProps> = ({
       {/* App Icon */}
       {imageIcon ? (
         // Image-based icon (no background)
-        <div className="relative w-16 h-16 flex items-center justify-center">
+        <div className={`relative w-16 h-16 flex items-center justify-center ${label === 'Games' ? 'bg-gray-700 border-4 border-white' : ''}`} style={label === 'Games' ? { boxShadow: 'none', background: 'none' } : {}}>
           <img 
             src={imageIcon} 
             alt={label}

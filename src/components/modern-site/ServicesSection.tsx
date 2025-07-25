@@ -10,7 +10,7 @@ import BrandingPopup from './service-popups/BrandingPopup';
 import ContentCreationPopup from './service-popups/ContentCreationPopup';
 import AIAutomationPopup from './service-popups/AIAutomationPopup';
 import SocialMediaPopup from './service-popups/SocialMediaPopup';
-import GrowthStrategyPopup from './service-popups/GrowthStrategyPopup';
+import SEOPopup from './service-popups/SEOPopup';
 
 interface ServicesSectionProps {
   className?: string;
@@ -61,9 +61,9 @@ const services: Service[] = [
     buttonColor: colors.primary.purple, // #9933FF
   },
   {
-    id: "growth",
-    title: "Growth Strategy",
-    description: "Scale your business with data-driven strategies. We help you identify and capture new opportunities.",
+    id: "seo",
+    title: "SEO",
+    description: "Boost your online visibility and rankings with expert SEO services.",
     color: colors.text.white,
     buttonColor: colors.primary.orange, // #FF6600
   }
@@ -131,8 +131,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ className = ""
         return <AIAutomationPopup onClose={closeServiceDetails} />;
       case 'social':
         return <SocialMediaPopup onClose={closeServiceDetails} />;
-      case 'growth':
-        return <GrowthStrategyPopup onClose={closeServiceDetails} />;
+      case 'seo':
+        return <SEOPopup onClose={closeServiceDetails} />;
       default:
         return null;
     }
@@ -153,7 +153,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({ className = ""
           our services
         </h2>
         <div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+          className="services-carousel grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
           role="list"
           aria-label="Service offerings"
         >

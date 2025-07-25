@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import Icon from './Icon';
 import Taskbar from './Taskbar';
 import DesktopContextMenu from './DesktopContextMenu';
@@ -19,7 +19,31 @@ interface ContextMenuPosition {
   y: number;
 }
 
-const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) => {
+// Helper to get a random position for game popups near the center of the screen
+const getRandomGamePopupPosition = (width: number, height: number) => {
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const centerX = (screenWidth - width) / 2;
+  const centerY = (screenHeight - height) / 2;
+  const maxOffsetX = Math.max(0, (screenWidth - width) / 4);
+  const maxOffsetY = Math.max(0, (screenHeight - height) / 4);
+  const offsetX = (Math.random() - 0.5) * 2 * maxOffsetX;
+  const offsetY = (Math.random() - 0.5) * 2 * maxOffsetY;
+  const x = Math.max(0, Math.min(centerX + offsetX, screenWidth - width));
+  const y = Math.max(0, Math.min(centerY + offsetY, screenHeight - height - 28)); // 28 for taskbar
+  return { x, y };
+};
+
+// Helper to determine if an app is a game or coming soon/external
+const isGameApp = (appId: string) => {
+  return appId && (
+    appId.startsWith('game-') ||
+    appId.toLowerCase().includes('comingsoon') ||
+    appId.toLowerCase().includes('external-')
+  );
+};
+
+const Desktop: React.FC<Windows95DesktopProps> = memo(({ onBack, setCurrentView }) => {
   const { createWindow } = useWindowManager();
   const [contextMenu, setContextMenu] = useState<ContextMenuPosition | null>(null);
   const [currentTutorialStep, setCurrentTutorialStep] = useState(0);
@@ -29,6 +53,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
   
   const [playStartup] = useSound('/sounds/windows95-startup.mp3', { volume: 0.5 });
 
+  // Play startup sound and track analytics on mount
   useEffect(() => {
     // Play startup sound when component mounts
     playStartup();
@@ -44,6 +69,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
     return () => window.removeEventListener('resize', checkMobile);
   }, [playStartup]);
 
+  // Steps for the tutorial popup
   const tutorialSteps = [
     {
       message: "Welcome to 1996! This is a Windows 95 desktop experience.",
@@ -59,21 +85,27 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
     }
   ];
 
-  const handleTutorialClose = () => {
+  // Advance tutorial step and track analytics
+  const handleTutorialClose = useCallback(() => {
     posthog.capture('tutorial_step_completed', { step: currentTutorialStep + 1 });
     setCurrentTutorialStep(prev => prev + 1);
-  };
+  }, [currentTutorialStep]);
 
-  const clampPositionToViewport = (x: number, y: number, width: number, height: number) => {
+  // Clamp window position to viewport to prevent off-screen windows
+  const clampPositionToViewport = useCallback((x: number, y: number, width: number, height: number) => {
     const maxX = window.innerWidth - width;
     const maxY = window.innerHeight - 28 - height; // 28px for taskbar
     return {
       x: Math.max(0, Math.min(x, maxX)),
       y: Math.max(0, Math.min(y, maxY)),
     };
-  };
+  }, []);
 
-  const handleOpenApp = (appId: string, content?: React.ReactNode, title?: string, positionOverride?: { x: number; y: number }, sizeOverride?: { width: number; height: number }) => {
+  // Main handler to open apps/windows from desktop icons
+  const handleOpenApp = useCallback((appId: string, content?: React.ReactNode, title?: string, positionOverride?: { x: number; y: number }, sizeOverride?: { width: number; height: number }) => {
+    if (appId && appId.toLowerCase().includes('comingsoon')) {
+      sizeOverride = { width: 600, height: 332 };
+    }
     if (appId === 'winamp' && !content) {
       console.warn('[DEFENSIVE] Prevented blank Winamp window creation.');
       return;
@@ -85,7 +117,12 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
 
     // Use the correct size for this app
     const appDefaultSize = appData[appId]?.defaultSize || { width: 400, height: 300 };
-    const size = sizeOverride || appDefaultSize;
+    const finalSize = sizeOverride || appDefaultSize;
+
+    // If this is a game popup, use a random position near the center
+    if (isGameApp(appId)) {
+      positionOverride = getRandomGamePopupPosition(finalSize.width, finalSize.height);
+    }
 
     let finalPosition: { x: number; y: number };
 
@@ -101,7 +138,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
     }
     
     // Clamp so window is always fully visible
-    finalPosition = clampPositionToViewport(finalPosition.x, finalPosition.y, size.width, size.height);
+    finalPosition = clampPositionToViewport(finalPosition.x, finalPosition.y, finalSize.width, finalSize.height);
 
     // Set alwaysOnTop true for all folders (appId ends with 'Folder')
     const isFolder = appId.endsWith('Folder');
@@ -114,7 +151,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
         title: title || appData[appId]?.name || appId,
         content: appData[appId].contentType === 'component'
           ? React.createElement(
-              appData[appId].component as React.ComponentType<any>,
+              appData[appId].component as React.ComponentType<AppContentProps & { onContinueToModernSite?: () => void }>,
               {
                 onOpenApp: handleOpenApp,
                 onContinueToModernSite: () => setCurrentView('2025'),
@@ -122,7 +159,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
             )
           : undefined,
         position: finalPosition,
-        size,
+        size: finalSize,
         type: appData[appId]?.type as WindowType || (isFolder ? 'folder' : 'application'),
         styles: {
           isResizable: appData[appId]?.isResizable !== undefined ? appData[appId]?.isResizable : true,
@@ -135,7 +172,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
         title: title,
         content: content,
         position: finalPosition,
-        size,
+        size: finalSize,
         type: appData[appId]?.type as WindowType || (isFolder ? 'folder' : 'application'),
         styles: {
           isResizable: appData[appId]?.isResizable !== undefined ? appData[appId]?.isResizable : true,
@@ -150,7 +187,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
         title: title || appData[appId]?.name || appId,
         content: appData[appId].contentType === 'component' ? React.createElement(appData[appId].component as React.ComponentType<AppContentProps>, { onOpenApp: handleOpenApp }) : undefined,
         position: finalPosition,
-        size,
+        size: finalSize,
         type: appData[appId]?.type as WindowType || (isFolder ? 'folder' : 'application'),
         styles: {
           isResizable: appData[appId]?.isResizable !== undefined ? appData[appId]?.isResizable : true,
@@ -160,46 +197,40 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
     } else {
       console.error(`Data for app ${appId} not found.`);
     }
-  };
+  }, [appData, createWindow, generateUniquePosition, clampPositionToViewport, setCurrentView]);
 
-  const handleContextMenu = (e: React.MouseEvent) => {
+  // Show context menu on right-click
+  const handleContextMenu = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     // Only show context menu if clicking directly on the desktop
     if (e.target === e.currentTarget) {
       setContextMenu({ x: e.clientX, y: e.clientY });
-      
-      // Track context menu opening with PostHog
-      posthog.capture('desktop_context_menu_opened');
     }
-  };
+  }, []);
 
-  const handleArrangeIcons = () => {
-    // Implement icon arrangement logic
-    posthog.capture('desktop_icons_arranged');
-  };
+  // Placeholder for arranging icons
+  const handleArrangeIcons = useCallback(() => {
+    setContextMenu(null);
+    // Implementation for arranging icons
+  }, []);
 
-  const handleRefresh = () => {
-    // Implement refresh logic
-    posthog.capture('desktop_refreshed');
-  };
+  // Placeholder for refresh
+  const handleRefresh = useCallback(() => {
+    setContextMenu(null);
+    // Implementation for refresh
+  }, []);
 
-  const handleNewFolder = () => {
-    // Implement new folder creation logic
-    posthog.capture('new_folder_created');
-  };
+  // Placeholder for new folder
+  const handleNewFolder = useCallback(() => {
+    setContextMenu(null);
+    // Implementation for new folder
+  }, []);
 
-  // Adjust icon positions for mobile
-  const getAdjustedIconPosition = (originalPosition: { x: number; y: number }) => {
-    if (!isMobile) return originalPosition;
-    
-    // Scale down positions for mobile, but keep vertical spacing compact
-    const scaleFactorX = 0.7;
-    const scaleFactorY = 1.0; // No extra vertical spacing for mobile
-    return {
-      x: originalPosition.x * scaleFactorX,
-      y: originalPosition.y * scaleFactorY
-    };
-  };
+  // Adjust icon position if needed (currently returns original)
+  const getAdjustedIconPosition = useCallback((originalPosition: { x: number; y: number }) => {
+    // Implementation for adjusting icon position
+    return originalPosition;
+  }, []);
 
   // Define desktop icons and their positions
   const desktopIcons = [
@@ -228,6 +259,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
         onContextMenu={handleContextMenu}
         onClick={() => setContextMenu(null)}
       >
+        {/* Show tutorial popup if not completed */}
         {currentTutorialStep < tutorialSteps.length && (
           <TutorialPopup
             message={tutorialSteps[currentTutorialStep].message}
@@ -264,6 +296,7 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
         {/* Render all windows using WindowManager */}
         <WindowManager />
         <Taskbar onBack={onBack} />
+        {/* Show context menu if open */}
         {contextMenu && (
           <DesktopContextMenu
             x={contextMenu.x}
@@ -277,6 +310,6 @@ const Desktop: React.FC<Windows95DesktopProps> = ({ onBack, setCurrentView }) =>
       </div>
     </WindowsContextProvider>
   );
-};
+});
 
 export default Desktop;

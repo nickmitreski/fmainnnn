@@ -26,10 +26,12 @@ import GameLauncher from '../components/Windows95/apps/GameLauncher';
 import ModernStatsPopup from '../components/modern-site/ModernStatsPopup';
 import { FOLDER_POPUP_DEFAULT_SIZE } from './folderPopupConfig';
 
+// AppContentProps defines the props passed to app components for opening other apps
 export interface AppContentProps {
   onOpenApp: (appId: string, content?: React.ReactNode, title?: string, position?: { x: number; y: number }, sizeOverride?: { width: number; height: number }) => void;
 }
 
+// AppConfig describes the configuration for each app/window
 export interface AppConfig {
   name: string;
   icon: string;
@@ -44,10 +46,12 @@ export interface AppConfig {
   isAlwaysOnTop?: boolean;
 }
 
+// AppData is a mapping of app IDs to their configuration
 export interface AppData {
   [id: string]: AppConfig;
 }
 
+// initialAppData defines all available apps/windows on the desktop
 export const initialAppData: AppData = {
   myComputer: {
     name: 'My Computer',
@@ -202,16 +206,23 @@ export const initialAppData: AppData = {
   'comingSoon-mario': {
     name: 'Super Mario - Coming Soon',
     icon: '/mario.png',
-    defaultSize: { width: 400, height: 300 },
+    defaultSize: { width: 600, height: 400 },
     contentType: 'component',
-    component: ComingSoon,
+    component: (props: AppContentProps) => <ComingSoon {...props} featureName="Super Mario" />,
   },
   'comingSoon-zelda': {
     name: 'Zelda - Coming Soon',
     icon: '/zelda.png',
-    defaultSize: { width: 400, height: 300 },
+    defaultSize: { width: 600, height: 400 },
     contentType: 'component',
-    component: ComingSoon,
+    component: (props: AppContentProps) => <ComingSoon {...props} featureName="Legend of Zelda" />,
+  },
+  'comingSoonTetris': {
+    name: 'Tetris - Coming Soon',
+    icon: '/tetris.png',
+    defaultSize: { width: 600, height: 400 },
+    contentType: 'component',
+    component: (props: AppContentProps) => <ComingSoon {...props} featureName="Tetris" />,
   },
   // External games added via folderItemsData
   'external-streetfighter': {

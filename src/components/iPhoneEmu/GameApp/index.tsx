@@ -23,9 +23,9 @@ const GameHeader: React.FC<{ gameName: string }> = ({ gameName }) => (
 const GameApp: React.FC<GameAppProps> = ({ gameId, onClose }) => {
   const gameInfo: Record<string, GameInfo> = {
     'doodle-jump': { name: 'Doodle Jump', color: 'bg-yellow-500', emoji: '🦘', hasGame: true },
-    '2048': { name: '2048', color: 'bg-orange-500', emoji: '🔢', hasGame: true },
+    'paper-toss': { name: 'Paper Toss', color: 'bg-blue-400', emoji: '🗑️', hasGame: true },
     'flappy-bird': { name: 'Flappy Bird', color: 'bg-green-600', emoji: '🐦', hasGame: true },
-    'snake': { name: 'Snake', color: 'bg-green-700', emoji: '🐍' },
+    'taptap-revolution': { name: 'Tap Tap Revolution', color: 'bg-blue-600', emoji: '🎵', hasGame: true },
     'tetris': { name: 'Tetris', color: 'bg-purple-600', emoji: '🧩', hasGame: true },
     'angry-birds': { name: 'Angry Birds', color: 'bg-red-600', emoji: '🐦', hasGame: true },
     'space-invaders': { name: 'Space Invaders', color: 'bg-blue-700', emoji: '👾' },
@@ -45,13 +45,17 @@ const GameApp: React.FC<GameAppProps> = ({ gameId, onClose }) => {
         gameSrc = '/Iphone_Games/Flappy-Bird-HTML5-gh-pages/index.html';
         gameTitle = 'Flappy Bird Game';
         break;
-      case '2048':
-        gameSrc = '/Iphone_Games/2048-Game-main/index.html';
-        gameTitle = '2048 Game';
+      case 'paper-toss':
+        gameSrc = '/Iphone_Games/Paper-Toss2-main/index.html';
+        gameTitle = 'Paper Toss Game';
         break;
       case 'doodle-jump':
-        gameSrc = '/Iphone_Games/Doodle-Jump-HTML5-master/app/index.html';
+        gameSrc = '/Iphone_Games/doodle-jump-master/index.html';
         gameTitle = 'Doodle Jump Game';
+        break;
+      case 'taptap-revolution':
+        gameSrc = '/Iphone_Games/TapTapRevolution/index.html';
+        gameTitle = 'Tap Tap Revolution Game';
         break;
       case 'tetris':
         gameSrc = '/Iphone_Games/Tetris-master/TetrisGame_NoIntro_Final.htm';
@@ -74,7 +78,7 @@ const GameApp: React.FC<GameAppProps> = ({ gameId, onClose }) => {
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.7, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed inset-0 z-50 bg-black overflow-hidden"
+            className="w-full h-full bg-black overflow-hidden relative flex flex-col"
           >
             {/* Close button positioned for landscape mode */}
             <button
@@ -83,7 +87,6 @@ const GameApp: React.FC<GameAppProps> = ({ gameId, onClose }) => {
             >
               ✕
             </button>
-            
             {/* Auto-rotated landscape game container */}
             <div 
               className="absolute inset-0 flex items-center justify-center"

@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import VideosHeader from './VideosHeader';
 
-interface VideosAppProps {
-  onClose: () => void;
-}
-
 interface Video {
   id: string;
   title: string;
@@ -23,7 +19,7 @@ const flashForwardVideos: Video[] = [
     title: 'Flash Forward News',
     description: 'Collection of news videos featuring Flash Forward Digital in the spotlight',
     url: 'https://file.garden/Zxsc5-9aojhlnJO6/news_promo.mp4',
-    thumbnail: '/1996.png', // Using existing 2007-era image
+    thumbnail: '/news_thumbnail.png',
     duration: '2:15',
     category: 'News'
   },
@@ -32,7 +28,7 @@ const flashForwardVideos: Video[] = [
     title: 'Flash Forward Digital',
     description: 'Official promotional video showcasing Flash Forward Digital agency services',
     url: 'https://file.garden/Zxsc5-9aojhlnJO6/flashforowarddraft.mp4',
-    thumbnail: '/1 Nick.png', // Using existing team photo
+    thumbnail: '/promo_thumbnail.png',
     duration: '1:45',
     category: 'Promo'
   },
@@ -41,24 +37,17 @@ const flashForwardVideos: Video[] = [
     title: 'Content Creation Services',
     description: 'Detailed explanation of our professional content creation services and process',
     url: 'https://file.garden/Zxsc5-9aojhlnJO6/content_promo.mp4',
-    thumbnail: '/VIDEOS.png', // Using existing videos icon
+    thumbnail: '/content_thumbnail.png',
     duration: '3:20',
     category: 'Services'
   }
 ];
 
-const VideosApp: React.FC<VideosAppProps> = ({ onClose }) => {
+const VideosApp: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
 
   const handleVideoSelect = (video: Video) => {
     setSelectedVideo(video);
-    setIsPlaying(true);
-  };
-
-  const handleBackToList = () => {
-    setSelectedVideo(null);
-    setIsPlaying(false);
   };
 
   return (
@@ -69,7 +58,7 @@ const VideosApp: React.FC<VideosAppProps> = ({ onClose }) => {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="w-full h-full bg-black flex flex-col"
     >
-      <VideosHeader onClose={onClose} onBack={selectedVideo ? handleBackToList : undefined} />
+      <VideosHeader />
       
       <div className="flex-1 overflow-hidden">
         {!selectedVideo ? (

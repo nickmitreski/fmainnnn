@@ -3,7 +3,7 @@ import Webamp from 'webamp';
 
 const WinampPlayer: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const webampRef = useRef<any>(null);
+  const webampRef = useRef<Webamp | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;

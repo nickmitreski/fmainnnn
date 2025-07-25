@@ -26,7 +26,7 @@ try {
         onAuthStateChange: () => ({ subscription: { unsubscribe: () => {} } }),
       },
       rpc: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-    } as any;
+    } as ReturnType<typeof createClient>;
   } else {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
   }
@@ -48,7 +48,7 @@ try {
       onAuthStateChange: () => ({ subscription: { unsubscribe: () => {} } }),
     },
     rpc: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-  } as any;
+  } as ReturnType<typeof createClient>;
 }
 
 export { supabase };

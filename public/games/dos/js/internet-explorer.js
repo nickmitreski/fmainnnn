@@ -1,7 +1,7 @@
 export function initInternetExplorer(win, showNotification) {
   const urlBar = win.querySelector('#url-bar');
   const goBtn = win.querySelector('#go-btn');
-  const ieContent = win.querySelector('#ie-content');
+  let ieContent = win.querySelector('#ie-content');
   if (!urlBar || !goBtn || !ieContent) {
     console.error('Internet Explorer elements not found');
     return;

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { supabase } from '../../../../../lib/supabase';
-import { callDeepseek } from '../../../../../lib/llm';
+import { callOpenAI } from '../../../../../lib/llm';
 
 interface ChatMessage {
   id?: string;
@@ -31,7 +31,7 @@ const Chatbot: React.FC = () => {
           .single();
           
         if (data?.id) {
-          setSessionId(data.id);
+          setSessionId(data.id as string);
           // Load any existing messages (should be empty for new session)
           loadMessages(data.id);
           
@@ -47,6 +47,11 @@ const Chatbot: React.FC = () => {
         }
       } catch (err) {
         console.error('Error creating session:', err);
+        if (err instanceof Error && typeof err.message === 'string') {
+          setError(err.message);
+        } else {
+          setError('Failed to initialize chat');
+        }
       }
     };
     
@@ -61,7 +66,20 @@ const Chatbot: React.FC = () => {
       .select('*')
       .eq('session_id', sessionId)
       .order('created_at', { ascending: true });
-    if (data) setMessages(data);
+    if (data) {
+      // Filter and map to ensure each item has 'role' and 'content'
+      const filtered = (data as any[]).filter(
+        (msg) => typeof msg.role === 'string' && typeof msg.content === 'string'
+      ).map(
+        (msg) => ({
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          created_at: msg.created_at
+        }) as ChatMessage
+      );
+      setMessages(filtered);
+    }
   };
 
   // Store a message in Supabase
@@ -110,7 +128,7 @@ const Chatbot: React.FC = () => {
       ];
       
       // Call the AI
-      const response = await callDeepseek(input, contextWithSystem);
+      const response = await callOpenAI(input, contextWithSystem);
       
       // Add assistant response
       const assistantMessage: ChatMessage = { role: 'assistant', content: response };
@@ -227,7 +245,7 @@ const Chatbot: React.FC = () => {
                 <span></span>
                 <span></span>
               </div>
-              <style jsx>{`
+              <style>{`
                 .typing-indicator {
                   display: flex;
                   align-items: center;

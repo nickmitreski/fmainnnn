@@ -28,7 +28,7 @@ const GPT90s: React.FC = () => {
           .single();
           
         if (data?.id) {
-          setSessionId(data.id);
+          setSessionId(data.id as string); // Ensure string type
           // Add welcome message
           const welcomeMessage: ChatMessage = {
             role: 'assistant',
@@ -91,32 +91,30 @@ const GPT90s: React.FC = () => {
       }));
       
       // Call DeepSeek API with delay to simulate 90s internet
-      setTimeout(async () => {
-        try {
-          // Add 90s-specific system prompt
-          const systemPrompt = "You are 90sGPT, a professional AI assistant from 1996. You have the following characteristics:\n\n1. KNOWLEDGE BASE:\n- You have extensive knowledge up to 1996 only\n- You're unaware of events, technology, or cultural developments after 1996\n- You use references to Windows 95, early internet, and 90s computing\n\n2. PROFESSIONAL TONE:\n- You are helpful, informative, and courteous\n- You maintain a professional demeanor while still being approachable\n- You occasionally use terms like \"information superhighway\" instead of \"internet\"\n\n3. TECHNICAL CONTEXT:\n- You run on a Pentium processor with 16MB RAM\n- You occasionally reference technical limitations of the era\n- You might mention loading times or memory constraints\n\n4. RESPONSE FORMAT:\n- Keep responses concise and focused (2-3 paragraphs maximum)\n- Use proper grammar and professional language\n- Occasionally add a \"loading...\" or \"processing...\" phrase\n\nWhen asked about modern technology or events after 1996, politely explain that your knowledge only extends to 1996, and offer the closest 90s equivalent you're familiar with.";
-          
-          const contextWithSystem = [
-            { role: 'system', content: systemPrompt },
-            ...history
-          ];
-          
-          const response = await callDeepseek(prompt, contextWithSystem);
-          
-          // Add assistant response
-          const assistantMessage: ChatMessage = { role: 'assistant', content: response };
-          setMessages(prev => [...prev, assistantMessage]);
-          
-          // Store assistant message
-          await storeMessage(sessionId, assistantMessage);
-        } catch (err) {
-          console.error('Error generating response:', err);
-          setError(err instanceof Error ? err.message : 'Failed to generate response');
-        } finally {
-          setIsTyping(false);
-          setIsGenerating(false);
-        }
-      }, 1500); // Simulate 90s internet delay
+      try {
+        // Add 90s-specific system prompt
+        const systemPrompt = "You are 90sGPT, a professional AI assistant from 1996. You have the following characteristics:\n\n1. KNOWLEDGE BASE:\n- You have extensive knowledge up to 1996 only\n- You're unaware of events, technology, or cultural developments after 1996\n- You use references to Windows 95, early internet, and 90s computing\n\n2. PROFESSIONAL TONE:\n- You are helpful, informative, and courteous\n- You maintain a professional demeanor while still being approachable\n- You occasionally use terms like \"information superhighway\" instead of \"internet\"\n\n3. TECHNICAL CONTEXT:\n- You run on a Pentium processor with 16MB RAM\n- You occasionally reference technical limitations of the era\n- You might mention loading times or memory constraints\n\n4. RESPONSE FORMAT:\n- Keep responses concise and focused (2-3 paragraphs maximum)\n- Use proper grammar and professional language\n- Occasionally add a \"loading...\" or \"processing...\" phrase\n\nWhen asked about modern technology or events after 1996, politely explain that your knowledge only extends to 1996, and offer the closest 90s equivalent you're familiar with.";
+        
+        const contextWithSystem = [
+          { role: 'system', content: systemPrompt },
+          ...history
+        ];
+        
+        const response = await callDeepseek(prompt, contextWithSystem);
+        
+        // Add assistant response
+        const assistantMessage: ChatMessage = { role: 'assistant', content: response };
+        setMessages(prev => [...prev, assistantMessage]);
+        
+        // Store assistant message
+        await storeMessage(sessionId, assistantMessage);
+      } catch (err) {
+        console.error('Error generating response:', err);
+        setError(err instanceof Error ? err.message : 'Failed to generate response');
+      } finally {
+        setIsTyping(false);
+        setIsGenerating(false);
+      }
       
     } catch (err) {
       console.error('Error in generate response flow:', err);

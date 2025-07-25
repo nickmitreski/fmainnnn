@@ -162,34 +162,34 @@ export const PricingSection: React.FC<PricingSectionProps> = ({ className = "" }
         </h2>
         
         <div className="flex justify-center mb-12">
-          <div className={`${colors.background.card} p-1 rounded-full`}>
-            <div className="flex relative">
-              <button
-                onClick={() => setPricingType('packages')}
-                className={`px-6 py-2 rounded-full text-sm ${typography.fontFamily.light} ${transitions.colors} relative z-10 ${
-                  pricingType === 'packages' ? 'text-black' : colors.text.white
-                }`}
-              >
-                Packages
-              </button>
-              <button
-                onClick={() => setPricingType('subscription')}
-                className={`px-6 py-2 rounded-full text-sm ${typography.fontFamily.light} ${transitions.colors} relative z-10 ${
-                  pricingType === 'subscription' ? 'text-black' : colors.text.white
-                }`}
-              >
-                Subscription
-              </button>
-              <motion.div
-                className="absolute inset-1 rounded-full bg-[#008CFF]"
-                initial={false}
-                animate={{
-                  x: pricingType === 'packages' ? 0 : '100%',
-                  width: '50%'
-                }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            </div>
+          <div className="pricing-toggle relative flex items-center bg-black/80 p-1 rounded-full border border-[#008CFF] overflow-hidden">
+            <motion.div
+              className="absolute top-0 left-0 h-full w-1/2 rounded-full bg-[#008CFF] z-0"
+              initial={false}
+              animate={{
+                x: pricingType === 'packages' ? 0 : '100%',
+                width: '50%'
+              }}
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+            />
+            <button
+              onClick={() => setPricingType('packages')}
+              className={`relative flex-1 px-6 py-2 rounded-full text-sm ${typography.fontFamily.light} ${transitions.colors} z-10 focus:outline-none focus:ring-2 focus:ring-[#008CFF] ${
+                pricingType === 'packages' ? 'text-black font-bold bg-[#008CFF]' : 'text-gray-400 font-light bg-transparent'
+              }`}
+              aria-pressed={pricingType === 'packages'}
+            >
+              Packages
+            </button>
+            <button
+              onClick={() => setPricingType('subscription')}
+              className={`relative flex-1 px-6 py-2 rounded-full text-sm ${typography.fontFamily.light} ${transitions.colors} z-10 focus:outline-none focus:ring-2 focus:ring-[#008CFF] ${
+                pricingType === 'subscription' ? 'text-black font-bold bg-[#008CFF]' : 'text-gray-400 font-light bg-transparent'
+              }`}
+              aria-pressed={pricingType === 'subscription'}
+            >
+              Subscription
+            </button>
           </div>
         </div>
 

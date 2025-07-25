@@ -11,7 +11,9 @@ import { initAnalytics } from './lib/analytics';
 initAnalytics();
 
 createRoot(document.getElementById('root')!).render(
-  <PostHogProvider client={posthog}>
-    <App />
-  </PostHogProvider>
+  <StrictMode>
+    <PostHogProvider client={posthog}>
+      <App />
+    </PostHogProvider>
+  </StrictMode>
 );

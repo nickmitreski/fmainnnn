@@ -104,11 +104,6 @@ const WebDesignPopup: React.FC<WebDesignPopupProps> = ({ onClose }) => {
         </div>
         
         <div className="p-6">
-          <div className="mb-8">
-            <p className={`${typography.fontSize.lg} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
-              We create stunning, high-performance websites that captivate your audience and drive results. Our web design and development services include:
-            </p>
-          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {webServices.map((service) => (
@@ -128,34 +123,6 @@ const WebDesignPopup: React.FC<WebDesignPopupProps> = ({ onClose }) => {
                 </p>
               </motion.div>
             ))}
-          </div>
-          
-          <div className="mt-12">
-            <h3 className={`${typography.fontSize.xl} ${typography.fontFamily.light} ${typography.tracking.tight} text-white mb-4`}>
-              Our Web Development Process
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
-                <h4 className="text-blue-400 font-light mb-2">1. Discovery & Planning</h4>
-                <p className="text-gray-400 text-sm">We start by understanding your business goals, target audience, and requirements to create a strategic plan for your website.</p>
-              </div>
-              
-              <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
-                <h4 className="text-blue-400 font-light mb-2">2. Design & Prototyping</h4>
-                <p className="text-gray-400 text-sm">Our designers create wireframes and visual designs that align with your brand and provide optimal user experience.</p>
-              </div>
-              
-              <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
-                <h4 className="text-blue-400 font-light mb-2">3. Development</h4>
-                <p className="text-gray-400 text-sm">Our developers bring the designs to life with clean, efficient code, ensuring your website is fast, responsive, and secure.</p>
-              </div>
-              
-              <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
-                <h4 className="text-blue-400 font-light mb-2">4. Testing & Launch</h4>
-                <p className="text-gray-400 text-sm">We rigorously test your website across devices and browsers before launching it to ensure everything works perfectly.</p>
-              </div>
-            </div>
           </div>
         </div>
         

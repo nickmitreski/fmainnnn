@@ -33,9 +33,12 @@ interface BrandCarouselSectionProps {
 }
 
 export const BrandCarouselSection: React.FC<BrandCarouselSectionProps> = ({ className = "" }) => {
+  // Detect mobile
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const duration = isMobile ? 12 : 25;
   return (
-    <section className={`py-12 overflow-hidden ${className}`}>
-      <div className={`container mx-auto ${spacing.container.padding} text-center mb-6`}>
+    <section className={`brand-carousel-section py-8 md:py-12 overflow-hidden ${className}`}>
+      <div className={`container mx-auto ${spacing.container.padding} text-center mb-4 md:mb-6`}>
         <h2 className={`${typography.fontSize.xl} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
           trusted by
         </h2>
@@ -44,11 +47,11 @@ export const BrandCarouselSection: React.FC<BrandCarouselSectionProps> = ({ clas
         className="flex whitespace-nowrap"
         animate={{
           x: ['0%', '-100%'],
-          transition: {
-            ease: 'linear',
-            duration: 25, // Slightly faster duration for more noticeable movement
-            repeat: Infinity,
-          },
+        }}
+        transition={{
+          ease: 'linear',
+          duration,
+          repeat: Infinity,
         }}
       >
         {brandLogos.map((logo, index) => (
@@ -56,7 +59,7 @@ export const BrandCarouselSection: React.FC<BrandCarouselSectionProps> = ({ clas
             key={index} 
             src={logo} 
             alt="Brand Logo" 
-            className="h-16 mx-10 inline-block filter grayscale-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
+            className="brand-carousel-logo h-20 md:h-16 mx-8 md:mx-10 inline-block filter grayscale-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
           />
         ))}
          {/* Duplicate logos for seamless loop */}
@@ -65,7 +68,7 @@ export const BrandCarouselSection: React.FC<BrandCarouselSectionProps> = ({ clas
             key={index + brandLogos.length} 
             src={logo} 
             alt="Brand Logo" 
-            className="h-16 mx-10 inline-block filter grayscale-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
+            className="brand-carousel-logo h-20 md:h-16 mx-8 md:mx-10 inline-block filter grayscale-0 opacity-80 hover:opacity-100 transition-opacity duration-200"
           />
         ))}
       </motion.div>

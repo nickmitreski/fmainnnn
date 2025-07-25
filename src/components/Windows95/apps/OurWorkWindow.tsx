@@ -26,7 +26,7 @@ const OurWorkWindow: React.FC = () => {
     { id: 'branding', name: 'Branding', color: '#FFCC00' },
     { id: 'design', name: 'Design', color: '#9933FF' },
     { id: 'ai', name: 'AI', color: '#00CC66' },
-    { id: 'growth', name: 'Growth', color: '#FF6600' }
+    { id: 'seo', name: 'SEO', color: '#FF6600' }
   ];
   const [selectedCategory, setSelectedCategory] = useState<string>(categories[0].id);
 
@@ -161,7 +161,7 @@ const OurWorkWindow: React.FC = () => {
     {
       id: 'analytics-dashboard',
       title: 'Growth Analytics',
-      category: 'growth',
+      category: 'seo',
       description: 'Real-time business metrics visualization platform for data-driven decision making.',
       technologies: ['Data Analytics', 'Dashboard Design', 'React', 'Chart.js'],
       features: ['Real-time Metrics', 'Custom Dashboards', 'Data Export', 'Performance Tracking'],
@@ -170,7 +170,7 @@ const OurWorkWindow: React.FC = () => {
     {
       id: 'seo-optimization',
       title: 'SEO Optimization',
-      category: 'growth',
+      category: 'seo',
       description: 'Search engine optimization strategies to improve online visibility and drive organic traffic.',
       technologies: ['SEO Tools', 'Content Strategy', 'Technical SEO', 'Analytics'],
       features: ['Keyword Research', 'On-page Optimization', 'Content Strategy', 'Performance Monitoring'],

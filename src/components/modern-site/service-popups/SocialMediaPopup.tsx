@@ -1,6 +1,6 @@
 import React from 'react';
 import { colors, typography } from '../../../theme/theme';
-import { X, Instagram, Facebook, Twitter, Linkedin, Youtube, TrendingUp, BarChart3, Calendar } from 'lucide-react';
+import { X, Instagram, Facebook, Twitter, Linkedin, Youtube, TrendingUp, Calendar, Users } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface SocialMediaPopupProps {
@@ -32,10 +32,16 @@ const SocialMediaPopup: React.FC<SocialMediaPopupProps> = ({ onClose }) => {
       icon: <Calendar size={32} className="text-blue-400" />
     },
     {
+      id: 'instagram-growth',
+      title: 'Instagram Growth',
+      description: 'Grow your Instagram with Followfuse—an authentic growth service that gains real followers for your brand.',
+      icon: <Instagram size={32} className="text-pink-400" />
+    },
+    {
       id: 'community-management',
       title: 'Community Management',
-      description: 'Active engagement with your audience to build relationships, answer questions, and foster community.',
-      icon: <BarChart3 size={32} className="text-green-400" />
+      description: 'Engage with your audience, respond to comments, and build a loyal community around your brand.',
+      icon: <Users size={32} className="text-cyan-400" />
     },
     {
       id: 'instagram',
@@ -98,11 +104,6 @@ const SocialMediaPopup: React.FC<SocialMediaPopupProps> = ({ onClose }) => {
         </div>
         
         <div className="p-6">
-          <div className="mb-8">
-            <p className={`${typography.fontSize.lg} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
-              Build your presence on social media with strategies and content that engage your audience and drive meaningful results. Our social media services include:
-            </p>
-          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {socialServices.map((service) => (
@@ -122,38 +123,6 @@ const SocialMediaPopup: React.FC<SocialMediaPopupProps> = ({ onClose }) => {
                 </p>
               </motion.div>
             ))}
-          </div>
-          
-          <div className="mt-12 bg-black/20 p-6 rounded-lg border border-gray-800">
-            <h3 className={`${typography.fontSize.xl} ${typography.fontFamily.light} ${typography.tracking.tight} text-white mb-4`}>
-              Our Social Media Approach
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp size={32} className="text-purple-400" />
-                </div>
-                <h4 className="text-purple-400 font-light mb-2">Strategy First</h4>
-                <p className="text-gray-400 text-sm">We develop data-driven strategies based on your audience, goals, and competitive landscape.</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                  <Calendar size={32} className="text-purple-400" />
-                </div>
-                <h4 className="text-purple-400 font-light mb-2">Consistent Execution</h4>
-                <p className="text-gray-400 text-sm">We maintain a consistent posting schedule with high-quality, engaging content.</p>
-              </div>
-              
-              <div className="text-center">
-                <div className="w-16 h-16 rounded-full bg-purple-500/20 flex items-center justify-center mx-auto mb-4">
-                  <BarChart3 size={32} className="text-purple-400" />
-                </div>
-                <h4 className="text-purple-400 font-light mb-2">Measure & Optimize</h4>
-                <p className="text-gray-400 text-sm">We continuously analyze performance and refine our approach to maximize results.</p>
-              </div>
-            </div>
           </div>
         </div>
         

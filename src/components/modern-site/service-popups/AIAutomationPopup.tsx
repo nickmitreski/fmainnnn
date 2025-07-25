@@ -104,12 +104,6 @@ const AIAutomationPopup: React.FC<AIAutomationPopupProps> = ({ onClose }) => {
         </div>
         
         <div className="p-6">
-          <div className="mb-8">
-            <p className={`${typography.fontSize.lg} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
-              Our AI solutions help businesses automate processes, enhance customer experiences, and gain valuable insights. Here are some of the AI services we offer:
-            </p>
-          </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {aiServices.map((service) => (
               <motion.div 

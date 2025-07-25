@@ -152,36 +152,39 @@ const ContactUsWindow: React.FC = () => {
         </form>
       )}
 
-      <div className="win95-contact-info">
-        <div className="win95-contact-info-header">
-          <h3>Other Ways to Reach Us</h3>
+      {/* Only show contact info if not success */}
+      {status !== 'success' && (
+        <div className="win95-contact-info">
+          <div className="win95-contact-info-header">
+            <h3>Other Ways to Reach Us</h3>
+          </div>
+          <div className="win95-contact-info-content">
+            <div className="win95-contact-info-item">
+              <div className="win95-contact-info-icon">📧</div>
+              <div className="win95-contact-info-text">
+                <div className="win95-contact-info-label">Email:</div>
+                <div className="win95-contact-info-value">hello@flashforward.com</div>
+              </div>
+            </div>
+            <div className="win95-contact-info-item">
+              <div className="win95-contact-info-icon">📞</div>
+              <div className="win95-contact-info-text">
+                <div className="win95-contact-info-label">Phone:</div>
+                <div className="win95-contact-info-value">(555) 123-4567</div>
+              </div>
+            </div>
+            <div className="win95-contact-info-item">
+              <div className="win95-contact-info-icon">🌐</div>
+              <div className="win95-contact-info-text">
+                <div className="win95-contact-info-label">Social:</div>
+                <div className="win95-contact-info-value">@flashforwardagency</div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="win95-contact-info-content">
-          <div className="win95-contact-info-item">
-            <div className="win95-contact-info-icon">📧</div>
-            <div className="win95-contact-info-text">
-              <div className="win95-contact-info-label">Email:</div>
-              <div className="win95-contact-info-value">hello@flashforward.com</div>
-            </div>
-          </div>
-          <div className="win95-contact-info-item">
-            <div className="win95-contact-info-icon">📞</div>
-            <div className="win95-contact-info-text">
-              <div className="win95-contact-info-label">Phone:</div>
-              <div className="win95-contact-info-value">(555) 123-4567</div>
-            </div>
-          </div>
-          <div className="win95-contact-info-item">
-            <div className="win95-contact-info-icon">🌐</div>
-            <div className="win95-contact-info-text">
-              <div className="win95-contact-info-label">Social:</div>
-              <div className="win95-contact-info-value">@flashforwardagency</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      )}
 
-      <style jsx>{`
+      <style>{`
         .win95-contact {
           padding: 10px;
           height: 100%;

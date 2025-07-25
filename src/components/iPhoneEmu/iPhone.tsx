@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import StatusBar from './StatusBar';
-import HomeScreen from './HomeScreen';
-import Dock from './Dock';
-import LockScreen from './LockScreen/LockScreen';
+import React, { useState, useCallback, memo } from 'react';
+import DeviceFrame from './DeviceFrame';
+import ScreenArea from './ScreenArea';
 import MessagesApp from './MessagesApp';
 import CalculatorApp from './CalculatorApp';
 import ClockApp from './ClockApp';
@@ -26,152 +23,138 @@ import ModernSiteApp from './ModernSiteApp';
 import GameApp from './GameApp';
 import { ViewType } from '../../types/index';
 
+// Tutorial messages shown on lock screen
+const TUTORIAL_MESSAGES = [
+  "Welcome to the 2007 Flash Forward experience. Explore the apps and games, have some fun.",
+  "When you're ready, click on the 'Modern Site' button to get to the 2025 website."
+];
+
+// Example app data array for iPhone home screen
+const gameApps = [
+  { id: 'doodle-jump', icon: 'ArrowUp', label: 'Doodle Jump', color: 'bg-yellow-500', imageIcon: '/iphone/Games_Icons_Iphone/Doodle_Jump.png' },
+  { id: 'paper-toss', icon: 'Trash2', label: 'Paper Toss', color: 'bg-blue-400', imageIcon: '/iphone/Games_Icons_Iphone/Paper_Toss.png' },
+  { id: 'flappy-bird', icon: 'Bird', label: 'Flappy Bird', color: 'bg-green-600', imageIcon: '/iphone/Games_Icons_Iphone/Flappy_Birds.png' },
+  { id: 'taptap-revolution', icon: 'Music', label: 'Tap Tap Revolution', color: 'bg-blue-600', imageIcon: '/iphone/Games_Icons_Iphone/Tap.png' },
+  { id: 'tetris', icon: 'Square', label: 'Tetris', color: 'bg-purple-600', imageIcon: '/iphone/Games_Icons_Iphone/Tetris.png' },
+  { id: 'angry-birds', icon: 'Target', label: 'Angry Birds', color: 'bg-red-600', imageIcon: '/iphone/Games_Icons_Iphone/Angry_Birds.png' },
+  { id: 'space-invaders', icon: 'Triangle', label: 'Space Invaders', color: 'bg-blue-700' },
+  { id: 'breakout', icon: 'Minus', label: 'Breakout', color: 'bg-red-600' },
+  { id: 'asteroids', icon: 'Hexagon', label: 'Asteroids', color: 'bg-gray-600' },
+];
+
+const appData = [
+  { id: 'messages', icon: 'Text', label: 'Messages', imageIcon: '/icons/iPhone_OS_Icons/Text.png', color: '' },
+  { id: 'calendar', icon: 'Calendar', label: 'Calendar', imageIcon: '/icons/iPhone_OS_Icons/Calendar.png', color: '' },
+  { id: 'photos', icon: 'Photos', label: 'Photos', imageIcon: '/icons/iPhone_OS_Icons/Photos.png', color: '' },
+  { id: 'clock', icon: 'Clock', label: 'Clock', imageIcon: '/icons/iPhone_OS_Icons/Clock.png', color: '' },
+  { id: 'calculator', icon: 'Calculator', label: 'Calculator', imageIcon: '/icons/iPhone_OS_Icons/Calculator.png', color: '' },
+  { id: 'notes', icon: 'Notes', label: 'Notes', imageIcon: '/icons/iPhone_OS_Icons/Notes.png', color: '' },
+  { id: 'settings', icon: 'Settings', label: 'Settings', imageIcon: '/icons/iPhone_OS_Icons/Settings.png', color: '' },
+  { id: 'contacts', icon: 'iPod', label: 'Contacts', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' },
+  { id: 'youtube', icon: 'YouTube', label: 'YouTube', imageIcon: '/icons/iPhone_OS_Icons/YouTube.png', color: '' },
+  { id: 'maps', icon: 'Maps', label: 'Maps', imageIcon: '/icons/iPhone_OS_Icons/Maps.png', color: '' },
+  { id: 'weather', icon: 'Weather', label: 'Weather', imageIcon: '/icons/iPhone_OS_Icons/Weather.png', color: '' },
+  { id: 'stocks', icon: 'Stocks', label: 'Stocks', imageIcon: '/icons/iPhone_OS_Icons/Stocks.png', color: '' },
+  { id: 'appstore', icon: 'Safari', label: 'App Store', imageIcon: '/icons/iPhone_OS_Icons/Safari.png', color: '' },
+  { id: 'voice', icon: 'iPod', label: 'Testimonials', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' },
+  { id: 'games', type: 'folder', label: 'Games', apps: gameApps },
+  { id: 'itunes', icon: 'Music2', label: 'iTunes', color: 'bg-purple-500', imageIcon: '/Music.png' },
+];
+
 interface IPhoneProps {
   setCurrentView: (view: ViewType) => void;
 }
 
-const IPhone: React.FC<IPhoneProps> = ({ setCurrentView }) => {
+const IPhone: React.FC<IPhoneProps> = memo(({ setCurrentView }) => {
+  // Track which app is selected and if the phone is locked
   const [selectedApp, setSelectedApp] = useState<string | null>(null);
   const [isLocked, setIsLocked] = useState(true);
 
-  const tutorialMessages = [
-    "Welcome to the 2007 Flash Forward experience. Explore the apps and games, have some fun.",
-    "When you're ready, click on the 'Modern Site' button to get to the 2025 website."
-  ];
-
-  const handleAppPress = (appId: string) => {
+  // Handle app icon press to open app
+  const handleAppPress = useCallback((appId: string) => {
     setSelectedApp(appId);
-    // No auto-close! App stays open until Home is pressed.
-  };
+  }, []);
 
-  const handleHomeButton = () => {
+  // Handle home button press to return to home screen
+  const handleHomePress = useCallback(() => {
     setSelectedApp(null);
-  };
+  }, []);
 
-  const handleUnlock = () => {
+  // Unlock the phone
+  const handleUnlock = useCallback(() => {
     setIsLocked(false);
-  };
+  }, []);
 
-  const renderApp = (appId: string) => {
+  // Render the selected app based on appId
+  const renderApp = useCallback((appId: string) => {
     switch (appId) {
       case 'messages':
-        return <MessagesApp onClose={() => setSelectedApp(null)} />;
+        return <MessagesApp onClose={handleHomePress} />;
       case 'calculator':
-        return <CalculatorApp onClose={() => setSelectedApp(null)} />;
+        return <CalculatorApp />;
       case 'clock':
-        return <ClockApp onClose={() => setSelectedApp(null)} />;
+        return <ClockApp onClose={handleHomePress} />;
       case 'calendar':
-        return <CalendarApp onClose={() => setSelectedApp(null)} />;
+        return <CalendarApp onClose={handleHomePress} />;
       case 'photos':
-        return <PhotosApp onClose={() => setSelectedApp(null)} />;
+        return <PhotosApp onClose={handleHomePress} />;
       case 'contacts':
-        return <ContactsApp onClose={() => setSelectedApp(null)} />;
+        return <ContactsApp onClose={handleHomePress} />;
       case 'notes':
-        return <NotesApp onClose={() => setSelectedApp(null)} />;
+        return <NotesApp onClose={handleHomePress} />;
       case 'settings':
-        return <SettingsApp onClose={() => setSelectedApp(null)} />;
+        return <SettingsApp onClose={handleHomePress} />;
       case 'youtube':
-        return <YouTubeApp onClose={() => setSelectedApp(null)} />;
+        return <YouTubeApp onClose={handleHomePress} />;
       case 'maps':
-        return <MapsApp onClose={() => setSelectedApp(null)} />;
+        return <MapsApp onClose={handleHomePress} />;
       case 'weather':
-        return <WeatherApp onClose={() => setSelectedApp(null)} />;
+        return <WeatherApp onClose={handleHomePress} />;
       case 'stocks':
-        return <StocksApp onClose={() => setSelectedApp(null)} />;
+        return <StocksApp onClose={handleHomePress} />;
       case 'appstore':
-        return <AppStoreApp onClose={() => setSelectedApp(null)} />;
+        return <AppStoreApp onClose={handleHomePress} />;
       case 'voice':
-        return <TestimonialsApp onClose={() => setSelectedApp(null)} />;
+        return <TestimonialsApp onClose={handleHomePress} />;
       case 'itunes':
-        return <ITunesApp onClose={() => setSelectedApp(null)} />;
+        return <ITunesApp />;
       case 'videos':
-        return <VideosApp onClose={() => setSelectedApp(null)} />;
+        return <VideosApp />;
       case 'phone':
-        return <PhoneApp onClose={() => setSelectedApp(null)} />;
+        return <PhoneApp onClose={handleHomePress} />;
       case 'mail':
-        return <ContactUsApp onClose={() => setSelectedApp(null)} />;
+        return <ContactUsApp onClose={handleHomePress} />;
       case 'safari':
-        return <ModernSiteApp onClose={() => setSelectedApp(null)} setCurrentView={setCurrentView} />;
+        return <ModernSiteApp onClose={handleHomePress} setCurrentView={setCurrentView} />;
       case 'doodle-jump':
-      case '2048':
+      case 'paper-toss':
       case 'flappy-bird':
-      case 'snake':
+      case 'taptap-revolution':
       case 'tetris':
       case 'angry-birds':
       case 'space-invaders':
       case 'breakout':
       case 'asteroids':
-        return <GameApp gameId={appId} onClose={() => setSelectedApp(null)} />;
+        return <GameApp gameId={appId} onClose={handleHomePress} />;
       default:
         return null;
     }
-  };
+  }, [handleHomePress, setCurrentView]);
 
   return (
-    <div className="relative w-96 h-[700px] mx-auto">
-      {/* Phone Frame with realistic bezels */}
-      <div className="w-full h-full bg-black rounded-[3rem] p-3 shadow-2xl relative z-0"
-           style={{
-             boxShadow: `
-               0 0 0 10px #222,
-               0 0 0 12px #333,
-               0 0 0 16px #444,
-               0 0 0 18px #555,
-               0 0 20px rgba(0, 0, 0, 0.5)
-             `
-           }}>
-        
-        {/* Camera Sensor */}
-        <div className="absolute top-6 left-1/2 transform -translate-x-1/2 -translate-x-4 w-2 h-2 bg-gray-900 rounded-full z-20"
-             style={{ boxShadow: 'inset 0 0 2px rgba(255, 255, 255, 0.1)' }}></div>
-        
-        {/* Speaker */}
-        <div className="absolute top-7 left-1/2 transform -translate-x-1/2 w-10 h-0.5 bg-gray-700 rounded-sm z-20"></div>
-        
-        <div className="w-full h-full bg-black rounded-[2.5rem] overflow-hidden relative flex flex-col">
-          {/* Status Bar */}
-          <StatusBar />
-          
-          {/* Main Content Area */}
-          <div className="flex-1 relative bg-black">
-            {/* HomeScreen always visible, no animation */}
-            <HomeScreen 
-              onAppPress={handleAppPress}
-              selectedApp={selectedApp}
-            />
-            {/* Static dimming overlay when an app is open */}
-            {selectedApp && (
-              <div className="absolute inset-0 bg-black bg-opacity-30 z-10 pointer-events-none" />
-            )}
-            {/* App Slide-in Animation */}
-            <AnimatePresence>
-              {selectedApp && (
-                <motion.div
-                  key={`${selectedApp}-app`}
-                  initial={{ scale: 0.7, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  exit={{ scale: 0.7, opacity: 0 }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-                  className="absolute inset-0 z-20"
-                >
-                  {renderApp(selectedApp)}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          {/* Dock */}
-          <Dock onAppPress={handleAppPress} onHomePress={handleHomeButton} />
-          
-          {/* Lock Screen Overlay */}
-          <AnimatePresence>
-            {isLocked && (
-              <LockScreen onUnlock={handleUnlock} tutorialMessages={tutorialMessages} />
-            )}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
+    <DeviceFrame onHomePress={handleHomePress}>
+      <ScreenArea
+        appData={appData}
+        selectedApp={selectedApp}
+        onAppPress={handleAppPress}
+        onHomePress={handleHomePress}
+        isLocked={isLocked}
+        onUnlock={handleUnlock}
+        tutorialMessages={TUTORIAL_MESSAGES}
+        renderApp={renderApp}
+      />
+    </DeviceFrame>
   );
-};
+});
 
 export default IPhone;

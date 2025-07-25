@@ -86,11 +86,6 @@ const BrandingPopup: React.FC<BrandingPopupProps> = ({ onClose }) => {
         </div>
         
         <div className="p-6">
-          <div className="mb-8">
-            <p className={`${typography.fontSize.lg} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
-              Your brand is more than just a logo—it's the emotional connection you build with your audience. We help you create a memorable brand that stands out in the digital landscape:
-            </p>
-          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {brandingServices.map((service) => (
@@ -110,30 +105,6 @@ const BrandingPopup: React.FC<BrandingPopupProps> = ({ onClose }) => {
                 </p>
               </motion.div>
             ))}
-          </div>
-          
-          <div className="mt-12 bg-black/20 p-6 rounded-lg border border-gray-800">
-            <h3 className={`${typography.fontSize.xl} ${typography.fontFamily.light} ${typography.tracking.tight} text-white mb-4`}>
-              Why Branding Matters
-            </h3>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-yellow-400 font-light mb-2">Recognition & Trust</h4>
-                <p className="text-gray-400 text-sm mb-4">A consistent, professional brand builds recognition and trust with your audience, making them more likely to choose you over competitors.</p>
-                
-                <h4 className="text-yellow-400 font-light mb-2">Emotional Connection</h4>
-                <p className="text-gray-400 text-sm">Strong branding creates an emotional connection with your audience, fostering loyalty and advocacy.</p>
-              </div>
-              
-              <div>
-                <h4 className="text-yellow-400 font-light mb-2">Differentiation</h4>
-                <p className="text-gray-400 text-sm mb-4">In crowded markets, distinctive branding helps you stand out and communicate your unique value proposition.</p>
-                
-                <h4 className="text-yellow-400 font-light mb-2">Increased Value</h4>
-                <p className="text-gray-400 text-sm">Companies with strong, consistent branding are perceived as more valuable and can command premium pricing.</p>
-              </div>
-            </div>
           </div>
         </div>
         

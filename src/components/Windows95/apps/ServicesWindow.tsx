@@ -5,7 +5,7 @@ import BrandingPopup from '../../modern-site/service-popups/BrandingPopup';
 import ContentCreationPopup from '../../modern-site/service-popups/ContentCreationPopup';
 import AIAutomationPopup from '../../modern-site/service-popups/AIAutomationPopup';
 import SocialMediaPopup from '../../modern-site/service-popups/SocialMediaPopup';
-import GrowthStrategyPopup from '../../modern-site/service-popups/GrowthStrategyPopup';
+import SEOPopup from '../../modern-site/service-popups/SEOPopup';
 
 const services = [
   {
@@ -44,10 +44,10 @@ const services = [
     color: '#9933FF'
   },
   {
-    id: 'growth',
-    title: 'Growth Strategy',
-    icon: '/GROWTH.png',
-    description: 'Data-driven strategies to scale your online presence.',
+    id: 'seo',
+    title: 'SEO',
+    icon: '/SEO.png',
+    description: 'Boost your online visibility and rankings with expert SEO services.',
     color: '#FF6600'
   },
 ];
@@ -58,7 +58,7 @@ const popupComponents: Record<string, React.FC<{ onClose: () => void }>> = {
   'content': ContentCreationPopup,
   'ai': AIAutomationPopup,
   'social': SocialMediaPopup,
-  'growth': GrowthStrategyPopup,
+  'seo': SEOPopup,
 };
 
 const ServicesWindow: React.FC = () => {

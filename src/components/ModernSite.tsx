@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, memo } from 'react';
 import InteractiveHero from './InteractiveHero';
 import { Header } from './modern-site/Header';
 import { AboutSection } from './modern-site/AboutSection';
@@ -15,11 +15,11 @@ import { QuoteSection } from './modern-site/QuoteSection';
 import { TestimonialCarouselSection } from './modern-site/TestimonialCarouselSection';
 import { ExaggeratedStatsSection } from './modern-site/ExaggeratedStatsSection';
 import { EvenAnotherQuoteSection } from './modern-site/EvenAnotherQuoteSection';
-import { ModernSiteProps } from '../types';
+import { ModernSiteProps } from '../types/index';
 import AITools from './modern-site/ai';
 import { posthog } from '../lib/posthog';
 
-const ModernSite: React.FC<ModernSiteProps> = ({ onBack, setCurrentView }) => {
+const ModernSite: React.FC<ModernSiteProps> = memo(({ onBack, setCurrentView }) => {
   useEffect(() => {
     // Track page view with PostHog
     posthog.capture('page_view', { page: 'modern_site' });
@@ -134,6 +134,6 @@ const ModernSite: React.FC<ModernSiteProps> = ({ onBack, setCurrentView }) => {
       }} />
     </div>
   );
-};
+});
 
 export default ModernSite;

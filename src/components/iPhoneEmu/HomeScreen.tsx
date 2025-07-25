@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import AppIcon from './AppIcon';
 import Folder from './Folder';
+import LockScreenGrid from './LockScreen/LockScreenGrid';
 
 interface HomeScreenProps {
   onAppPress: (appId: string) => void;
@@ -10,7 +11,7 @@ interface HomeScreenProps {
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ 
   onAppPress, 
-  selectedApp 
+  selectedApp
 }) => {
   const allApps = [
     { id: 'messages', icon: 'Text', label: 'Messages', imageIcon: '/icons/iPhone_OS_Icons/Text.png', color: '' },
@@ -20,13 +21,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
     { id: 'calculator', icon: 'Calculator', label: 'Calculator', imageIcon: '/icons/iPhone_OS_Icons/Calculator.png', color: '' },
     { id: 'notes', icon: 'Notes', label: 'Notes', imageIcon: '/icons/iPhone_OS_Icons/Notes.png', color: '' },
     { id: 'settings', icon: 'Settings', label: 'Settings', imageIcon: '/icons/iPhone_OS_Icons/Settings.png', color: '' },
-    { id: 'contacts', icon: 'iPod', label: 'Contacts', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' }, // No Contacts, using iPod as placeholder
+    { id: 'contacts', icon: 'iPod', label: 'Contacts', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' },
     { id: 'youtube', icon: 'YouTube', label: 'YouTube', imageIcon: '/icons/iPhone_OS_Icons/YouTube.png', color: '' },
     { id: 'maps', icon: 'Maps', label: 'Maps', imageIcon: '/icons/iPhone_OS_Icons/Maps.png', color: '' },
     { id: 'weather', icon: 'Weather', label: 'Weather', imageIcon: '/icons/iPhone_OS_Icons/Weather.png', color: '' },
     { id: 'stocks', icon: 'Stocks', label: 'Stocks', imageIcon: '/icons/iPhone_OS_Icons/Stocks.png', color: '' },
-    { id: 'appstore', icon: 'Safari', label: 'App Store', imageIcon: '/icons/iPhone_OS_Icons/Safari.png', color: '' }, // No App Store, using Safari as placeholder
-    { id: 'voice', icon: 'iPod', label: 'Testimonials', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' }, // No Voice, using iPod as placeholder
+    { id: 'appstore', icon: 'Safari', label: 'App Store', imageIcon: '/icons/iPhone_OS_Icons/Safari.png', color: '' },
+    { id: 'voice', icon: 'iPod', label: 'Testimonials', imageIcon: '/icons/iPhone_OS_Icons/iPod.png', color: '' },
   ];
 
   const gameApps = [
@@ -48,13 +49,19 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.3 }}
       className="relative h-full p-4 pt-6 bg-black overflow-hidden"
-      style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif', height: '100%' }}
+      style={{ fontFamily: 'Helvetica Neue, Helvetica, Arial, sans-serif' }}
     >
       {/* Black gradient background */}
-      <div className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none" style={{ background: 'linear-gradient(to bottom, #111 60%, #222 100%)' }} />
+      <div 
+        className="absolute inset-0 w-full h-full z-0 select-none pointer-events-none"
+        style={{ background: 'linear-gradient(to bottom, #20273c 60%, #0f1120 100%)' }}
+      />
+      {/* Subtle grid pattern overlay for authenticity (matches lock screen) */}
+      <LockScreenGrid />
+      
       <div className="relative z-10 h-full flex flex-col justify-end pb-8">
         {/* App Grid */}
-        <div className="grid grid-cols-4 gap-3 mb-6">
+        <div className="grid grid-cols-4 gap-3 mb-4">
           {allApps.map((app, index) => (
             <motion.div
               key={app.id}
@@ -69,6 +76,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
               />
             </motion.div>
           ))}
+          
           {/* Games Folder */}
           <motion.div
             key="games-folder"
@@ -84,6 +92,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
               isSelected={selectedApp === 'games'}
             />
           </motion.div>
+          
           {/* iTunes App */}
           <motion.div
             key="itunes"

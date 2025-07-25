@@ -29,7 +29,7 @@ const DesignWorkPopup: React.FC<DesignWorkPopupProps> = ({ onClose }) => {
       >
         <div className="flex justify-between items-center p-6 border-b border-gray-800">
           <h2 className={`${typography.fontSize['2xl']} ${typography.fontFamily.light} ${typography.tracking.tight} text-white`}>
-            Design Projects
+            Design
           </h2>
           <button 
             onClick={onClose}

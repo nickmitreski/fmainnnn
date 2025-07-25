@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import ContactUsHeader from './ContactUsHeader';
+import { supabase } from '../../../lib/supabase';
 
 interface ContactUsAppProps {
   onClose: () => void;
@@ -23,16 +24,26 @@ const ContactUsApp: React.FC<ContactUsAppProps> = ({ onClose }) => {
     e.preventDefault();
     setStatus('submitting');
 
-    // Mock form submission
-    setTimeout(() => {
+    try {
+      const { error } = await supabase.from('contact_submissions').insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          timestamp: new Date().toISOString()
+        }
+      ]);
+
+      if (error) throw error;
+
       setStatus('success');
       setFormData({ name: '', email: '', message: '' });
-      
-      // Reset to idle after 3 seconds
       setTimeout(() => {
         setStatus('idle');
       }, 3000);
-    }, 1500);
+    } catch (err) {
+      setStatus('error');
+    }
   };
 
   return (
@@ -43,7 +54,7 @@ const ContactUsApp: React.FC<ContactUsAppProps> = ({ onClose }) => {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="w-full h-full bg-black flex flex-col"
     >
-      <ContactUsHeader onClose={onClose} />
+      <ContactUsHeader />
       
       <div className="flex-1 bg-white overflow-y-auto p-6">
         <div className="max-w-md mx-auto">

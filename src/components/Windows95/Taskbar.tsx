@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useWindowManager } from '../../contexts/WindowManagerContext';
 import StartMenu from './StartMenu';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
@@ -7,7 +7,7 @@ interface TaskbarProps {
   onBack?: () => void;
 }
 
-const Taskbar: React.FC<TaskbarProps> = ({ onBack }) => {
+const Taskbar: React.FC<TaskbarProps> = memo(({ onBack }) => {
   const { windows, minimizeWindow, restoreWindow } = useWindowManager();
   const [isStartMenuOpen, setIsStartMenuOpen] = React.useState(false);
   const { playStartup } = useSoundEffects();
@@ -57,6 +57,6 @@ const Taskbar: React.FC<TaskbarProps> = ({ onBack }) => {
       </div>
     </>
   );
-};
+});
 
 export default Taskbar;

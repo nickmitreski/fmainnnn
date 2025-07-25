@@ -15,6 +15,7 @@ export const useCenteredWindowPosition = (
   const generatePosition = useCallback(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const bottomMargin = 40;
     // Centered base position
     const baseX = Math.floor((width - 500) / 2); // 500 is a typical folder width
     const baseY = Math.floor((height - 400) / 2); // 400 is a typical folder height
@@ -22,7 +23,7 @@ export const useCenteredWindowPosition = (
     const offsetX = Math.floor(Math.random() * varianceX * 2) - varianceX;
     const offsetY = Math.floor(Math.random() * varianceY * 2) - varianceY;
     const x = Math.max(10, baseX + offsetX);
-    const y = Math.max(10, baseY + offsetY);
+    const y = Math.max(10, Math.min(baseY + offsetY, height - 400 - bottomMargin));
     return { x, y };
   }, [varianceX, varianceY]);
   return generatePosition;
@@ -45,6 +46,7 @@ export const useFolderPosition = (
   const generatePosition = useCallback(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const bottomMargin = 40;
     
     // Different base positions for different folder types
     const basePositions: { [key: string]: { x: number; y: number } } = {
@@ -68,8 +70,12 @@ export const useFolderPosition = (
     const additionalOffsetX = Math.floor(Math.random() * 200) - 100;
     const additionalOffsetY = Math.floor(Math.random() * 200) - 100;
     
+    // Clamp Y to keep window away from the very bottom and closer to center
+    const minY = Math.floor(height * 0.15);
+    const maxY = Math.floor(height * 0.7) - bottomMargin;
+    const unclampedY = basePosition.y + offsetY + additionalOffsetY;
+    const y = Math.max(minY, Math.min(unclampedY, maxY));
     const x = Math.max(10, basePosition.x + offsetX + additionalOffsetX);
-    const y = Math.max(10, basePosition.y + offsetY + additionalOffsetY);
     
     return { x, y };
   }, [folderType, varianceX, varianceY]);
@@ -88,6 +94,7 @@ export const useUniqueWindowPosition = (appId?: string) => {
   const generatePosition = useCallback(() => {
     const width = window.innerWidth;
     const height = window.innerHeight;
+    const bottomMargin = 40;
     
     // Use timestamp for base uniqueness
     const timestamp = Date.now();
@@ -108,7 +115,7 @@ export const useUniqueWindowPosition = (appId?: string) => {
     const baseY = Math.floor((height - 400) / 2) + 80;
     
     const x = Math.max(10, Math.min(width - 510, baseX + timeOffsetX + appOffsetX + randomOffsetX));
-    const y = Math.max(60, Math.min(height - 410, baseY + timeOffsetY + appOffsetY + randomOffsetY));
+    const y = Math.max(60, Math.min(height - 410 - bottomMargin, baseY + timeOffsetY + appOffsetY + randomOffsetY));
     
     return { x, y };
   }, [appId]);
@@ -133,13 +140,14 @@ export const useWindowPosition = (
   varianceY: number = 50
 ) => {
   const generatePosition = useCallback(() => {
+    const bottomMargin = 40;
     // Generate random offsets within the variance range
     const offsetX = Math.floor(Math.random() * varianceX * 2) - varianceX;
     const offsetY = Math.floor(Math.random() * varianceY * 2) - varianceY;
     
     // Calculate final position with offsets
     const x = Math.max(10, baseX + offsetX);
-    const y = Math.max(10, baseY + offsetY);
+    const y = Math.max(10, Math.min(baseY + offsetY, window.innerHeight - bottomMargin));
     
     return { x, y };
   }, [baseX, baseY, varianceX, varianceY]);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as Icons from 'lucide-react';
 
@@ -22,7 +22,7 @@ const Folder: React.FC<FolderProps> = ({
   label, 
   apps, 
   onAppPress, 
-  isSelected 
+  isSelected
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,6 +39,22 @@ const Folder: React.FC<FolderProps> = ({
     setIsOpen(false);
   };
 
+  // Close folder when home button is pressed
+  useEffect(() => {
+    const handleHomeButtonPress = () => {
+      if (isOpen) {
+        setIsOpen(false);
+      }
+    };
+
+    // Listen for a custom event that the home button can dispatch
+    document.addEventListener('homeButtonPressed', handleHomeButtonPress);
+    
+    return () => {
+      document.removeEventListener('homeButtonPressed', handleHomeButtonPress);
+    };
+  }, [isOpen]);
+
   // Show first 9 apps as mini icons in the folder preview
   const previewApps = apps.slice(0, 9);
 
@@ -52,25 +68,22 @@ const Folder: React.FC<FolderProps> = ({
         className="flex flex-col items-center space-y-1 relative"
         animate={isSelected ? { scale: 1.1 } : { scale: 1 }}
       >
-        {/* Folder Background */}
-        <div className="relative w-16 h-16 rounded-2xl shadow-lg flex items-center justify-center bg-gradient-to-br from-gray-600 to-gray-800 border-2 border-gray-300 shadow-inner">
-          {/* Inner border for depth */}
-          <div className="absolute inset-0.5 rounded-xl border border-gray-400/50"></div>
-          
+        {/* Folder Background - FLAT STYLE */}
+        <div className="relative w-16 h-16 rounded-2xl flex items-center justify-center bg-gray-700 border border-gray-400">
           {/* Folder Grid - 3x3 mini icons */}
           <div className="grid grid-cols-3 gap-1 p-2.5 w-full h-full">
             {previewApps.map((app) => {
               return (
                 <div
                   key={app.id}
-                  className={`w-full h-full rounded-sm flex items-center justify-center shadow-sm`}
+                  className={`w-full h-full rounded-sm flex items-center justify-center`}
                   style={{ minWidth: '3px', minHeight: '3px' }}
                 >
                   {app.imageIcon ? (
                     <img src={app.imageIcon} alt={app.label} className="w-4 h-4 object-contain" />
                   ) : (
                     (() => {
-                      const IconComponent = Icons[app.icon as keyof typeof Icons] as React.ComponentType<any>;
+                      const IconComponent = Icons[app.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
                       return <IconComponent className="w-1.5 h-1.5 text-white" />;
                     })()
                   )}
@@ -82,13 +95,6 @@ const Folder: React.FC<FolderProps> = ({
               <div key={`empty-${index}`} className="w-full h-full" />
             ))}
           </div>
-
-          {/* Glossy Effect */}
-          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/30 via-white/10 to-transparent opacity-60"></div>
-          
-          {/* Metallic highlight */}
-          <div className="absolute top-0.5 left-0.5 right-0.5 h-2 rounded-t-xl bg-gradient-to-b from-white/40 to-transparent"></div>
-          
           {/* Selected Ring */}
           {isSelected && (
             <motion.div
@@ -98,7 +104,6 @@ const Folder: React.FC<FolderProps> = ({
             />
           )}
         </div>
-        
         {/* Folder Label */}
         <span className="text-white text-[10px] font-medium max-w-16 truncate leading-tight">
           {label}
@@ -150,7 +155,7 @@ const Folder: React.FC<FolderProps> = ({
                           {/* Glossy Effect */}
                           <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/40 via-white/20 to-transparent opacity-70"></div>
                           {(() => {
-                            const IconComponent = Icons[app.icon as keyof typeof Icons] as React.ComponentType<any>;
+                            const IconComponent = Icons[app.icon as keyof typeof Icons] as React.ComponentType<{ className?: string }>;
                             return <IconComponent className="w-8 h-8 text-white relative z-10" />;
                           })()}
                         </div>
@@ -164,16 +169,7 @@ const Folder: React.FC<FolderProps> = ({
                 })}
               </div>
 
-              {/* Home Button at the bottom of the folder popup */}
-              <div className="flex justify-center mt-6">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="w-16 h-16 bg-black/60 rounded-full flex items-center justify-center border-2 border-white/30 shadow-lg hover:bg-white/10 transition-colors"
-                  aria-label="Home"
-                >
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="7" y="17" width="10" height="2" rx="1"/></svg>
-                </button>
-              </div>
+              {/* Removed home button at the bottom of the folder popup */}
             </motion.div>
           </motion.div>
         )}

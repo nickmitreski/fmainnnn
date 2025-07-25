@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 
-interface CalculatorAppProps {
-  onClose: () => void;
-}
-
-const CalculatorApp: React.FC<CalculatorAppProps> = ({ onClose }) => {
+const CalculatorApp: React.FC = () => {
   const [display, setDisplay] = useState('0');
   const [previousValue, setPreviousValue] = useState<number | null>(null);
   const [operation, setOperation] = useState<string | null>(null);

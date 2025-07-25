@@ -10,6 +10,6 @@ export function getCenteredPosition(width = FOLDER_POPUP_DEFAULT_SIZE.width, hei
   const offsetY = Math.floor(Math.random() * 41) - 20; // -20 to +20
   return {
     x: Math.max(0, Math.floor((screenWidth - width) / 2) + offsetX),
-    y: Math.max(0, Math.floor((screenHeight - height) / 2) + offsetY)
+    y: Math.max(0, Math.floor((screenHeight - height) / 2) + offsetY),
   };
 } 

@@ -2,10 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import ITunesHeader from './iTunesHeader';
 
-interface iTunesAppProps {
-  onClose: () => void;
-}
-
 interface Song {
   id: number;
   title: string;
@@ -18,7 +14,7 @@ interface Song {
   url?: string; // <-- Add url property
 }
 
-const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
+const ITunesApp: React.FC = () => {
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -69,8 +65,17 @@ const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
     }
   };
 
-  const formatTime = (time: string) => {
-    return time;
+  // Album artwork mapping by song title (or unique identifier)
+  const artworkMap: { [key: string]: string } = {
+    'Rihanna - Umbrella': '/public/2007_songs_artwork/umbrella.png',
+    'Ne-Yo - So Sick': '/public/2007_songs_artwork/so_sick.png',
+    'Hips Don\'t Lie (ft. Wyclef Jean)': '/public/2007_songs_artwork/Hips_dont_lie.png',
+    'Sean Kingston - Beautiful Girls': '/public/2007_songs_artwork/Sean_Kingston.png',
+    'Sean Paul - Temperature': '/public/2007_songs_artwork/Temperature.png',
+    'Mario - Let Me Love You': '/public/2007_songs_artwork/Mario.png',
+    'Justin Timberlake - SexyBack': '/public/2007_songs_artwork/Sexyback.png',
+    'Ne-Yo - Because Of You': '/public/2007_songs_artwork/Because_of_you.png',
+    // Add more mappings as needed
   };
 
   return (
@@ -81,7 +86,7 @@ const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
       transition={{ type: 'spring', stiffness: 300, damping: 30 }}
       className="w-full h-full bg-black flex flex-col"
     >
-      <ITunesHeader onClose={onClose} />
+      <ITunesHeader />
       
       <div className="flex-1 bg-white flex flex-col overflow-hidden">
         {/* Library Header */}
@@ -99,7 +104,7 @@ const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
         </div>
 
         {/* Songs List - Scrollable */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto max-h-[350px]">
           {songs.filter(song => song.url).map((song, index) => (
             <motion.div
               key={song.id}
@@ -121,10 +126,12 @@ const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
               <div className="flex-1 px-2 min-w-0">
                 <div className="flex items-center space-x-3">
                   {/* Album Art Placeholder */}
-                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-purple-600 rounded-md flex items-center justify-center text-white shadow-sm flex-shrink-0">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                    </svg>
+                  <div className="w-10 h-10 rounded-md flex items-center justify-center shadow-sm flex-shrink-0 overflow-hidden bg-gray-200">
+                    <img
+                      src={artworkMap[song.title] || ''}
+                      alt={song.title + ' artwork'}
+                      className="w-full h-full object-cover"
+                    />
                   </div>
                   
                   {/* Song Details */}
@@ -163,10 +170,12 @@ const ITunesApp: React.FC<iTunesAppProps> = ({ onClose }) => {
             <audio ref={audioRef} src={selectedSong.url} onEnded={stopPlayback} style={{ display: 'none' }} />
             <div className="flex items-center space-x-4 mb-4">
               {/* Album Art */}
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center text-white shadow-md">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
-                </svg>
+              <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-md overflow-hidden bg-gray-200">
+                <img
+                  src={selectedSong ? artworkMap[selectedSong.title] || '' : ''}
+                  alt={selectedSong ? selectedSong.title + ' artwork' : 'Album artwork'}
+                  className="w-full h-full object-cover"
+                />
               </div>
               
               {/* Song Info */}

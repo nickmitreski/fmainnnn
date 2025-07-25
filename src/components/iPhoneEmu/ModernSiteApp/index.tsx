@@ -55,10 +55,9 @@ const ModernSiteApp: React.FC<ModernSiteAppProps> = ({ onClose, setCurrentView }
           <div className="mb-6">
             <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
               <div className="text-center">
-                <div className="text-xl font-bold text-gray-800 mb-3">Why Flash Forward Sites Perform Better</div>
-                <div className="text-sm text-gray-600 leading-relaxed">
-                  We design sites that naturally keep visitors engaged longer and encourage more interactions. 
-                  Here's the proven impact of better engagement on business results:
+                <div className="text-xl font-bold text-gray-800 mb-3" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Engagement Drives Results</div>
+                <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                  Better engagement leads to measurable business impact.
                 </div>
               </div>
             </div>
@@ -68,24 +67,24 @@ const ModernSiteApp: React.FC<ModernSiteAppProps> = ({ onClose, setCurrentView }
           <div className="mb-6">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 border border-gray-200">
               <div className="text-center mb-3">
-                <div className="text-sm font-semibold text-gray-700 mb-2">This Site's Live Performance</div>
-                <div className="text-xs text-gray-500">See how our design keeps you engaged</div>
+                <div className="text-sm font-semibold text-gray-700 mb-2" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>This Site's Live Performance</div>
+                <div className="text-xs text-gray-500" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>See how our design keeps you engaged</div>
               </div>
               <div className="flex gap-4">
                 <div className="flex-1 bg-white rounded-lg p-3 shadow-sm">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">
+                    <div className="text-2xl font-bold text-blue-600 mb-1" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
                       {formatDuration(displaySessionDuration)}
                     </div>
-                    <div className="text-xs font-medium text-gray-600">Your Session Time</div>
+                    <div className="text-xs font-medium text-gray-600" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Your Session Time</div>
                   </div>
                 </div>
                 <div className="flex-1 bg-white rounded-lg p-3 shadow-sm">
                   <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">
+                    <div className="text-2xl font-bold text-purple-600 mb-1" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
                       {displayClickCount}
                     </div>
-                    <div className="text-xs font-medium text-gray-600">Your Interactions</div>
+                    <div className="text-xs font-medium text-gray-600" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Your Interactions</div>
                   </div>
                 </div>
               </div>
@@ -93,103 +92,194 @@ const ModernSiteApp: React.FC<ModernSiteAppProps> = ({ onClose, setCurrentView }
           </div>
 
           {/* Engagement Impact Stats */}
-          <div className="space-y-4 mb-6">
+          <div className="space-y-6 mb-6">
             {/* Time Impact Section */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
-              <div className="px-4 py-3 bg-blue-50 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-blue-800 uppercase tracking-wide">Impact of Longer Session Times</h3>
-                <p className="text-xs text-blue-600 mt-1">When visitors stay 2-3+ minutes on sites we build</p>
+            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              {/* Accent Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-blue-500 to-blue-600" />
+              <div className="px-6 pt-5 pb-4">
+                <h3 className="font-bold text-xl text-gray-900 mb-5" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Longer Sessions Impact</h3>
               </div>
-              <div className="p-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">2.4x</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Higher Conversion Rate</div>
-                    <div className="text-xs text-gray-500">Visitors who stay 2+ minutes convert 2.4x more than quick visitors</div>
+              <div className="px-6 pb-6">
+                <div className="space-y-8">
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-blue-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>2.4x</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Higher Conversion</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Visitors who stay 2+ minutes convert 2.4x more than quick visitors
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center border-l border-r border-gray-200">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">73%</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Better Brand Recall</div>
-                    <div className="text-xs text-gray-500">Longer sessions create 73% better brand memory and recognition</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-blue-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>73%</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Better Brand Recall</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Longer sessions create 73% better brand memory and recognition
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-blue-600 mb-1">87%</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Return Rate</div>
-                    <div className="text-xs text-gray-500">Visitors who spend 3+ minutes return 87% more often</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-blue-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>87%</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Return Rate</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Visitors who spend 3+ minutes return 87% more often
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Interaction Impact Section */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
-              <div className="px-4 py-3 bg-purple-50 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-purple-800 uppercase tracking-wide">Impact of More User Interactions</h3>
-                <p className="text-xs text-purple-600 mt-1">When visitors click/interact 3-4+ times on our sites</p>
+            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              {/* Accent Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-purple-500 to-purple-600" />
+              <div className="px-6 pt-5 pb-4">
+                <h3 className="font-bold text-xl text-gray-900 mb-5" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>User Interactions Drive</h3>
               </div>
-              <div className="p-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">5.2x</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Conversion Rate</div>
-                    <div className="text-xs text-gray-500">Users who interact 4+ times convert 5.2x more than passive visitors</div>
+              <div className="px-6 pb-6">
+                <div className="space-y-8">
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-purple-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>5.2x</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Conversion Rate</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Users who interact 4+ times convert 5.2x more than passive visitors
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center border-l border-r border-gray-200">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">91%</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Engagement Quality</div>
-                    <div className="text-xs text-gray-500">Sites with 3+ interactions show 91% higher engagement quality</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-purple-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>91%</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Engagement Quality</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Sites with 3+ interactions show 91% higher engagement quality
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-purple-600 mb-1">3.8x</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Share Rate</div>
-                    <div className="text-xs text-gray-500">Highly interactive visitors share content 3.8x more frequently</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-purple-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>3.8x</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Share Rate</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Highly interactive visitors share content 3.8x more frequently
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* SEO & Business Impact */}
-            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200">
-              <div className="px-4 py-3 bg-green-50 border-b border-gray-200">
-                <h3 className="text-sm font-semibold text-green-800 uppercase tracking-wide">SEO & Business Impact</h3>
-                <p className="text-xs text-green-600 mt-1">How engagement improvements boost search rankings and traffic</p>
+            <div className="bg-white rounded-xl overflow-hidden shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200">
+              {/* Accent Bar */}
+              <div className="h-1 w-full bg-gradient-to-r from-green-500 to-green-600" />
+              <div className="px-6 pt-5 pb-4">
+                <h3 className="font-bold text-xl text-gray-900 mb-5" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>SEO & Growth</h3>
               </div>
-              <div className="p-4">
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-1">45%</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">SEO Ranking Boost</div>
-                    <div className="text-xs text-gray-500">Google rewards sites with 2+ minute sessions with 45% better rankings</div>
+              <div className="px-6 pb-6">
+                <div className="space-y-8">
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-green-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>45%</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>SEO Ranking Boost</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Google rewards sites with 2+ minute sessions with 45% better rankings
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center border-l border-r border-gray-200">
-                    <div className="text-2xl font-bold text-green-600 mb-1">67%</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Lower Bounce Rate</div>
-                    <div className="text-xs text-gray-500">Interactive sites achieve 67% lower bounce rates than static ones</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-green-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>67%</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Lower Bounce Rate</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Interactive sites achieve 67% lower bounce rates than static ones
+                      </div>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-green-600 mb-1">2.1x</div>
-                    <div className="text-xs font-medium text-gray-700 mb-1">Organic Traffic Growth</div>
-                    <div className="text-xs text-gray-500">Engaged sites see 2.1x more organic traffic growth over time</div>
+                  
+                  <div className="group">
+                    <div className="flex items-center mb-3">
+                      <div className="flex-shrink-0 mr-6">
+                        <div className="text-5xl font-black text-green-600 leading-none tracking-tight" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>2.1x</div>
+                        <div className="text-sm font-bold text-gray-800 mt-2 tracking-wide" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>Organic Traffic Growth</div>
+                      </div>
+                      <div className="flex-1 h-px bg-gray-200 opacity-60"></div>
+                    </div>
+                    <div className="pl-0">
+                      <div className="text-sm text-gray-600 leading-relaxed" style={{ fontFamily: 'Inter, Montserrat, Roboto, sans-serif' }}>
+                        Engaged sites see 2.1x more organic traffic growth over time
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
 
-
-
           {/* Continue Button */}
           <div className="px-2">
-            <button
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={handleContinueToModernSite}
-              className="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700 text-white py-4 px-6 rounded-xl font-semibold text-lg transition-all duration-150 shadow-sm"
+              className="w-full text-white py-4 px-6 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg"
               style={{
-                background: 'linear-gradient(180deg, #007AFF 0%, #0056CC 100%)',
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06)'
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                fontFamily: 'Inter, Montserrat, Roboto, sans-serif',
+                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4), 0 2px 4px rgba(0, 0, 0, 0.1)'
               }}
             >
               Continue to Modern Site
-            </button>
+            </motion.button>
           </div>
         </div>
       </div>

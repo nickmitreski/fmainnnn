@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { memo } from 'react';
 
 interface FooterProps {
   onAdminClick: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
+export const Footer: React.FC<FooterProps> = memo(({ onAdminClick }) => {
   return (
     <footer className="bg-black border-t border-gray-800 py-16">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
-          <div>
-            <h3 className="text-[#008CFF] font-light mb-4 tracking-tight">flash forward</h3>
-            <p className="text-gray-400 font-light tracking-tight">
-              creating digital experiences that capture attention and drive results.
-            </p>
-          </div>
-          
+        {/* Brand and tagline always on top on mobile, left column on desktop */}
+        <div className="footer-brand-block mb-8 md:mb-0">
+          <h3 className="text-[#008CFF] font-light mb-4 tracking-tight">flash forward</h3>
+          <p className="text-gray-400 font-light tracking-tight">
+            creating digital experiences that capture attention and drive results.
+          </p>
+        </div>
+        {/* Main footer links: horizontal flex on mobile, grid on desktop */}
+        <div className="footer-main-sections flex flex-col md:grid md:grid-cols-3 gap-8 md:gap-12 mb-12 w-full">
           <div>
             <h4 className="text-white font-light mb-4 tracking-tight">services</h4>
             <ul className="space-y-2">
@@ -25,7 +26,6 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
               <li><a href="#" className="text-gray-400 hover:text-white transition-colors tracking-tight">ai services</a></li>
             </ul>
           </div>
-          
           <div>
             <h4 className="text-white font-light mb-4 tracking-tight">company</h4>
             <ul className="space-y-2">
@@ -35,7 +35,6 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
               <li><a href="#contact" className="text-gray-400 hover:text-white transition-colors tracking-tight">contact</a></li>
             </ul>
           </div>
-          
           <div>
             <h4 className="text-white font-light mb-4 tracking-tight">connect</h4>
             <ul className="space-y-2">
@@ -65,4 +64,4 @@ export const Footer: React.FC<FooterProps> = ({ onAdminClick }) => {
       </div>
     </footer>
   );
-}; 
+}); 

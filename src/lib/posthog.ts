@@ -4,6 +4,8 @@ import posthog from 'posthog-js';
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
 const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
 
+let posthogInstance = posthog;
+
 // Only initialize if we have the required config
 if (posthogKey) {
   posthog.init(posthogKey, {
@@ -12,9 +14,7 @@ if (posthogKey) {
     capture_pageleave: true, // Capture when users leave the page
     autocapture: true, // Automatically capture clicks, form submissions etc.
     persistence: 'localStorage',
-    session_recording: {
-      enabled: true,
-    },
+    disable_session_recording: false,
     loaded: (posthog) => {
       // Add any additional configuration after PostHog is loaded
       if (import.meta.env.DEV) {
@@ -26,10 +26,10 @@ if (posthogKey) {
 } else {
   // Create a mock implementation for when PostHog is not available
   const mockPosthog = {
-    capture: (eventName: string, properties?: Record<string, any>) => {
+    capture: (eventName: string, properties?: Record<string, unknown>) => {
       console.log(`[PostHog Mock] Event: ${eventName}`, properties);
     },
-    identify: (id: string, properties?: Record<string, any>) => {
+    identify: (id: string, properties?: Record<string, unknown>) => {
       console.log(`[PostHog Mock] Identify: ${id}`, properties);
     },
     reset: () => {
@@ -45,27 +45,22 @@ if (posthogKey) {
       console.log(`[PostHog Mock] Debug mode enabled`);
     },
   };
-
-  // @ts-ignore - Replace posthog with mock implementation
-  Object.keys(mockPosthog).forEach(key => {
-    posthog[key] = mockPosthog[key];
-  });
-  
+  posthogInstance = mockPosthog as typeof posthog;
   console.warn('PostHog not initialized: Missing configuration');
 }
 
 // Utility functions for manual tracking
-export const trackEvent = (eventName: string, properties?: Record<string, any>) => {
-  posthog.capture(eventName, properties);
+export const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
+  posthogInstance.capture(eventName, properties);
 };
 
-export const identifyUser = (id: string, properties?: Record<string, any>) => {
-  posthog.identify(id, properties);
+export const identifyUser = (id: string, properties?: Record<string, unknown>) => {
+  posthogInstance.identify(id, properties);
 };
 
 export const resetUser = () => {
-  posthog.reset();
+  posthogInstance.reset();
 };
 
 // Export the posthog instance for direct use
-export { posthog };
+export { posthogInstance as posthog };

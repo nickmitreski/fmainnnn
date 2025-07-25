@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Window from './Window';
 import { useWindowManager } from '../../contexts/WindowManagerContext';
 
-const WindowManager: React.FC = () => {
-  const { windows, closeWindow, minimizeWindow, maximizeWindow, restoreWindow } = useWindowManager();
+const WindowManager: React.FC = memo(() => {
+  const { windows, closeWindow, minimizeWindow } = useWindowManager();
 
   return (
     <div className="window-manager">
@@ -18,13 +18,11 @@ const WindowManager: React.FC = () => {
           onClose={() => closeWindow(window.id)}
           onMinimize={() => minimizeWindow(window.id)}
           isMinimized={window.state === 'minimized'}
-          type={window.type}
           isResizable={window.styles?.isResizable}
-          isAlwaysOnTop={window.styles?.alwaysOnTop}
         />
       ))}
     </div>
   );
-};
+});
 
 export default WindowManager; 

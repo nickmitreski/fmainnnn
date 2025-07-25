@@ -5,14 +5,13 @@ interface IconProps {
   icon: string;
   x: number;
   y: number;
-  onOpen: () => void;
+  onOpen: (name: string) => void;
   singleClick?: boolean;
 }
 
 const Icon: React.FC<IconProps> = ({ name, icon, x, y, onOpen, singleClick }) => {
   const handleOpen = () => {
-    console.log('[DEBUG] Icon onOpen fired for:', name);
-    onOpen();
+    onOpen(name);
   };
   return (
     <div 

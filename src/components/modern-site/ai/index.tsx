@@ -13,7 +13,6 @@ interface AIToolsProps {
 type ToolType = 'chatbot' | 'image-generator' | 'voice-assistant' | 'video-generator' | 'voice-sales' | 'lead-generator' | 'ai-assistant';
 
 const AITools: React.FC<AIToolsProps> = ({ className = "" }) => {
-  const [activeTab, setActiveTab] = useState<ToolType>('chatbot');
   const [isOpen, setIsOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   
@@ -71,28 +70,10 @@ const AITools: React.FC<AIToolsProps> = ({ className = "" }) => {
             <div className="flex justify-between items-center p-3 border-b border-gray-800">
               <div className="flex gap-2">
                 <button
-                  onClick={() => setActiveTab('chatbot')}
-                  className={`p-2 rounded-md ${activeTab === 'chatbot' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
+                  className={`p-2 rounded-md bg-blue-600 text-white`}
+                  disabled
                 >
                   <Bot size={20} />
-                </button>
-                <button
-                  onClick={() => setActiveTab('image-generator')}
-                  className={`p-2 rounded-md ${activeTab === 'image-generator' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
-                >
-                  <Image size={20} />
-                </button>
-                <button
-                  onClick={() => setActiveTab('voice-assistant')}
-                  className={`p-2 rounded-md ${activeTab === 'voice-assistant' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
-                >
-                  <Mic size={20} />
-                </button>
-                <button
-                  onClick={() => setActiveTab('video-generator')}
-                  className={`p-2 rounded-md ${activeTab === 'video-generator' ? 'bg-blue-600 text-white' : 'text-gray-400 hover:text-white hover:bg-gray-800'}`}
-                >
-                  <Video size={20} />
                 </button>
               </div>
               <button
@@ -102,47 +83,8 @@ const AITools: React.FC<AIToolsProps> = ({ className = "" }) => {
                 <X size={20} />
               </button>
             </div>
-            
             <div className="h-[calc(100%-48px)]">
-              {activeTab === 'chatbot' && <ModernChatbot />}
-              {activeTab === 'image-generator' && <ModernImageGenerator />}
-              {activeTab === 'voice-assistant' && <ModernVoiceAssistant />}
-              {activeTab === 'video-generator' && (
-                <ComingSoonTool 
-                  title="Video Generator" 
-                  description="Our AI video generation technology will transform your text prompts into professional-quality videos."
-                  icon={<Video size={24} />}
-                  fallbackDays={14}
-                  color="#FF1493"
-                />
-              )}
-              {activeTab === 'voice-sales' && (
-                <ComingSoonTool 
-                  title="Voice Sales Agent" 
-                  description="Our AI voice sales agents will handle customer inquiries, qualify leads, and book appointments without human intervention."
-                  icon={<Phone size={24} />}
-                  fallbackDays={7}
-                  color="#FF6600"
-                />
-              )}
-              {activeTab === 'lead-generator' && (
-                <ComingSoonTool 
-                  title="Lead Generator" 
-                  description="Our AI lead generation system will automatically identify and engage potential customers across digital channels."
-                  icon={<Users size={24} />}
-                  fallbackDays={14}
-                  color="#9933FF"
-                />
-              )}
-              {activeTab === 'ai-assistant' && (
-                <ComingSoonTool 
-                  title="AI Assistant" 
-                  description="Our AI personal assistant will help you stay organized, manage tasks, and boost your productivity."
-                  icon={<Sparkles size={24} />}
-                  fallbackDays={17.5}
-                  color="#6366F1"
-                />
-              )}
+              <ModernChatbot />
             </div>
           </motion.div>
         )}

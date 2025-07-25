@@ -8,6 +8,7 @@ import BrandingWorkPopup from './work-popups/BrandingWorkPopup';
 import DesignWorkPopup from './work-popups/DesignWorkPopup';
 import AIWorkPopup from './work-popups/AIWorkPopup';
 import GrowthWorkPopup from './work-popups/GrowthWorkPopup';
+import SEOPopup from './service-popups/SEOPopup';
 
 interface WorkSectionProps {
   className?: string;
@@ -26,7 +27,7 @@ const workItems: Work[] = [
   { id: 'branding', title: 'Branding', color: colors.text.white, imageUrl: '/BRANDING.png' },
   { id: 'design', title: 'Design', color: colors.text.white, imageUrl: '/DESIGN.png' },
   { id: 'ai', title: 'AI', color: colors.text.white, imageUrl: '/AI.png' },
-  { id: 'growth', title: 'Growth', color: colors.text.white, imageUrl: '/GROWTH.png' }
+  { id: 'seo', title: 'SEO', color: colors.text.white, imageUrl: '/SEO.png' }
 ];
 
 export const WorkSection: React.FC<WorkSectionProps> = ({ className = "" }) => {
@@ -53,7 +54,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ className = "" }) => {
         return <DesignWorkPopup onClose={closeWorkDetails} />;
       case 'ai':
         return <AIWorkPopup onClose={closeWorkDetails} />;
-      case 'growth':
+      case 'seo':
         return <GrowthWorkPopup onClose={closeWorkDetails} />;
       default:
         return null;
@@ -66,7 +67,7 @@ export const WorkSection: React.FC<WorkSectionProps> = ({ className = "" }) => {
         <h2 className={`${typography.fontSize['4xl']} sm:text-5xl lg:text-[64px] ${colors.text.white} text-center mb-12 ${typography.tracking.tighter} font-bold`}>
           our work
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="work-carousel grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {workItems.map((work, index) => (
             <WorkCard 
               key={work.id} 

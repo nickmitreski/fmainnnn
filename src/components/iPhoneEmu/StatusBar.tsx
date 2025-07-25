@@ -20,7 +20,7 @@ const StatusBar: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-between px-2 py-1 bg-black text-white text-xs font-bold relative z-10" style={{height: '22px'}}>
+    <div className="flex items-center justify-between px-2 py-1 bg-transparent text-white text-xs font-bold relative z-10" style={{height: '22px'}}>
       {/* Upside-down Signal Bars */}
       <div className="flex items-center space-x-1 min-w-[70px]">
         <div className="flex gap-0.5 items-end" style={{ transform: 'scaleY(-1)' }}>

@@ -10,7 +10,7 @@ const LockScreenBackground: React.FC<LockScreenBackgroundProps> = ({ className =
     <div
       className={`absolute inset-0 w-full h-full z-0 ${className}`}
       style={{
-        background: 'linear-gradient(to bottom, #111 60%, #222 100%)',
+        background: 'linear-gradient(to bottom, #20273c 60%, #0f1120 100%)',
         ...style
       }}
     />

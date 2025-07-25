@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { useSoundEffects } from '../../hooks/useSoundEffects';
 
 interface StartMenuProps {
@@ -8,8 +8,6 @@ interface StartMenuProps {
 }
 
 const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onShutdown }) => {
-  if (!isOpen) return null;
-
   const { playStartup } = useSoundEffects();
 
   const handleItemClick = useCallback((action: () => void) => {
@@ -22,6 +20,8 @@ const StartMenu: React.FC<StartMenuProps> = ({ isOpen, onClose, onShutdown }) =>
       onShutdown();
     }
   };
+
+  if (!isOpen) return null;
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, ArrowLeft } from 'lucide-react';
 import { colors, typography, transitions, spacing } from '../../theme/theme';
@@ -7,18 +7,18 @@ interface HeaderProps {
   onBack: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onBack }) => {
+export const Header: React.FC<HeaderProps> = memo(({ onBack }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('');
 
-  const navItems = [
+  const navItems = useMemo(() => [
     { id: 'about', label: 'About' },
     { id: 'services', label: 'Services' },
     { id: 'work', label: 'Work' },
     { id: 'team', label: 'Team' },
     { id: 'pricing', label: 'Pricing' },
     { id: 'contact', label: 'Contact' }
-  ];
+  ], []);
 
   // Smooth scroll to section
   const scrollToSection = (sectionId: string) => {
@@ -52,7 +52,7 @@ export const Header: React.FC<HeaderProps> = ({ onBack }) => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navItems]);
 
   return (
     <header 
@@ -131,4 +131,4 @@ export const Header: React.FC<HeaderProps> = ({ onBack }) => {
       </motion.div>
     </header>
   );
-}; 
+});

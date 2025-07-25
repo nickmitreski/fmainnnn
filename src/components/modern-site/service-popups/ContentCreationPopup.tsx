@@ -86,11 +86,6 @@ const ContentCreationPopup: React.FC<ContentCreationPopupProps> = ({ onClose }) 
         </div>
         
         <div className="p-6">
-          <div className="mb-8">
-            <p className={`${typography.fontSize.lg} ${typography.fontFamily.light} ${typography.tracking.tight} text-gray-300`}>
-              Engaging content is the cornerstone of effective digital marketing. We create compelling content that tells your story, showcases your expertise, and connects with your audience:
-            </p>
-          </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {contentServices.map((service) => (
@@ -110,48 +105,6 @@ const ContentCreationPopup: React.FC<ContentCreationPopupProps> = ({ onClose }) 
                 </p>
               </motion.div>
             ))}
-          </div>
-          
-          <div className="mt-12">
-            <h3 className={`${typography.fontSize.xl} ${typography.fontFamily.light} ${typography.tracking.tight} text-white mb-4`}>
-              Our Content Creation Process
-            </h3>
-            
-            <div className="bg-black/20 p-6 rounded-lg border border-gray-800">
-              <ol className="space-y-6">
-                <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">1</div>
-                  <div>
-                    <h4 className="text-pink-400 font-light mb-1">Strategy & Planning</h4>
-                    <p className="text-gray-400 text-sm">We begin by understanding your audience, goals, and brand voice to develop a content strategy that aligns with your business objectives.</p>
-                  </div>
-                </li>
-                
-                <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">2</div>
-                  <div>
-                    <h4 className="text-pink-400 font-light mb-1">Creation & Production</h4>
-                    <p className="text-gray-400 text-sm">Our team of specialists creates high-quality content tailored to your specific needs and target platforms.</p>
-                  </div>
-                </li>
-                
-                <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">3</div>
-                  <div>
-                    <h4 className="text-pink-400 font-light mb-1">Review & Refinement</h4>
-                    <p className="text-gray-400 text-sm">We collaborate with you to review and refine the content until it perfectly captures your vision and meets your standards.</p>
-                  </div>
-                </li>
-                
-                <li className="flex gap-4">
-                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-pink-500/20 flex items-center justify-center text-pink-400 font-bold">4</div>
-                  <div>
-                    <h4 className="text-pink-400 font-light mb-1">Distribution & Optimization</h4>
-                    <p className="text-gray-400 text-sm">We help you distribute your content effectively and continuously analyze performance to optimize future content.</p>
-                  </div>
-                </li>
-              </ol>
-            </div>
           </div>
         </div>
         

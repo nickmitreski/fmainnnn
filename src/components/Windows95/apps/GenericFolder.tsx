@@ -1,10 +1,12 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback, useState, useEffect, useRef } from 'react';
+import { motion } from 'framer-motion';
 import { AppContentProps } from '../../../data/appData.tsx';
 import { FolderItem } from '../../../data/folderItemsData.ts';
 import StatsPage from './StatsPage';
 import { useWindowsContext } from '../../../contexts/WindowsContext.tsx';
 import RandomAudioPlayer from './RandomAudioPlayer';
 import { useUniqueWindowPosition } from '../../../hooks/useWindowPosition';
+import ComingSoonPopup from '../../ComingSoonPopup';
 
 interface GenericFolderProps extends AppContentProps {
   items: FolderItem[];
@@ -38,10 +40,23 @@ const GenericFolder: React.FC<GenericFolderProps> = ({ onOpenApp, items, onConti
 
   // Detect mobile view
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  // Stop audio on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+    };
   }, []);
 
   /**
@@ -49,6 +64,23 @@ const GenericFolder: React.FC<GenericFolderProps> = ({ onOpenApp, items, onConti
    * @param item - The folder item that was clicked
    */
   const handleItemClick = useCallback((item: FolderItem) => {
+    // Testimonials: Play audio directly if openOnSingleClick and audioUrls
+    if (item.audioUrls && item.audioUrls.length > 0 && item.openOnSingleClick) {
+      if (isAudioPlaying) return; // Prevent replay if already playing
+      const randomUrl = item.audioUrls[Math.floor(Math.random() * item.audioUrls.length)];
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      } else {
+        audioRef.current = new Audio();
+      }
+      audioRef.current.src = randomUrl;
+      audioRef.current.play();
+      setIsAudioPlaying(true);
+      audioRef.current.onended = () => setIsAudioPlaying(false);
+      audioRef.current.onpause = () => setIsAudioPlaying(false);
+      return;
+    }
     // Defensive patch: Never open a folder window for Winamp unless it is a built-in app with appId 'winamp'
     if (item.name === 'Winamp' && (!item.isBuiltIn || item.appId !== 'winamp')) {
       return;
@@ -59,13 +91,24 @@ const GenericFolder: React.FC<GenericFolderProps> = ({ onOpenApp, items, onConti
 
       if (item.component) {
         // If a custom component is provided, use it as the content
-        onOpenApp(
-          item.appId,
-          React.createElement(item.component),
-          item.name,
-          position,
-          item.defaultSize
-        );
+        // Special handling for ComingSoonPopup to pass featureName
+        if (item.component === ComingSoonPopup) {
+          onOpenApp(
+            item.appId,
+            React.createElement(item.component, { featureName: item.name }),
+            item.name,
+            position,
+            item.defaultSize
+          );
+        } else {
+          onOpenApp(
+            item.appId,
+            React.createElement(item.component),
+            item.name,
+            position,
+            item.defaultSize
+          );
+        }
       } else if (item.appId === 'statsPage') {
         onOpenApp(
           item.appId,
@@ -162,26 +205,52 @@ const GenericFolder: React.FC<GenericFolderProps> = ({ onOpenApp, items, onConti
         position
       );
     }
-  }, [onOpenApp, onBack, generateUniquePosition, onContinueToModernSite]);
+  }, [onOpenApp, onBack, generateUniquePosition, onContinueToModernSite, isAudioPlaying]);
 
   return (
     <div className="win95-folder-content">
-      {items && items.map((item, index) => (
-        <div 
-          key={index} 
-          className="win95-folder-item"
-          {...(isMobile
+      {items && items.map((item, index) => {
+        const isSingleClick = !!item.openOnSingleClick;
+        const itemProps = isSingleClick
+          ? { onClick: () => handleItemClick(item) }
+          : isMobile
             ? { onClick: () => handleItemClick(item) }
-            : { onDoubleClick: () => handleItemClick(item) })}
-        >
-          <img 
-            src={item.icon} 
-            alt={item.name} 
-            className="win95-folder-item-icon" 
-          />
-          <div className="win95-folder-item-text">{item.name}</div>
-        </div>
-      ))}
+            : { onDoubleClick: () => handleItemClick(item) };
+        return isSingleClick ? (
+          <motion.div
+            key={index}
+            className="win95-folder-item"
+            whileTap={{ scale: 0.92 }}
+            style={{ outline: 'none', boxShadow: 'none' }}
+            tabIndex={-1}
+            {...itemProps}
+          >
+            <img 
+              src={item.icon} 
+              alt={item.name} 
+              className="win95-folder-item-icon" 
+              style={{ outline: 'none', boxShadow: 'none' }}
+            />
+            <div className="win95-folder-item-text">{item.name}</div>
+          </motion.div>
+        ) : (
+          <div
+            key={index}
+            className="win95-folder-item"
+            style={{ outline: 'none', boxShadow: 'none' }}
+            tabIndex={-1}
+            {...itemProps}
+          >
+            <img 
+              src={item.icon} 
+              alt={item.name} 
+              className="win95-folder-item-icon" 
+              style={{ outline: 'none', boxShadow: 'none' }}
+            />
+            <div className="win95-folder-item-text">{item.name}</div>
+          </div>
+        );
+      })}
     </div>
   );
 };

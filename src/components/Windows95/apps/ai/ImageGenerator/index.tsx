@@ -84,8 +84,8 @@ const ImageGenerator: React.FC = () => {
             return;
           }
           
-          if (data.status === 'succeeded' && data.output && data.output.length > 0) {
-            setGeneratedImageUrl(data.output[0]);
+          if (data.status === 'succeeded' && data.output && Array.isArray(data.output) && data.output.length > 0) {
+            setGeneratedImageUrl(data.output[0] as string);
             setIsGenerating(false);
             clearInterval(interval);
             setPollingInterval(null);
@@ -95,7 +95,7 @@ const ImageGenerator: React.FC = () => {
             }
             setGenerationProgress(100);
           } else if (data.status === 'failed') {
-            setError(data.error || 'Image generation failed');
+            setError((data.error as string) || 'Image generation failed');
             setIsGenerating(false);
             clearInterval(interval);
             setPollingInterval(null);
@@ -383,10 +383,7 @@ const ImageGenerator: React.FC = () => {
           </div>
         )}
         
-        <div style={{ textAlign: 'center', marginTop: '20px', fontSize: '12px', color: '#555' }}>
-          Powered by Replicate AI<br/>
-          Using Flux 1.1 Pro Ultra
-        </div>
+
       </div>
     </div>
   );

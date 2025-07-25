@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
-import { Activity, Mail, Database, LogOut, Key, FileText, Sticker as Sticky, BarChart2, Briefcase, CreditCard, DollarSign, Users } from 'lucide-react';
+import { Activity, Mail, Database, LogOut, Key, FileText, Sticker as Sticky, BarChart2, Briefcase, CreditCard, DollarSign, Bell, LucideIcon, Search } from 'lucide-react';
 import ApiKeyManager from './admin/ApiKeyManager';
-import PageViewList from './admin/PageViewList';
+
 import ContactSubmissionList from './admin/ContactSubmissionList';
 import TodoList from './admin/TodoList';
 import NotesList from './admin/NotesList';
@@ -11,6 +11,8 @@ import AnalyticsDashboard from './admin/AnalyticsDashboard';
 import ClientsJobsManager from './admin/ClientsJobsManager';
 import FinancialDashboard from './admin/FinancialDashboard';
 import SubscriptionManager from './admin/SubscriptionManager';
+import ComingSoonNotificationsManager from './admin/ComingSoonNotificationsManager';
+import SeoAudits from './admin/SeoAudits';
 import { testGeminiApiKey, testOpenAIApiKey, testGrokApiKey, testDeepseekApiKey } from '../lib/llm';
 import posthog from 'posthog-js';
 
@@ -54,6 +56,7 @@ export interface ContactSubmission {
   status?: string;
   responded_at?: string;
   response_by?: string;
+  admin_notes?: string;
 }
 
 export interface Video {
@@ -65,7 +68,7 @@ export interface Video {
   duration?: number;
   size?: number;
   format?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   tags?: string[];
 }
 
@@ -167,6 +170,15 @@ export interface Expense {
   recurring: boolean;
 }
 
+export interface ComingSoonNotification {
+  id: string;
+  email: string;
+  feature_name: string;
+  created_at: string;
+  notified: boolean;
+  notified_at: string | null;
+}
+
 const AdminPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -176,12 +188,11 @@ const AdminPage: React.FC = () => {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   // Data states
-  const [activeTab, setActiveTab] = useState<'analytics' | 'contacts' | 'supabase-status' | 'api-keys' | 'todos' | 'notes' | 'clients-jobs' | 'subscriptions' | 'financials'>('analytics');
+  const [activeTab, setActiveTab] = useState<'analytics' | 'contacts' | 'supabase-status' | 'api-keys' | 'todos' | 'notes' | 'clients-jobs' | 'subscriptions' | 'financials' | 'coming-soon' | 'seo-audits'>('analytics');
   const [pageViews, setPageViews] = useState<PageView[]>([]);
   const [clickEvents, setClickEvents] = useState<ClickEvent[]>([]);
   const [visitDurations, setVisitDurations] = useState<VisitDuration[]>([]);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
-  const [videos, setVideos] = useState<Video[]>([]);
   const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
   const [todos, setTodos] = useState<Todo[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
@@ -191,6 +202,7 @@ const AdminPage: React.FC = () => {
   const [apiCosts, setApiCosts] = useState<ApiCost[]>([]);
   const [revenues, setRevenues] = useState<Revenue[]>([]);
   const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [comingSoonNotifications, setComingSoonNotifications] = useState<ComingSoonNotification[]>([]);
   const [dataLoading, setDataLoading] = useState(false);
 
   // API Key management states
@@ -203,7 +215,7 @@ const AdminPage: React.FC = () => {
   const [supabaseDbStatus, setSupabaseDbStatus] = useState<'checking' | 'connected' | 'error'>('checking');
   const [supabaseStorageStatus, setSupabaseStorageStatus] = useState<'checking' | 'connected' | 'error'>('checking');
   const [supabaseError, setSupabaseError] = useState<string | null>(null);
-  const [supabaseDetails, setSupabaseDetails] = useState<Record<string, any>>({});
+  const [supabaseDetails, setSupabaseDetails] = useState<Record<string, unknown>>({});
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -309,7 +321,7 @@ const AdminPage: React.FC = () => {
 
       if (contactsError) throw contactsError;
       if (contactsData) {
-        setContactSubmissions(contactsData);
+        setContactSubmissions(contactsData as unknown as ContactSubmission[]);
         supabaseDetails.contactSubmissions = {
           count: contactsData.length,
           lastUpdated: contactsData[0]?.timestamp || 'N/A'
@@ -324,7 +336,7 @@ const AdminPage: React.FC = () => {
 
       if (apiKeysError) throw apiKeysError;
       if (apiKeysData) {
-        setApiKeys(apiKeysData);
+        setApiKeys(apiKeysData as unknown as ApiKey[]);
         supabaseDetails.apiKeys = {
           count: apiKeysData.length,
           activeCount: apiKeysData.filter(key => key.is_active).length
@@ -339,7 +351,7 @@ const AdminPage: React.FC = () => {
 
       if (todosError) throw todosError;
       if (todosData) {
-        setTodos(todosData);
+        setTodos(todosData as unknown as Todo[]);
         supabaseDetails.todos = {
           count: todosData.length,
           completedCount: todosData.filter(todo => todo.is_completed).length
@@ -354,7 +366,7 @@ const AdminPage: React.FC = () => {
 
       if (notesError) throw notesError;
       if (notesData) {
-        setNotes(notesData);
+        setNotes(notesData as unknown as Note[]);
         supabaseDetails.notes = {
           count: notesData.length
         };
@@ -374,12 +386,12 @@ const AdminPage: React.FC = () => {
             .from('clients')
             .select('*')
             .order('created_at', { ascending: false });
-          if (newClientsData) setClients(newClientsData);
+          if (newClientsData) setClients(newClientsData as unknown as Client[]);
         } else {
           throw clientsError;
         }
       } else if (clientsData) {
-        setClients(clientsData);
+        setClients(clientsData as unknown as Client[]);
         supabaseDetails.clients = {
           count: clientsData.length,
           activeCount: clientsData.filter(client => client.status === 'active').length
@@ -400,12 +412,12 @@ const AdminPage: React.FC = () => {
             .from('jobs')
             .select('*')
             .order('created_at', { ascending: false });
-          if (newJobsData) setJobs(newJobsData);
+          if (newJobsData) setJobs(newJobsData as unknown as Job[]);
         } else {
           throw jobsError;
         }
       } else if (jobsData) {
-        setJobs(jobsData);
+        setJobs(jobsData as unknown as Job[]);
         supabaseDetails.jobs = {
           count: jobsData.length,
           completedCount: jobsData.filter(job => job.status === 'completed').length,
@@ -427,21 +439,21 @@ const AdminPage: React.FC = () => {
             .from('subscriptions')
             .select('*')
             .order('start_date', { ascending: false });
-          if (newSubscriptionsData) setSubscriptions(newSubscriptionsData);
+          if (newSubscriptionsData) setSubscriptions(newSubscriptionsData as unknown as Subscription[]);
         } else {
           throw subscriptionsError;
         }
       } else if (subscriptionsData) {
-        setSubscriptions(subscriptionsData);
+        setSubscriptions(subscriptionsData as unknown as Subscription[]);
         supabaseDetails.subscriptions = {
           count: subscriptionsData.length,
           activeCount: subscriptionsData.filter(sub => sub.status === 'active').length,
           monthlyRevenue: subscriptionsData
             .filter(sub => sub.status === 'active' && sub.interval === 'month')
-            .reduce((acc, curr) => acc + curr.amount, 0),
+            .reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : 0), 0),
           yearlyRevenue: subscriptionsData
             .filter(sub => sub.status === 'active' && sub.interval === 'year')
-            .reduce((acc, curr) => acc + curr.amount, 0) / 12 // Monthly equivalent
+            .reduce((acc, curr) => acc + (typeof curr.amount === 'number' ? curr.amount : 0), 0) / 12 // Monthly equivalent
         };
       }
 
@@ -459,15 +471,15 @@ const AdminPage: React.FC = () => {
             .from('api_costs')
             .select('*')
             .order('date', { ascending: false });
-          if (newApiCostsData) setApiCosts(newApiCostsData);
+          if (newApiCostsData) setApiCosts(newApiCostsData as unknown as ApiCost[]);
         } else {
           throw apiCostsError;
         }
       } else if (apiCostsData) {
-        setApiCosts(apiCostsData);
+        setApiCosts(apiCostsData as unknown as ApiCost[]);
         supabaseDetails.apiCosts = {
           count: apiCostsData.length,
-          totalCost: apiCostsData.reduce((acc, curr) => acc + curr.cost, 0)
+          totalCost: apiCostsData.reduce((acc, curr) => acc + (curr.cost as number), 0)
         };
       }
 
@@ -485,16 +497,28 @@ const AdminPage: React.FC = () => {
             .from('revenues')
             .select('*')
             .order('date', { ascending: false });
-          if (newRevenuesData) setRevenues(newRevenuesData);
+          if (newRevenuesData) setRevenues(newRevenuesData as unknown as Revenue[]);
         } else {
           throw revenuesError;
         }
-      } else if (revenuesData) {
-        setRevenues(revenuesData);
-        supabaseDetails.revenues = {
-          count: revenuesData.length,
-          totalRevenue: revenuesData.reduce((acc, curr) => acc + curr.amount, 0)
-        };
+              } else if (revenuesData) {
+          setRevenues(revenuesData as unknown as Revenue[]);
+          supabaseDetails.revenues = {
+            count: revenuesData.length,
+            totalRevenue: revenuesData.reduce((acc, curr) => acc + (curr.amount as number), 0)
+          };
+        }
+
+      // Fetch coming soon notifications
+      const { data: comingSoonData, error: comingSoonError } = await supabase
+        .from('coming_soon_notifications')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (comingSoonError) {
+        console.warn('Coming soon notifications table might not exist yet:', comingSoonError);
+      } else if (comingSoonData) {
+        setComingSoonNotifications(comingSoonData as unknown as ComingSoonNotification[]);
       }
 
       // Set database status to connected
@@ -557,7 +581,7 @@ const AdminPage: React.FC = () => {
 
       if (insertError) throw insertError;
       if (data) {
-        setApiKeys(prev => [...prev, data]);
+        setApiKeys(prev => [...prev, data as unknown as ApiKey]);
         setNewApiKey({ provider: '', api_key: '' });
         
         // Track with PostHog
@@ -669,7 +693,6 @@ const AdminPage: React.FC = () => {
         setSupabaseAuthUser(null);
         setPageViews([]);
         setContactSubmissions([]);
-        setVideos([]);
         setApiKeys([]);
         setTodos([]);
         setNotes([]);
@@ -701,7 +724,7 @@ const AdminPage: React.FC = () => {
     }
   };
 
-  const TabButton = ({ tab, icon: Icon, label }: { tab: typeof activeTab; icon: any; label: string }) => (
+  const TabButton = ({ tab, icon: Icon, label }: { tab: typeof activeTab; icon: LucideIcon; label: string }) => (
     <button
       onClick={() => {
         setActiveTab(tab);
@@ -762,6 +785,8 @@ const AdminPage: React.FC = () => {
               <TabButton tab="api-keys" icon={Key} label="API Keys" />
               <TabButton tab="todos" icon={FileText} label="Todo List" />
               <TabButton tab="notes" icon={Sticky} label="Notes" />
+              <TabButton tab="coming-soon" icon={Bell} label="Coming Soon" />
+              <TabButton tab="seo-audits" icon={Search} label="SEO Audits" />
               <TabButton tab="supabase-status" icon={Database} label="Supabase Status" />
             </div>
             <button
@@ -855,6 +880,17 @@ const AdminPage: React.FC = () => {
                   </div>
                 )}
 
+                {activeTab === 'coming-soon' && (
+                  <ComingSoonNotificationsManager 
+                    notifications={comingSoonNotifications}
+                    setNotifications={setComingSoonNotifications}
+                  />
+                )}
+
+                {activeTab === 'seo-audits' && (
+                  <SeoAudits />
+                )}
+
                 {activeTab === 'supabase-status' && (
                    <div className="space-y-8">
                      <h2 className="text-2xl font-light tracking-tight">Supabase Status</h2>
@@ -870,7 +906,7 @@ const AdminPage: React.FC = () => {
                                  <div key={key} className="bg-black/20 p-4 rounded border border-gray-800">
                                     <h4 className="text-[#0CF2A0] capitalize mb-2">{key.replace(/([A-Z])/g, ' $1').trim()}</h4>
                                     <div className="space-y-1 text-sm">
-                                       {Object.entries(value).map(([subKey, subValue]) => (
+                                       {Object.entries(value as Record<string, unknown>).map(([subKey, subValue]) => (
                                           <p key={subKey} className="text-gray-300">
                                              <span className="text-gray-500 capitalize">{subKey.replace(/([A-Z])/g, ' $1').trim()}:</span> {' '}
                                              {typeof subValue === 'object' ? JSON.stringify(subValue) : String(subValue)}
