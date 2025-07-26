@@ -8,17 +8,6 @@ export default defineConfig({
     exclude: ['lucide-react'],
   },
   build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          // Split large components
-          windows95: ['./src/components/Windows95/Desktop.tsx'],
-          modernsite: ['./src/components/ModernSite.tsx'],
-          admin: ['./src/components/AdminPage.tsx'],
-          iphone: ['./src/components/iPhoneEmu/iPhone.tsx'],
-        },
-      },
-    },
     chunkSizeWarningLimit: 1000,
   },
 });
