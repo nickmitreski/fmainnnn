@@ -72,16 +72,30 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
   // Try to get API key from environment variable first, then Supabase, then fallback
   let apiKey: string;
   
-  // First try environment variable
+  // Debug: Log what we're finding
+  console.log('Environment variable check:', {
+    hasViteOpenAI: !!import.meta.env.VITE_OPENAI_API_KEY,
+    hasOpenAI: !!import.meta.env.OPENAI_API_KEY,
+    viteOpenAIPrefix: import.meta.env.VITE_OPENAI_API_KEY?.substring(0, 10) + '...',
+    openAIPrefix: import.meta.env.OPENAI_API_KEY?.substring(0, 10) + '...'
+  });
+  
+  // First try environment variable (check both VITE_ and regular prefix)
   if (import.meta.env.VITE_OPENAI_API_KEY) {
     apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    console.log('Using VITE_OPENAI_API_KEY');
+  } else if (import.meta.env.OPENAI_API_KEY) {
+    apiKey = import.meta.env.OPENAI_API_KEY;
+    console.log('Using OPENAI_API_KEY');
   } else {
     try {
       // Fallback to Supabase
       apiKey = await getLLMApiKey('openai');
+      console.log('Using Supabase API key');
     } catch {
       // Final fallback to demo key
       apiKey = "sk-proj-demo-key-placeholder";
+      console.log('Using hardcoded demo key');
     }
   }
   const url = 'https://api.openai.com/v1/chat/completions';
