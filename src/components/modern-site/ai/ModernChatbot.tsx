@@ -21,15 +21,14 @@ const ModernChatbot: React.FC = () => {
   useEffect(() => {
     const createSession = async () => {
       try {
-        const { data, error } = await supabase
-          .from('chat_sessions')
-          .insert({})
-          .select('id')
-          .single();
-          
-        if (data?.id) {
-          setSessionId(data.id);
-        }
+                    const { data, error } = await supabase
+        .from('chat_sessions')
+        .insert({})
+        .select('id');
+        
+      if (data && data.length > 0 && data[0]?.id) {
+        setSessionId(data[0].id as string);
+      }
       } catch (err) {
         console.error('Error creating session:', err);
       }

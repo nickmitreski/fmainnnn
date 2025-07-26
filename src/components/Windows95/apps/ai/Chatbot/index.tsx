@@ -27,13 +27,13 @@ const Chatbot: React.FC = () => {
         const { data, error } = await supabase
           .from('chat_sessions')
           .insert({})
-          .select('id')
-          .single();
+          .select('id');
           
-        if (data?.id) {
-          setSessionId(data.id as string);
+        if (data && data.length > 0 && data[0]?.id) {
+          const sessionId = data[0].id as string;
+          setSessionId(sessionId);
           // Load any existing messages (should be empty for new session)
-          loadMessages(data.id);
+          loadMessages(sessionId);
           
           // Add welcome message
           const welcomeMessage: ChatMessage = {
@@ -41,7 +41,7 @@ const Chatbot: React.FC = () => {
             content: "Hello! I'm your AI assistant. How can I help you today?"
           };
           setMessages([welcomeMessage]);
-          await storeMessage(data.id, welcomeMessage);
+          await storeMessage(sessionId, welcomeMessage);
         } else {
           setError('Failed to create chat session.');
         }

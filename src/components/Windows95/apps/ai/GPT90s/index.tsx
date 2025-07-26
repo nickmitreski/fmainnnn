@@ -24,18 +24,18 @@ const GPT90s: React.FC = () => {
         const { data, error } = await supabase
           .from('chat_sessions')
           .insert({})
-          .select('id')
-          .single();
+          .select('id');
           
-        if (data?.id) {
-          setSessionId(data.id as string); // Ensure string type
+        if (data && data.length > 0 && data[0]?.id) {
+          const sessionId = data[0].id as string;
+          setSessionId(sessionId);
           // Add welcome message
           const welcomeMessage: ChatMessage = {
             role: 'assistant',
             content: "Welcome to 90sGPT! I'm running on a Pentium processor with 16MB of RAM. What can I help you with today? :-)"
           };
           setMessages([welcomeMessage]);
-          await storeMessage(data.id, welcomeMessage);
+          await storeMessage(sessionId, welcomeMessage);
         } else {
           setError('Failed to create chat session');
         }
