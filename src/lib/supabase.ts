@@ -1,54 +1,18 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables with fallbacks to prevent undefined errors
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://irzgkacsptptspcozrrd.supabase.co';
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32eMiRgRtYu57PrDyAdK06x1pRWl3NjnSvcoqQ';
 
 // Create the Supabase client with error handling
 let supabase: ReturnType<typeof createClient>;
 
 try {
-  if (!supabaseUrl || !supabaseAnonKey) {
-    console.warn('Missing Supabase environment variables. Some features may not work correctly.');
-    // Create a dummy client that won't throw errors when methods are called
-    supabase = {
-      from: () => ({
-        select: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-        insert: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-        update: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-        delete: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-        eq: () => ({ select: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }) }),
-      }),
-      auth: {
-        signInWithPassword: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-        signOut: () => Promise.resolve({ error: null }),
-        getUser: () => Promise.resolve({ data: { user: null }, error: new Error('Supabase not configured') }),
-        onAuthStateChange: () => ({ subscription: { unsubscribe: () => {} } }),
-      },
-      rpc: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') }),
-    } as ReturnType<typeof createClient>;
-  } else {
-    supabase = createClient(supabaseUrl, supabaseAnonKey);
-  }
+  supabase = createClient(supabaseUrl, supabaseAnonKey);
 } catch (error) {
   console.error('Error initializing Supabase client:', error);
-  // Create a dummy client as fallback
-  supabase = {
-    from: () => ({
-      select: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-      insert: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-      update: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-      delete: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-      eq: () => ({ select: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }) }),
-    }),
-    auth: {
-      signInWithPassword: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-      signOut: () => Promise.resolve({ error: null }),
-      getUser: () => Promise.resolve({ data: { user: null }, error: new Error('Supabase initialization failed') }),
-      onAuthStateChange: () => ({ subscription: { unsubscribe: () => {} } }),
-    },
-    rpc: () => Promise.resolve({ data: null, error: new Error('Supabase initialization failed') }),
-  } as ReturnType<typeof createClient>;
+  // Create a minimal client as fallback
+  supabase = createClient('https://irzgkacsptptspcozrrd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32eMiRgRtYu57PrDyAdK06x1pRWl3NjnSvcoqQ');
 }
 
 export { supabase };

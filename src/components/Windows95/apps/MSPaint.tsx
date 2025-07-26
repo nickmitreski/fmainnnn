@@ -5,17 +5,12 @@ const MSPaint: React.FC = () => {
   const [loadError, setLoadError] = useState(false);
 
   useEffect(() => {
-    // Preload the jspaint application
-    const preloadImage = new Image();
-    preloadImage.onload = () => {
-      // Start loading the iframe after a brief delay to show loading state
-      setTimeout(() => setIsLoading(false), 500);
-    };
-    preloadImage.onerror = () => {
-      setLoadError(true);
+    // Show loading state briefly, then allow iframe to load
+    const timer = setTimeout(() => {
       setIsLoading(false);
-    };
-    preloadImage.src = '/jspaint-main/index.html';
+    }, 1000);
+    
+    return () => clearTimeout(timer);
   }, []);
 
   if (loadError) {
