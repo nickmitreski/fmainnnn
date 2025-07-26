@@ -9,5 +9,10 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: () => 'index.js', // Force everything into a single chunk
+      },
+    },
   },
 });
