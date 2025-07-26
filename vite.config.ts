@@ -11,8 +11,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          // Split vendor libraries
-          vendor: ['react', 'react-dom'],
           // Split large components
           windows95: ['./src/components/Windows95/Desktop.tsx'],
           modernsite: ['./src/components/ModernSite.tsx'],
