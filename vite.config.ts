@@ -11,7 +11,8 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: () => 'index.js', // Force everything into a single chunk
+        manualChunks: undefined,
+        inlineDynamicImports: true, // Force everything inline
       },
     },
   },
