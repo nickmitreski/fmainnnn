@@ -69,7 +69,14 @@ export async function callGemini(prompt: string): Promise<string> {
 }
 
 export async function callOpenAI(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  const apiKey = "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";
+  // Try to get API key from Supabase first, fallback to hardcoded key
+  let apiKey: string;
+  try {
+    apiKey = await getLLMApiKey('openai');
+  } catch {
+    // Fallback to a demo key (this should be replaced with a real key)
+    apiKey = "sk-proj-demo-key-placeholder";
+  }
   const url = 'https://api.openai.com/v1/chat/completions';
   const messages = [...history, { role: 'user', content: prompt }];
   const response = await fetch(url, {
@@ -94,7 +101,14 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
 }
 
 export async function callDeepseek(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  const apiKey = await getLLMApiKey('deepseek');
+  // Try to get API key from Supabase first, fallback to demo response
+  let apiKey: string;
+  try {
+    apiKey = await getLLMApiKey('deepseek');
+  } catch {
+    // Return a demo response for 90sGPT when no API key is available
+    return "I apologize, but I'm currently running in demo mode without an active API key. In a full deployment, I would be able to help you with questions about 90s technology, Windows 95, early internet, and computing from the 1996 era. Please contact the administrator to configure the DeepSeek API key for full functionality.";
+  }
   const url = 'https://api.deepseek.com/v1/chat/completions';
   const messages = [...history, { role: 'user', content: prompt }];
   const response = await fetch(url, {
