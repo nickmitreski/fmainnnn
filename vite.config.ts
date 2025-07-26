@@ -16,8 +16,6 @@ export default defineConfig({
           modernsite: ['./src/components/ModernSite.tsx'],
           admin: ['./src/components/AdminPage.tsx'],
           iphone: ['./src/components/iPhoneEmu/iPhone.tsx'],
-          // Split utilities
-          utils: ['framer-motion', 'lucide-react'],
         },
       },
     },
