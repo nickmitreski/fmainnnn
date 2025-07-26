@@ -69,13 +69,20 @@ export async function callGemini(prompt: string): Promise<string> {
 }
 
 export async function callOpenAI(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  // Try to get API key from Supabase first, fallback to hardcoded key
+  // Try to get API key from environment variable first, then Supabase, then fallback
   let apiKey: string;
-  try {
-    apiKey = await getLLMApiKey('openai');
-  } catch {
-    // Fallback to a demo key (this should be replaced with a real key)
-    apiKey = "sk-proj-demo-key-placeholder";
+  
+  // First try environment variable
+  if (import.meta.env.VITE_OPENAI_API_KEY) {
+    apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+  } else {
+    try {
+      // Fallback to Supabase
+      apiKey = await getLLMApiKey('openai');
+    } catch {
+      // Final fallback to demo key
+      apiKey = "sk-proj-demo-key-placeholder";
+    }
   }
   const url = 'https://api.openai.com/v1/chat/completions';
   const messages = [...history, { role: 'user', content: prompt }];
@@ -101,13 +108,20 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
 }
 
 export async function callDeepseek(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  // Try to get API key from Supabase first, fallback to demo response
+  // Try to get API key from environment variable first, then Supabase, then fallback
   let apiKey: string;
-  try {
-    apiKey = await getLLMApiKey('deepseek');
-  } catch {
-    // Return a demo response for 90sGPT when no API key is available
-    return "I apologize, but I'm currently running in demo mode without an active API key. In a full deployment, I would be able to help you with questions about 90s technology, Windows 95, early internet, and computing from the 1996 era. Please contact the administrator to configure the DeepSeek API key for full functionality.";
+  
+  // First try environment variable
+  if (import.meta.env.VITE_DEEPSEEK_API_KEY) {
+    apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
+  } else {
+    try {
+      // Fallback to Supabase
+      apiKey = await getLLMApiKey('deepseek');
+    } catch {
+      // Return a demo response for 90sGPT when no API key is available
+      return "I apologize, but I'm currently running in demo mode without an active API key. In a full deployment, I would be able to help you with questions about 90s technology, Windows 95, early internet, and computing from the 1996 era. Please contact the administrator to configure the DeepSeek API key for full functionality.";
+    }
   }
   const url = 'https://api.deepseek.com/v1/chat/completions';
   const messages = [...history, { role: 'user', content: prompt }];
