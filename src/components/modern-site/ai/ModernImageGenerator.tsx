@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../../lib/supabase';
+import { config } from '../../../lib/config';
 import { Send, Image, Download, RefreshCw, AlertCircle } from 'lucide-react';
 
 const ModernImageGenerator: React.FC = () => {
@@ -63,7 +64,7 @@ const ModernImageGenerator: React.FC = () => {
           setPollingCount(prev => prev + 1);
           console.log(`Polling attempt ${pollingCount + 1} for generation ${generationId}`);
           
-          const { data, error } = await supabase
+          const { data, error } = await supabase()
             .from('replicate_generations')
             .select('*')
             .eq('id', generationId)
@@ -172,10 +173,10 @@ const ModernImageGenerator: React.FC = () => {
       const enhancedPrompt = `${styles[selectedStyle as keyof typeof styles]} ${prompt}`;
       
       // Call the Supabase Edge Function
-      const apiUrl = `${import.meta.env.VITE_SUPABASE_URL || ''}/functions/v1/generate-image`;
+      const apiUrl = `${config.supabase.url}/functions/v1/generate-image`;
       
       const headers = {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || ''}`,
+        'Authorization': `Bearer ${config.supabase.anonKey}`,
         'Content-Type': 'application/json',
       };
 

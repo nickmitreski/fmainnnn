@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { supabase } from '../../../../../lib/supabase';
+import { config } from '../../../../../lib/config';
 
 interface GenerationResult {
   id: string;
@@ -71,7 +72,7 @@ const ImageGenerator: React.FC = () => {
     if (generationId && isGenerating) {
       const interval = setInterval(async () => {
         try {
-          const { data, error } = await supabase
+          const { data, error } = await supabase()
             .from('replicate_generations')
             .select('*')
             .eq('id', generationId)
@@ -167,11 +168,11 @@ const ImageGenerator: React.FC = () => {
       }
       
       // Call the Supabase Edge Function
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
+      const supabaseUrl = config.supabase.url;
       const apiUrl = `${supabaseUrl}/functions/v1/generate-image`;
       
       const headers = {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || ''}`,
+        'Authorization': `Bearer ${config.supabase.anonKey}`,
         'Content-Type': 'application/json',
       };
 
