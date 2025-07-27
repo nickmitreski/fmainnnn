@@ -6,8 +6,13 @@ const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
 
 let posthogInstance = posthog;
 
-// Only initialize if we have the required config
-if (posthogKey) {
+// Only initialize if we have a valid PostHog key (not placeholder)
+const isValidPostHogKey = posthogKey && 
+  posthogKey !== 'your-posthog-key-here' && 
+  posthogKey !== 'disabled' && 
+  posthogKey.length > 10;
+
+if (isValidPostHogKey) {
   posthog.init(posthogKey, {
     api_host: posthogHost || 'https://us.i.posthog.com',
     capture_pageview: true, // Automatically capture pageviews
@@ -23,6 +28,7 @@ if (posthogKey) {
       }
     },
   });
+  console.log('PostHog initialized successfully');
 } else {
   // Create a mock implementation for when PostHog is not available
   const mockPosthog = {
@@ -46,7 +52,7 @@ if (posthogKey) {
     },
   };
   posthogInstance = mockPosthog as typeof posthog;
-  console.warn('PostHog not initialized: Missing configuration');
+  console.warn('PostHog not initialized: Missing or invalid configuration');
 }
 
 // Utility functions for manual tracking
