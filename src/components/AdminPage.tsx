@@ -238,7 +238,12 @@ const AdminPage: React.FC = () => {
     setSupabaseError(null);
 
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      const supabaseClient = supabase();
+      if (!supabaseClient || !supabaseClient.auth) {
+        throw new Error('Supabase client not properly initialized');
+      }
+
+      const { data, error: signInError } = await supabaseClient.auth.signInWithPassword({
         email,
         password
       });
@@ -327,7 +332,11 @@ const AdminPage: React.FC = () => {
       }
       
       // Fetch contact submissions
-      const { data: contactsData, error: contactsError } = await supabase
+      const supabaseClient = supabase();
+      if (!supabaseClient) {
+        throw new Error('Supabase client not initialized');
+      }
+      const { data: contactsData, error: contactsError } = await supabaseClient
         .from('contact_submissions')
         .select('*')
         .order('timestamp', { ascending: false });
@@ -342,7 +351,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch API keys
-      const { data: apiKeysData, error: apiKeysError } = await supabase
+      const { data: apiKeysData, error: apiKeysError } = await supabaseClient
         .from('api_keys')
         .select('*')
         .order('provider', { ascending: true });
@@ -357,7 +366,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch todos
-      const { data: todosData, error: todosError } = await supabase
+      const { data: todosData, error: todosError } = await supabaseClient
         .from('todos')
         .select('*')
         .order('created_at', { ascending: false });
@@ -372,7 +381,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch notes
-      const { data: notesData, error: notesError } = await supabase
+      const { data: notesData, error: notesError } = await supabaseClient
         .from('notes')
         .select('*')
         .order('created_at', { ascending: false });
@@ -386,7 +395,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch clients
-      const { data: clientsData, error: clientsError } = await supabase
+      const { data: clientsData, error: clientsError } = await supabaseClient
         .from('clients')
         .select('*')
         .order('created_at', { ascending: false });
@@ -394,8 +403,12 @@ const AdminPage: React.FC = () => {
       if (clientsError) {
         // If table doesn't exist, create it
         if (clientsError.code === '42P01') {
-          await supabase.rpc('create_clients_table');
-          const { data: newClientsData } = await supabase
+          const supabaseClient = supabase();
+          if (!supabaseClient) {
+            throw new Error('Supabase client not initialized');
+          }
+          await supabaseClient.rpc('create_clients_table');
+          const { data: newClientsData } = await supabaseClient
             .from('clients')
             .select('*')
             .order('created_at', { ascending: false });
@@ -412,7 +425,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch jobs
-      const { data: jobsData, error: jobsError } = await supabase
+      const { data: jobsData, error: jobsError } = await supabaseClient
         .from('jobs')
         .select('*')
         .order('created_at', { ascending: false });
@@ -420,8 +433,12 @@ const AdminPage: React.FC = () => {
       if (jobsError) {
         // If table doesn't exist, create it
         if (jobsError.code === '42P01') {
-          await supabase.rpc('create_jobs_table');
-          const { data: newJobsData } = await supabase
+          const supabaseClient = supabase();
+          if (!supabaseClient) {
+            throw new Error('Supabase client not initialized');
+          }
+          await supabaseClient.rpc('create_jobs_table');
+          const { data: newJobsData } = await supabaseClient
             .from('jobs')
             .select('*')
             .order('created_at', { ascending: false });
@@ -439,7 +456,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch subscriptions
-      const { data: subscriptionsData, error: subscriptionsError } = await supabase
+      const { data: subscriptionsData, error: subscriptionsError } = await supabaseClient
         .from('subscriptions')
         .select('*')
         .order('start_date', { ascending: false });
@@ -447,8 +464,12 @@ const AdminPage: React.FC = () => {
       if (subscriptionsError) {
         // If table doesn't exist, create it
         if (subscriptionsError.code === '42P01') {
-          await supabase.rpc('create_subscriptions_table');
-          const { data: newSubscriptionsData } = await supabase
+          const supabaseClient = supabase();
+          if (!supabaseClient) {
+            throw new Error('Supabase client not initialized');
+          }
+          await supabaseClient.rpc('create_subscriptions_table');
+          const { data: newSubscriptionsData } = await supabaseClient
             .from('subscriptions')
             .select('*')
             .order('start_date', { ascending: false });
@@ -471,7 +492,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch API costs
-      const { data: apiCostsData, error: apiCostsError } = await supabase
+      const { data: apiCostsData, error: apiCostsError } = await supabaseClient
         .from('api_costs')
         .select('*')
         .order('date', { ascending: false });
@@ -479,8 +500,12 @@ const AdminPage: React.FC = () => {
       if (apiCostsError) {
         // If table doesn't exist, create it
         if (apiCostsError.code === '42P01') {
-          await supabase.rpc('create_api_costs_table');
-          const { data: newApiCostsData } = await supabase
+          const supabaseClient = supabase();
+          if (!supabaseClient) {
+            throw new Error('Supabase client not initialized');
+          }
+          await supabaseClient.rpc('create_api_costs_table');
+          const { data: newApiCostsData } = await supabaseClient
             .from('api_costs')
             .select('*')
             .order('date', { ascending: false });
@@ -497,7 +522,7 @@ const AdminPage: React.FC = () => {
       }
 
       // Fetch revenues
-      const { data: revenuesData, error: revenuesError } = await supabase
+      const { data: revenuesData, error: revenuesError } = await supabaseClient
         .from('revenues')
         .select('*')
         .order('date', { ascending: false });
@@ -505,8 +530,12 @@ const AdminPage: React.FC = () => {
       if (revenuesError) {
         // If table doesn't exist, create it
         if (revenuesError.code === '42P01') {
-          await supabase.rpc('create_revenues_table');
-          const { data: newRevenuesData } = await supabase
+          const supabaseClient = supabase();
+          if (!supabaseClient) {
+            throw new Error('Supabase client not initialized');
+          }
+          await supabaseClient.rpc('create_revenues_table');
+          const { data: newRevenuesData } = await supabaseClient
             .from('revenues')
             .select('*')
             .order('date', { ascending: false });
@@ -523,7 +552,7 @@ const AdminPage: React.FC = () => {
         }
 
       // Fetch coming soon notifications
-      const { data: comingSoonData, error: comingSoonError } = await supabase
+      const { data: comingSoonData, error: comingSoonError } = await supabaseClient
         .from('coming_soon_notifications')
         .select('*')
         .order('created_at', { ascending: false });
@@ -581,7 +610,11 @@ const AdminPage: React.FC = () => {
         }
       }
 
-      const { data, error: insertError } = await supabase
+      const supabaseClient = supabase();
+      if (!supabaseClient) {
+        throw new Error('Supabase client not initialized');
+      }
+      const { data, error: insertError } = await supabaseClient
         .from('api_keys')
         .insert({
           provider: newApiKey.provider,
@@ -617,7 +650,11 @@ const AdminPage: React.FC = () => {
 
   const handleToggleApiKey = async (id: string, currentStatus: boolean) => {
     try {
-      const { error: updateError } = await supabase
+      const supabaseClient = supabase();
+      if (!supabaseClient) {
+        throw new Error('Supabase client not initialized');
+      }
+      const { error: updateError } = await supabaseClient
         .from('api_keys')
         .update({ is_active: !currentStatus })
         .eq('id', id);
@@ -639,7 +676,11 @@ const AdminPage: React.FC = () => {
 
   const handleDeleteApiKey = async (id: string) => {
     try {
-      const { error: deleteError } = await supabase
+      const supabaseClient = supabase();
+      if (!supabaseClient) {
+        throw new Error('Supabase client not initialized');
+      }
+      const { error: deleteError } = await supabaseClient
         .from('api_keys')
         .delete()
         .eq('id', id);
@@ -657,11 +698,19 @@ const AdminPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuthStatus = async () => {
-       const { data, error: userError } = await supabase.auth.getUser();
-       if (userError) {
+      try {
+        const supabaseClient = supabase();
+        if (!supabaseClient || !supabaseClient.auth) {
+          setSupabaseAuthStatus('error');
+          setSupabaseError('Supabase client not properly initialized');
+          return;
+        }
+
+        const { data, error: userError } = await supabaseClient.auth.getUser();
+        if (userError) {
           setSupabaseAuthStatus('error');
           setSupabaseError(userError.message);
-       } else if (data?.user) {
+        } else if (data?.user) {
           setIsAuthenticated(true);
           setCurrentUserId(data.user.id);
           setSupabaseAuthStatus('authenticated');
@@ -673,67 +722,95 @@ const AdminPage: React.FC = () => {
             email: data.user.email,
             role: 'admin'
           });
-       } else {
+        } else {
           setIsAuthenticated(false);
           setSupabaseAuthStatus('unauthenticated');
           setSupabaseAuthUser(null);
           setCurrentUserId(null);
-       }
+        }
+      } catch (error) {
+        setSupabaseAuthStatus('error');
+        setSupabaseError(error instanceof Error ? error.message : 'Unknown error');
+      }
     };
 
     checkAuthStatus();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') {
-        setIsAuthenticated(true);
-        setCurrentUserId(session?.user?.id || null);
-        setSupabaseAuthStatus('authenticated');
-        setSupabaseAuthUser(session?.user?.email || null);
-        fetchData();
-        
-        // Track with PostHog
-        if (session?.user) {
-          posthog.identify(session.user.id, {
-            email: session.user.email,
-            role: 'admin'
-          });
-          posthog.capture('admin_signed_in');
+    try {
+      const supabaseClient = supabase();
+      if (!supabaseClient || !supabaseClient.auth) {
+        setSupabaseAuthStatus('error');
+        setSupabaseError('Supabase client not properly initialized');
+        return;
+      }
+
+      const { data: authListener } = supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === 'SIGNED_IN') {
+          setIsAuthenticated(true);
+          setCurrentUserId(session?.user?.id || null);
+          setSupabaseAuthStatus('authenticated');
+          setSupabaseAuthUser(session?.user?.email || null);
+          fetchData();
+          
+          // Track with PostHog
+          if (session?.user) {
+            posthog.identify(session.user.id, {
+              email: session.user.email,
+              role: 'admin'
+            });
+            posthog.capture('admin_signed_in');
+          }
+        } else if (event === 'SIGNED_OUT') {
+          setIsAuthenticated(false);
+          setCurrentUserId(null);
+          setSupabaseAuthStatus('unauthenticated');
+          setSupabaseAuthUser(null);
+          setPageViews([]);
+          setContactSubmissions([]);
+          setApiKeys([]);
+          setTodos([]);
+          setNotes([]);
+          
+          // Track with PostHog
+          posthog.capture('admin_signed_out');
+          posthog.reset();
         }
-      } else if (event === 'SIGNED_OUT') {
+      });
+
+      return () => {
+        authListener?.subscription.unsubscribe();
+      };
+    } catch (error) {
+      setSupabaseAuthStatus('error');
+      setSupabaseError(error instanceof Error ? error.message : 'Unknown error');
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      // Track with PostHog before logging out
+      posthog.capture('admin_logout_initiated');
+      
+      const supabaseClient = supabase();
+      if (!supabaseClient || !supabaseClient.auth) {
+        setSupabaseAuthStatus('error');
+        setSupabaseError('Supabase client not properly initialized');
+        return;
+      }
+
+      const { error: signOutError } = await supabaseClient.auth.signOut();
+      if (signOutError) {
+        setSupabaseAuthStatus('error');
+        setSupabaseError(signOutError.message);
+      } else {
         setIsAuthenticated(false);
         setCurrentUserId(null);
         setSupabaseAuthStatus('unauthenticated');
         setSupabaseAuthUser(null);
-        setPageViews([]);
-        setContactSubmissions([]);
-        setApiKeys([]);
-        setTodos([]);
-        setNotes([]);
-        
-        // Track with PostHog
-        posthog.capture('admin_signed_out');
-        posthog.reset();
       }
-    });
-
-    return () => {
-      authListener?.subscription.unsubscribe();
-    };
-  }, []);
-
-  const handleLogout = async () => {
-    // Track with PostHog before logging out
-    posthog.capture('admin_logout_initiated');
-    
-    const { error: signOutError } = await supabase.auth.signOut();
-    if (signOutError) {
-       setSupabaseAuthStatus('error');
-       setSupabaseError(signOutError.message);
-    } else {
-       setIsAuthenticated(false);
-       setCurrentUserId(null);
-       setSupabaseAuthStatus('unauthenticated');
-       setSupabaseAuthUser(null);
+    } catch (error) {
+      setSupabaseAuthStatus('error');
+      setSupabaseError(error instanceof Error ? error.message : 'Unknown error');
     }
   };
 
