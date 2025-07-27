@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
 import { Clock, MousePointer, Eye, Calendar, ArrowUpRight, Users, TrendingUp, Activity, Zap, Smartphone, Monitor, Globe, MessageSquare, Gamepad2, Settings } from 'lucide-react';
 
-// PostHog API configuration
-const POSTHOG_API_KEY = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
-const POSTHOG_HOST = import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
+// PostHog API configuration - will be accessed within functions
+const getPostHogConfig = () => ({
+  apiKey: import.meta.env.VITE_PUBLIC_POSTHOG_KEY,
+  host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+});
 
 interface PostHogEvent {
   id: string;
@@ -53,8 +55,10 @@ const AnalyticsDashboard: React.FC = () => {
     setLoading(true);
     setError(null);
 
+    const config = getPostHogConfig();
+    
     // Check if PostHog API key is configured
-    if (!POSTHOG_API_KEY) {
+    if (!config.apiKey) {
       setError('PostHog API key not configured. Please set VITE_PUBLIC_POSTHOG_KEY in your environment variables.');
       setLoading(false);
       return;
@@ -118,9 +122,10 @@ const AnalyticsDashboard: React.FC = () => {
 
   // PostHog API calls
   const fetchEvents = async (dateFrom: string): Promise<PostHogEvent[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/events/?date_from=${dateFrom}&limit=100`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/events/?date_from=${dateFrom}&limit=100`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -131,9 +136,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchPageViews = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"page_viewed","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"page_viewed","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -144,9 +150,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchFeatureUsage = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"feature_used","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"feature_used","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -157,9 +164,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchAPICalls = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"api_call","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"api_call","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -170,9 +178,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchUserJourney = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"user_journey","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"user_journey","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -183,9 +192,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchDeviceInfo = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"device_info","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"device_info","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -196,9 +206,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchPerformance = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"page_performance","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"page_performance","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });
@@ -209,9 +220,10 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const fetchErrors = async (dateFrom: string): Promise<any[]> => {
-    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"error_occurred","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+    const config = getPostHogConfig();
+    const response = await fetch(`${config.host}/api/projects/@current/insights/trend/?events=[{"id":"error_occurred","type":"events"}]&date_from=${dateFrom}&interval=day`, {
       headers: {
-        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Authorization': `Bearer ${config.apiKey}`,
         'Content-Type': 'application/json'
       }
     });

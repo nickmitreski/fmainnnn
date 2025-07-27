@@ -1,20 +1,23 @@
 import posthog from 'posthog-js';
 
 // Initialize PostHog with environment variables
-const posthogKey = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
-const posthogHost = import.meta.env.VITE_PUBLIC_POSTHOG_HOST;
+const getPostHogConfig = () => ({
+  key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY,
+  host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+});
 
 let posthogInstance = posthog;
 
 // Only initialize if we have a valid PostHog key (not placeholder)
-const isValidPostHogKey = posthogKey && 
-  posthogKey !== 'your-posthog-key-here' && 
-  posthogKey !== 'disabled' && 
-  posthogKey.length > 10;
+const config = getPostHogConfig();
+const isValidPostHogKey = config.key && 
+  config.key !== 'your-posthog-key-here' && 
+  config.key !== 'disabled' && 
+  config.key.length > 10;
 
 if (isValidPostHogKey) {
-  posthog.init(posthogKey, {
-    api_host: posthogHost || 'https://us.i.posthog.com',
+  posthog.init(config.key, {
+    api_host: config.host,
     capture_pageview: true, // Automatically capture pageviews
     capture_pageleave: true, // Capture when users leave the page
     autocapture: true, // Automatically capture clicks, form submissions etc.
