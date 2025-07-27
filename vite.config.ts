@@ -16,4 +16,9 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    // Ensure environment variables are properly defined at build time
+    'import.meta.env.DEV': JSON.stringify(process.env.NODE_ENV === 'development'),
+    'import.meta.env.PROD': JSON.stringify(process.env.NODE_ENV === 'production'),
+  },
 });
