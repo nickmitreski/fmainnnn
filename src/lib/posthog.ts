@@ -1,10 +1,20 @@
 import posthog from 'posthog-js';
 
 // Initialize PostHog with environment variables
-const getPostHogConfig = () => ({
-  key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
-  host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
-});
+const getPostHogConfig = () => {
+  try {
+    return {
+      key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
+      host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+    };
+  } catch (error) {
+    console.warn('Error accessing PostHog environment variables:', error);
+    return {
+      key: '',
+      host: 'https://us.i.posthog.com'
+    };
+  }
+};
 
 let posthogInstance = posthog;
 
@@ -25,7 +35,7 @@ if (isValidPostHogKey) {
     disable_session_recording: false,
     loaded: (posthog) => {
       // Add any additional configuration after PostHog is loaded
-      if (import.meta.env.DEV) {
+      if (import.meta.env.DEV || false) {
         // Enable debug mode in development
         posthog.debug();
       }

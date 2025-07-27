@@ -1,10 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables - these should be set in Vercel
-const getSupabaseConfig = () => ({
-  url: import.meta.env.VITE_SUPABASE_URL || '',
-  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-});
+const getSupabaseConfig = () => {
+  try {
+    return {
+      url: import.meta.env.VITE_SUPABASE_URL || '',
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+    };
+  } catch (error) {
+    console.warn('Error accessing environment variables:', error);
+    return {
+      url: '',
+      anonKey: ''
+    };
+  }
+};
 
 // Create the Supabase client with error handling
 let supabase: ReturnType<typeof createClient>;

@@ -3,10 +3,20 @@ import { debugAPI, APIConfig } from './apiDebugger';
 import { trackAPICall } from './analytics';
 
 // Get Supabase configuration
-const getSupabaseConfig = () => ({
-  url: import.meta.env.VITE_SUPABASE_URL || '',
-  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-});
+const getSupabaseConfig = () => {
+  try {
+    return {
+      url: import.meta.env.VITE_SUPABASE_URL || '',
+      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+    };
+  } catch (error) {
+    console.warn('Error accessing Supabase environment variables:', error);
+    return {
+      url: '',
+      anonKey: ''
+    };
+  }
+};
 
 // Create a mock client if environment variables are not set
 let supabase: ReturnType<typeof createClient>;
@@ -255,7 +265,7 @@ export async function testOpenAIApiKey(apiKey: string): Promise<boolean> {
   const requestId = debugAPI.log({
     provider: 'openai',
     endpoint: 'https://api.openai.com/v1/models',
-    environment: import.meta.env.DEV ? 'development' : 'production',
+    environment: (import.meta.env.DEV || false) ? 'development' : 'production',
     userAgent: navigator.userAgent,
     apiKeySource: 'environment'
   });

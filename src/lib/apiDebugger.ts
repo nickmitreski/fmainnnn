@@ -134,15 +134,30 @@ class APIDebugger {
   }
 
   public getEnvironmentStatus(): Record<string, any> {
-    const getEnvVars = () => ({
-      supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
-      supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
-      openaiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
-      mistralKey: import.meta.env.VITE_MISTRAL_API_KEY || '',
-      googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
-      youtubeKey: import.meta.env.VITE_YOUTUBE_API_KEY || '',
-      postHogKey: import.meta.env.VITE_POSTHOG_KEY || '',
-    });
+    const getEnvVars = () => {
+      try {
+        return {
+          supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
+          supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+          openaiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
+          mistralKey: import.meta.env.VITE_MISTRAL_API_KEY || '',
+          googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+          youtubeKey: import.meta.env.VITE_YOUTUBE_API_KEY || '',
+          postHogKey: import.meta.env.VITE_POSTHOG_KEY || '',
+        };
+      } catch (error) {
+        console.warn('Error accessing environment variables in apiDebugger:', error);
+        return {
+          supabaseUrl: '',
+          supabaseKey: '',
+          openaiKey: '',
+          mistralKey: '',
+          googleMapsKey: '',
+          youtubeKey: '',
+          postHogKey: '',
+        };
+      }
+    };
 
     const envVars = getEnvVars();
     
