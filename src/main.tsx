@@ -5,10 +5,9 @@ import './index.css';
 import './styles/skeuomorphic-ios.css';
 import { PostHogProvider } from 'posthog-js/react';
 import { posthog } from './lib/posthog';
-import { analytics } from './lib/analytics';
+import { analytics } from './lib/analytics-simple';
 
-// Analytics is automatically initialized when the module is imported
-// The analytics singleton is already available
+// Using simplified analytics without DOM event listeners
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
