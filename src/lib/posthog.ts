@@ -1,8 +1,8 @@
 import posthog from 'posthog-js';
 
 // Initialize PostHog with environment variables
-const posthogKey = import.meta.env.VITE_POSTHOG_KEY;
-const posthogHost = import.meta.env.VITE_POSTHOG_HOST;
+const posthogKey = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
+const posthogHost = import.meta.env.VITE_PUBLIC_POSTHOG_HOST;
 
 let posthogInstance = posthog;
 

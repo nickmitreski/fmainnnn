@@ -3,8 +3,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Clock, MousePointer, Eye, Calendar, ArrowUpRight, Users, TrendingUp, Activity, Zap, Smartphone, Monitor, Globe, MessageSquare, Gamepad2, Settings } from 'lucide-react';
 
 // PostHog API configuration
-const POSTHOG_API_KEY = 'phc_7bAsvmPvKkOF91RjkIMnidQhsAPF5HkO9GqvyGKu0Is';
-const POSTHOG_HOST = 'https://us.i.posthog.com';
+const POSTHOG_API_KEY = import.meta.env.VITE_PUBLIC_POSTHOG_KEY;
+const POSTHOG_HOST = import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
 
 interface PostHogEvent {
   id: string;
@@ -52,6 +52,13 @@ const AnalyticsDashboard: React.FC = () => {
   const fetchPostHogData = async () => {
     setLoading(true);
     setError(null);
+
+    // Check if PostHog API key is configured
+    if (!POSTHOG_API_KEY) {
+      setError('PostHog API key not configured. Please set VITE_PUBLIC_POSTHOG_KEY in your environment variables.');
+      setLoading(false);
+      return;
+    }
 
     try {
       const dateFrom = getDateFromTimeRange(timeRange);
@@ -364,6 +371,16 @@ const AnalyticsDashboard: React.FC = () => {
       <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-lg">
         <h3 className="text-lg font-semibold mb-2">Analytics Error</h3>
         <p>{error}</p>
+        {error.includes('PostHog API key not configured') && (
+          <div className="mt-4 p-4 bg-gray-800 rounded text-sm">
+            <p className="text-gray-300 mb-2">To configure PostHog analytics:</p>
+            <ol className="list-decimal list-inside text-gray-400 space-y-1">
+              <li>Add <code className="bg-gray-700 px-1 rounded">VITE_PUBLIC_POSTHOG_KEY</code> to your environment variables</li>
+              <li>Add <code className="bg-gray-700 px-1 rounded">VITE_PUBLIC_POSTHOG_HOST</code> to your environment variables</li>
+              <li>Redeploy your application</li>
+            </ol>
+          </div>
+        )}
         <button 
           onClick={fetchPostHogData}
           className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
