@@ -5,7 +5,7 @@ import { CONVERSATION_EXAMPLES } from './conversationExamples';
 import MessagesHeader from './MessagesHeader';
 import MessageBubble from './MessageBubble';
 import InputBar from './InputBar';
-import { trackFeatureUsage, trackAPICall } from '../../../lib/analytics';
+import { trackFeatureUsage, trackAPICall } from '../../../lib/analytics-new';
 
 type Message = {
   sender: 'user' | 'ai';

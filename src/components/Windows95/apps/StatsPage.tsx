@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo } from 'react';
 import { posthog } from '../../../lib/posthog';
-import { getSessionDuration, getClickCount } from '../../../lib/analytics';
+import { getSessionDuration, getClickCount } from '../../../lib/analytics-new';
 
 /**
  * StatsPage props interface

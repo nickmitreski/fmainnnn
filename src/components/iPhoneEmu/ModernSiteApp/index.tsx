@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import ModernSiteHeader from './ModernSiteHeader';
-import { getSessionDuration, getClickCount } from '../../../lib/analytics';
+import { getSessionDuration, getClickCount } from '../../../lib/analytics-new';
 import { ViewType } from '../../../types/index';
 
 interface ModernSiteAppProps {

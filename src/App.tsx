@@ -3,7 +3,7 @@ import { Frame } from './components/ChoiceAnimation/Frame';
 import { ViewType } from './types/index';
 import './styles/global.css';
 import { posthog } from './lib/posthog';
-import { analytics, trackPageView, trackFeatureUsage } from './lib/analytics';
+import { analytics, trackPageView, trackFeatureUsage } from './lib/analytics-new';
 import { WindowManagerProvider } from './contexts/WindowManagerContext';
 import ErrorBoundary from './components/ErrorBoundary';
 

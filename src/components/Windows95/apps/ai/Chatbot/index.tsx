@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { supabase } from '../../../../../lib/supabase';
 import { callOpenAI } from '../../../../../lib/llm';
-import { trackFeatureUsage, trackGameUsage } from '../../../../../lib/analytics';
+import { trackFeatureUsage, trackGameUsage } from '../../../../../lib/analytics-new';
 
 interface ChatMessage {
   id?: string;

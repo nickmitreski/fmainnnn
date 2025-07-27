@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { colors } from '../../theme/theme';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getSessionDuration, getClickCount } from '../../lib/analytics';
+import { getSessionDuration, getClickCount } from '../../lib/analytics-new';
 
 interface ModernStatsPopupProps {
   isOpen: boolean;

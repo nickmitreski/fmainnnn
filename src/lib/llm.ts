@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { debugAPI, APIConfig } from './apiDebugger';
-import { trackAPICall } from './analytics';
+import { trackAPICall } from './analytics-new';
 import { config } from './config';
 
 // Get Supabase configuration
