@@ -41,13 +41,13 @@ const YouTubeApp: React.FC<YouTubeAppProps> = ({ onClose }) => {
   const playerRef = useRef<HTMLDivElement>(null);
   const [recommended, setRecommended] = useState<any[]>([]);
 
-  const YT_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
+  const getYoutubeApiKey = () => import.meta.env.VITE_YOUTUBE_API_KEY || '';
 
   const fetchVideos = async (query: string) => {
     setLoading(true);
     setVideos([]);
     try {
-      const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(query)}&key=${YT_API_KEY}`);
+      const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(query)}&key=${getYoutubeApiKey()}`);
       const data = await res.json();
       setVideos(data.items || []);
     } catch (e) {
@@ -75,7 +75,7 @@ const YouTubeApp: React.FC<YouTubeAppProps> = ({ onClose }) => {
     const fetchRecommended = async () => {
       try {
         const ids = RECOMMENDED_VIDEO_IDS.join(',');
-        const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids}&key=${YT_API_KEY}`);
+        const res = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${ids}&key=${getYoutubeApiKey()}`);
         const data = await res.json();
         setRecommended(data.items || []);
       } catch (e) {

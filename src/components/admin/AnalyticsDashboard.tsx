@@ -4,7 +4,7 @@ import { Clock, MousePointer, Eye, Calendar, ArrowUpRight, Users, TrendingUp, Ac
 
 // PostHog API configuration - will be accessed within functions
 const getPostHogConfig = () => ({
-  apiKey: import.meta.env.VITE_PUBLIC_POSTHOG_KEY,
+  apiKey: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
   host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
 });
 

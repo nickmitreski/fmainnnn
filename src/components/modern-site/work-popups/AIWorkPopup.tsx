@@ -511,10 +511,10 @@ const ImageGenerationDemo: React.FC = () => {
       // Simulate image generation with a real API call
       try {
         // Call the Supabase Edge Function
-        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/generate-image`;
+        const apiUrl = `${import.meta.env.VITE_SUPABASE_URL || ''}/functions/v1/generate-image`;
         
         const headers = {
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+                      'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || ''}`,
           'Content-Type': 'application/json',
         };
 

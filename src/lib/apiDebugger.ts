@@ -32,7 +32,7 @@ export interface APIConfig {
 class APIDebugger {
   private debugLog: APIDebugInfo[] = [];
   private getDebugMode() {
-    return import.meta.env.DEV || import.meta.env.VITE_DEBUG_APIS === 'true';
+    return (import.meta.env.DEV || false) || (import.meta.env.VITE_DEBUG_APIS === 'true');
   }
 
   constructor() {

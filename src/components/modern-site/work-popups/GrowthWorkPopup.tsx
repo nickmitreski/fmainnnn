@@ -4,7 +4,7 @@ import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 // Use environment variable for Supabase anon key
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const getSupabaseAnonKey = () => import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
 interface GrowthWorkPopupProps {
   onClose: () => void;
@@ -28,7 +28,7 @@ const GrowthWorkPopup: React.FC<GrowthWorkPopupProps> = ({ onClose }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "apikey": SUPABASE_ANON_KEY,
+        "apikey": getSupabaseAnonKey(),
         "Prefer": "return=representation"
       },
       body: JSON.stringify({ website_url, email })

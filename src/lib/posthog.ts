@@ -2,7 +2,7 @@ import posthog from 'posthog-js';
 
 // Initialize PostHog with environment variables
 const getPostHogConfig = () => ({
-  key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY,
+  key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
   host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
 });
 

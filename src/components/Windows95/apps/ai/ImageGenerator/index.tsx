@@ -167,11 +167,11 @@ const ImageGenerator: React.FC = () => {
       }
       
       // Call the Supabase Edge Function
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
       const apiUrl = `${supabaseUrl}/functions/v1/generate-image`;
       
       const headers = {
-        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
+        'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY || ''}`,
         'Content-Type': 'application/json',
       };
 

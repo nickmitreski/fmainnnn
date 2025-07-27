@@ -4,8 +4,8 @@ import { trackAPICall } from './analytics';
 
 // Get Supabase configuration
 const getSupabaseConfig = () => ({
-  url: import.meta.env.VITE_SUPABASE_URL,
-  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY
+  url: import.meta.env.VITE_SUPABASE_URL || '',
+  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 });
 
 // Create a mock client if environment variables are not set
