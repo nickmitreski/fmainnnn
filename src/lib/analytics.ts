@@ -228,6 +228,14 @@ export class AnalyticsTracker {
     });
   }
 
+  public getSessionDuration(): number {
+    return Math.floor((Date.now() - this.sessionStartTime) / 1000);
+  }
+
+  public getClickCount(): number {
+    return this.userProperties.total_clicks || 0;
+  }
+
   // Page View Tracking with Enhanced Data
   public trackPageView(page: string, properties?: Record<string, any>) {
     const pageDuration = Date.now() - this.pageStartTime;
@@ -420,4 +428,13 @@ export const trackPageView = (page: string, properties?: Record<string, any>) =>
 
 export const trackAPICall = (api: string, method: string, status: number, duration: number, properties?: Record<string, any>) => {
   analytics.trackAPICall(api, method, status, duration, properties);
+};
+
+// Session and click tracking utilities
+export const getSessionDuration = (): number => {
+  return analytics.getSessionDuration();
+};
+
+export const getClickCount = (): number => {
+  return analytics.getClickCount();
 };
