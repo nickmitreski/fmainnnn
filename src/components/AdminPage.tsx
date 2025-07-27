@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase';
 import { motion } from 'framer-motion';
 import { Activity, Mail, Database, LogOut, Key, FileText, Sticker as Sticky, BarChart2, Briefcase, CreditCard, DollarSign, Bell, LucideIcon, Search } from 'lucide-react';
 import ApiKeyManager from './admin/ApiKeyManager';
+import APIDebugger from './admin/APIDebugger';
 
 import ContactSubmissionList from './admin/ContactSubmissionList';
 import TodoList from './admin/TodoList';
@@ -189,6 +190,7 @@ const AdminPage: React.FC = () => {
 
   // Data states
   const [activeTab, setActiveTab] = useState<'analytics' | 'contacts' | 'supabase-status' | 'api-keys' | 'todos' | 'notes' | 'clients-jobs' | 'subscriptions' | 'financials' | 'coming-soon' | 'seo-audits'>('analytics');
+  const [isAPIDebuggerOpen, setIsAPIDebuggerOpen] = useState(false);
   const [pageViews, setPageViews] = useState<PageView[]>([]);
   const [clickEvents, setClickEvents] = useState<ClickEvent[]>([]);
   const [visitDurations, setVisitDurations] = useState<VisitDuration[]>([]);
@@ -789,6 +791,17 @@ const AdminPage: React.FC = () => {
               <TabButton tab="seo-audits" icon={Search} label="SEO Audits" />
               <TabButton tab="supabase-status" icon={Database} label="Supabase Status" />
             </div>
+            
+            {/* API Debugger Button */}
+            <div className="mt-6 pt-6 border-t border-gray-800">
+              <button
+                onClick={() => setIsAPIDebuggerOpen(true)}
+                className="flex items-center gap-2 px-4 py-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded w-full transition-colors"
+              >
+                <Search size={18} />
+                <span className="font-light tracking-tight">API Debugger</span>
+              </button>
+            </div>
             <button
               onClick={handleLogout}
               className="flex items-center gap-2 px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-500/10 rounded mt-8 w-full transition-colors"
@@ -945,6 +958,67 @@ const AdminPage: React.FC = () => {
       </div>
     );
   }
+
+  return (
+    <>
+      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
+        <motion.div 
+          className="w-full max-w-md bg-[#1a1a1a] p-8 rounded-lg border border-gray-800"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl font-light mb-6 tracking-tight text-center">Admin Login</h1>
+          
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded mb-4 text-sm">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-sm font-light mb-2 tracking-tight">
+                Email
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-2 bg-black border border-gray-800 rounded text-white focus:outline-none focus:border-[#0CF2A0] transition-colors"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-light mb-2 tracking-tight">
+                Password
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-4 py-2 bg-black border border-gray-800 rounded text-white focus:outline-none focus:border-[#0CF2A0] transition-colors"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-[#0CF2A0] text-black py-3 rounded transition-colors hover:bg-[#07C280] disabled:opacity-50"
+              disabled={loading}
+            >
+              {loading ? 'Loading...' : 'Login'}
+            </button>
+          </form>
+        </motion.div>
+      </div>
+      
+      {/* API Debugger Modal */}
+      <APIDebugger 
+        isOpen={isAPIDebuggerOpen} 
+        onClose={() => setIsAPIDebuggerOpen(false)} 
+      />
+    </>
+  );
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
