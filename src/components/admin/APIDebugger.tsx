@@ -12,9 +12,11 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
   const [debugLog, setDebugLog] = useState<any[]>([]);
   const [isTesting, setIsTesting] = useState(false);
   const [activeTab, setActiveTab] = useState<'status' | 'tests' | 'logs' | 'keys'>('status');
+  const [error, setError] = useState<string | null>(null);
 
   // Debug logging
   console.log('APIDebugger component rendered, isOpen:', isOpen);
+  console.log('APIDebugger props:', { isOpen, onClose: typeof onClose });
 
   useEffect(() => {
     console.log('APIDebugger useEffect triggered, isOpen:', isOpen);
@@ -29,8 +31,10 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
         const logs = debugAPI.getDebugLog();
         console.log('Debug logs:', logs);
         setDebugLog(logs);
+        setError(null);
       } catch (error) {
         console.error('Error in APIDebugger useEffect:', error);
+        setError(`Failed to initialize: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
   }, [isOpen]);
@@ -94,9 +98,36 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
     return null;
   }
 
+  // Fallback for production debugging
+  if (typeof window !== 'undefined' && !debugAPI) {
+    console.error('debugAPI not available');
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white rounded-lg shadow-xl w-11/12 max-w-6xl h-5/6 overflow-hidden">
+          <div className="p-8">
+            <h2 className="text-2xl font-bold mb-4">API Debugger Error</h2>
+            <p className="text-red-600">debugAPI is not available. This might be a build issue.</p>
+            <button 
+              onClick={onClose}
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white rounded-lg shadow-xl w-11/12 max-w-6xl h-5/6 overflow-hidden">
+        {/* Error Display */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded m-4">
+            <strong>Error:</strong> {error}
+          </div>
+        )}
         {/* Header */}
         <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">🔍 API Debugger & Manager</h2>

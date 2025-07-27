@@ -197,6 +197,12 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     console.log('APIDebugger state changed:', isAPIDebuggerOpen);
   }, [isAPIDebuggerOpen]);
+
+  // Additional debugging for production
+  useEffect(() => {
+    console.log('AdminPage mounted, isAuthenticated:', isAuthenticated);
+    console.log('APIDebugger import check:', typeof APIDebugger);
+  }, []);
   const [clickEvents, setClickEvents] = useState<ClickEvent[]>([]);
   const [visitDurations, setVisitDurations] = useState<VisitDuration[]>([]);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
