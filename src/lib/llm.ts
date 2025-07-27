@@ -2,33 +2,50 @@ import { createClient } from '@supabase/supabase-js';
 import { debugAPI, APIConfig } from './apiDebugger';
 import { trackAPICall } from './analytics';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Get Supabase configuration
+const getSupabaseConfig = () => ({
+  url: import.meta.env.VITE_SUPABASE_URL,
+  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY
+});
 
 // Create a mock client if environment variables are not set
 let supabase: ReturnType<typeof createClient>;
 
-if (!supabaseUrl || !supabaseAnonKey || supabaseUrl === 'https://your-project-id.supabase.co' || supabaseAnonKey === 'your-anon-key-here') {
-  console.warn('Supabase environment variables not configured. Using mock client.');
-  // Create a mock supabase client for development
-  supabase = ({
-    from: () => ({
-      select: () => ({
-        eq: () => ({
+const initializeSupabase = () => {
+  const config = getSupabaseConfig();
+  
+  if (!config.url || !config.anonKey || config.url === 'https://your-project-id.supabase.co' || config.anonKey === 'your-anon-key-here') {
+    console.warn('Supabase environment variables not configured. Using mock client.');
+    // Create a mock supabase client for development
+    supabase = ({
+      from: () => ({
+        select: () => ({
           eq: () => ({
-            order: () => ({
-              limit: () => ({
-                maybeSingle: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') })
+            eq: () => ({
+              order: () => ({
+                limit: () => ({
+                  maybeSingle: () => Promise.resolve({ data: null, error: new Error('Supabase not configured') })
+                })
               })
             })
           })
         })
       })
-    })
-  }) as any;
-} else {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-}
+    }) as any;
+  } else {
+    supabase = createClient(config.url, config.anonKey);
+  }
+};
+
+// Initialize on first access
+let isInitialized = false;
+const getSupabase = () => {
+  if (!isInitialized) {
+    initializeSupabase();
+    isInitialized = true;
+  }
+  return supabase;
+};
 
 export interface APIKeyInfo {
   key: string;
@@ -49,7 +66,8 @@ export async function getLLMApiKey(provider: string): Promise<APIKeyInfo> {
   });
 
   try {
-    const { data, error } = await supabase
+    const supabaseClient = getSupabase();
+    const { data, error } = await supabaseClient
       .from('api_keys')
       .select('api_key')
       .eq('provider', provider)

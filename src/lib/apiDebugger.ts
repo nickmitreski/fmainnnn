@@ -31,7 +31,9 @@ export interface APIConfig {
 
 class APIDebugger {
   private debugLog: APIDebugInfo[] = [];
-  private isDebugMode = import.meta.env.DEV || import.meta.env.VITE_DEBUG_APIS === 'true';
+  private getDebugMode() {
+    return import.meta.env.DEV || import.meta.env.VITE_DEBUG_APIS === 'true';
+  }
 
   constructor() {
     this.setupGlobalErrorHandling();
@@ -67,7 +69,7 @@ class APIDebugger {
 
     this.debugLog.push(debugInfo);
     
-    if (this.isDebugMode) {
+    if (this.getDebugMode()) {
       console.group(`🔍 API Call [${requestId}] - ${info.provider}`);
       console.log('Debug Info:', debugInfo);
       console.groupEnd();
@@ -87,7 +89,7 @@ class APIDebugger {
       };
       debugInfo.success = false;
 
-      if (this.isDebugMode) {
+      if (this.getDebugMode()) {
         console.error(`❌ API Error [${requestId}]:`, {
           error: debugInfo.error,
           context,
@@ -103,14 +105,14 @@ class APIDebugger {
       debugInfo.success = true;
       debugInfo.responseTime = responseTime;
 
-      if (this.isDebugMode) {
+      if (this.getDebugMode()) {
         console.log(`✅ API Success [${requestId}] - ${responseTime}ms`);
       }
     }
   }
 
   private logError(type: string, error: any) {
-    if (this.isDebugMode) {
+    if (this.getDebugMode()) {
       console.error(`🚨 ${type}:`, error);
     }
   }
@@ -132,23 +134,35 @@ class APIDebugger {
   }
 
   public getEnvironmentStatus(): Record<string, any> {
+    const getEnvVars = () => ({
+      supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
+      supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+      openaiKey: import.meta.env.VITE_OPENAI_API_KEY,
+      mistralKey: import.meta.env.VITE_MISTRAL_API_KEY,
+      googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+      youtubeKey: import.meta.env.VITE_YOUTUBE_API_KEY,
+      postHogKey: import.meta.env.VITE_POSTHOG_KEY,
+    });
+
+    const envVars = getEnvVars();
+    
     return {
       isDevelopment: import.meta.env.DEV,
       isProduction: import.meta.env.PROD,
-      debugMode: this.isDebugMode,
+      debugMode: this.getDebugMode(),
       environmentVariables: {
-        hasSupabaseUrl: !!import.meta.env.VITE_SUPABASE_URL,
-        hasSupabaseKey: !!import.meta.env.VITE_SUPABASE_ANON_KEY,
-        hasOpenAIKey: !!import.meta.env.VITE_OPENAI_API_KEY,
-        hasMistralKey: !!import.meta.env.VITE_MISTRAL_API_KEY,
-        hasGoogleMapsKey: !!import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-        hasYouTubeKey: !!import.meta.env.VITE_YOUTUBE_API_KEY,
-        hasPostHogKey: !!import.meta.env.VITE_POSTHOG_KEY,
+        hasSupabaseUrl: !!envVars.supabaseUrl,
+        hasSupabaseKey: !!envVars.supabaseKey,
+        hasOpenAIKey: !!envVars.openaiKey,
+        hasMistralKey: !!envVars.mistralKey,
+        hasGoogleMapsKey: !!envVars.googleMapsKey,
+        hasYouTubeKey: !!envVars.youtubeKey,
+        hasPostHogKey: !!envVars.postHogKey,
       },
       apiKeyPrefixes: {
-        openai: import.meta.env.VITE_OPENAI_API_KEY?.substring(0, 10) + '...',
-        mistral: import.meta.env.VITE_MISTRAL_API_KEY?.substring(0, 10) + '...',
-        supabase: import.meta.env.VITE_SUPABASE_ANON_KEY?.substring(0, 10) + '...',
+        openai: envVars.openaiKey?.substring(0, 10) + '...',
+        mistral: envVars.mistralKey?.substring(0, 10) + '...',
+        supabase: envVars.supabaseKey?.substring(0, 10) + '...',
       }
     };
   }

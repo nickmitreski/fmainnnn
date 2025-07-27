@@ -1,25 +1,41 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Get environment variables - these should be set in Vercel
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const getSupabaseConfig = () => ({
+  url: import.meta.env.VITE_SUPABASE_URL,
+  anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY
+});
 
 // Create the Supabase client with error handling
 let supabase: ReturnType<typeof createClient>;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing required Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
-  throw new Error('Supabase environment variables not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.');
-}
+const initializeSupabase = () => {
+  const config = getSupabaseConfig();
+  
+  if (!config.url || !config.anonKey) {
+    console.error('Missing required Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+    throw new Error('Supabase environment variables not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.');
+  }
 
-try {
-  supabase = createClient(supabaseUrl, supabaseAnonKey);
-} catch (error) {
-  console.error('Error initializing Supabase client:', error);
-  throw new Error('Failed to initialize Supabase client');
-}
+  try {
+    supabase = createClient(config.url, config.anonKey);
+  } catch (error) {
+    console.error('Error initializing Supabase client:', error);
+    throw new Error('Failed to initialize Supabase client');
+  }
+};
 
-export { supabase };
+// Initialize on first access
+let isInitialized = false;
+const getSupabase = () => {
+  if (!isInitialized) {
+    initializeSupabase();
+    isInitialized = true;
+  }
+  return supabase;
+};
+
+export { getSupabase as supabase };
 
 // Contact form submission with error handling
 export const submitContactForm = async (data: {
@@ -28,11 +44,12 @@ export const submitContactForm = async (data: {
   message: string;
 }) => {
   try {
-    if (!supabase || !supabase.from) {
+    const supabaseClient = getSupabase();
+    if (!supabaseClient || !supabaseClient.from) {
       return { success: false, error: 'Supabase client not properly initialized' };
     }
     
-    const { error } = await supabase.from('contact_submissions').insert([
+    const { error } = await supabaseClient.from('contact_submissions').insert([
       { ...data, timestamp: new Date().toISOString() }
     ]);
 
@@ -51,11 +68,12 @@ export const submitContactForm = async (data: {
 // Video management with error handling
 export const getVideos = async () => {
   try {
-    if (!supabase || !supabase.from) {
+    const supabaseClient = getSupabase();
+    if (!supabaseClient || !supabaseClient.from) {
       return { success: false, error: 'Supabase client not properly initialized', videos: [] };
     }
     
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from('videos')
       .select('*')
       .order('timestamp', { ascending: false });
