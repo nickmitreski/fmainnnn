@@ -135,20 +135,20 @@ class APIDebugger {
 
   public getEnvironmentStatus(): Record<string, any> {
     const getEnvVars = () => ({
-      supabaseUrl: import.meta.env.VITE_SUPABASE_URL,
-      supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY,
-      openaiKey: import.meta.env.VITE_OPENAI_API_KEY,
-      mistralKey: import.meta.env.VITE_MISTRAL_API_KEY,
-      googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-      youtubeKey: import.meta.env.VITE_YOUTUBE_API_KEY,
-      postHogKey: import.meta.env.VITE_POSTHOG_KEY,
+      supabaseUrl: import.meta.env.VITE_SUPABASE_URL || '',
+      supabaseKey: import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+      openaiKey: import.meta.env.VITE_OPENAI_API_KEY || '',
+      mistralKey: import.meta.env.VITE_MISTRAL_API_KEY || '',
+      googleMapsKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+      youtubeKey: import.meta.env.VITE_YOUTUBE_API_KEY || '',
+      postHogKey: import.meta.env.VITE_POSTHOG_KEY || '',
     });
 
     const envVars = getEnvVars();
     
     return {
-      isDevelopment: import.meta.env.DEV,
-      isProduction: import.meta.env.PROD,
+      isDevelopment: import.meta.env.DEV || false,
+      isProduction: import.meta.env.PROD || false,
       debugMode: this.getDebugMode(),
       environmentVariables: {
         hasSupabaseUrl: !!envVars.supabaseUrl,

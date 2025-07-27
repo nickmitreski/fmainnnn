@@ -60,7 +60,7 @@ export async function getLLMApiKey(provider: string): Promise<APIKeyInfo> {
   const requestId = debugAPI.log({
     provider: 'supabase',
     endpoint: 'api_keys',
-    environment: import.meta.env.DEV ? 'development' : 'production',
+    environment: (import.meta.env.DEV || false) ? 'development' : 'production',
     userAgent: navigator.userAgent,
     apiKeySource: 'supabase'
   });
@@ -103,16 +103,16 @@ export async function getAPIKeyWithFallback(provider: string): Promise<APIKeyInf
 
   // Check environment variables first
   if (provider === 'openai') {
-    if (import.meta.env.VITE_OPENAI_API_KEY) {
-      apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    if (import.meta.env.VITE_OPENAI_API_KEY || '') {
+      apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
       source = 'environment';
-    } else if (import.meta.env.OPENAI_API_KEY) {
-      apiKey = import.meta.env.OPENAI_API_KEY;
+    } else if (import.meta.env.OPENAI_API_KEY || '') {
+      apiKey = import.meta.env.OPENAI_API_KEY || '';
       source = 'environment';
     }
   } else if (provider === 'mistral') {
-    if (import.meta.env.VITE_MISTRAL_API_KEY) {
-      apiKey = import.meta.env.VITE_MISTRAL_API_KEY;
+    if (import.meta.env.VITE_MISTRAL_API_KEY || '') {
+      apiKey = import.meta.env.VITE_MISTRAL_API_KEY || '';
       source = 'environment';
     }
   }
@@ -129,7 +129,7 @@ export async function getAPIKeyWithFallback(provider: string): Promise<APIKeyInf
   }
 
   // Final fallback for development
-  if (!apiKey && import.meta.env.DEV) {
+  if (!apiKey && (import.meta.env.DEV || false)) {
     if (provider === 'openai') {
       apiKey = "sk-proj-demo-key-placeholder";
       source = 'fallback';
@@ -151,7 +151,7 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
   const requestId = debugAPI.log({
     provider: 'openai',
     endpoint: 'https://api.openai.com/v1/chat/completions',
-    environment: import.meta.env.DEV ? 'development' : 'production',
+    environment: (import.meta.env.DEV || false) ? 'development' : 'production',
     userAgent: navigator.userAgent,
     apiKeySource: 'environment'
   });
@@ -170,7 +170,7 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
     debugAPI.log({
       provider: 'openai',
       endpoint: 'https://api.openai.com/v1/chat/completions',
-      environment: import.meta.env.DEV ? 'development' : 'production',
+      environment: (import.meta.env.DEV || false) ? 'development' : 'production',
       userAgent: navigator.userAgent,
       apiKeySource: apiKeyInfo.source,
       apiKeyPrefix: apiKeyInfo.key.substring(0, 10) + '...'
