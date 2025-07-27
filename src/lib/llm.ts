@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { debugAPI, APIConfig } from './apiDebugger';
+import { trackAPICall } from './analytics';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
@@ -137,6 +138,13 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
     apiKeySource: 'environment'
   });
 
+  // Track API call start
+  trackAPICall('openai', 'POST', 0, 0, { 
+    prompt_length: prompt.length,
+    history_length: history.length,
+    model: 'gpt-3.5-turbo'
+  });
+
   try {
     const apiKeyInfo = await getAPIKeyWithFallback('openai');
     
@@ -183,9 +191,27 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
     const responseTime = Date.now() - startTime;
     debugAPI.success(requestId, responseTime);
     
+    // Track successful API call
+    trackAPICall('openai', 'POST', response.status, responseTime, {
+      prompt_length: prompt.length,
+      history_length: history.length,
+      model: 'gpt-3.5-turbo',
+      response_length: data.choices[0].message.content.length,
+      tokens_used: data.usage?.total_tokens || 0
+    });
+    
     return data.choices[0].message.content;
   } catch (error) {
     debugAPI.error(requestId, error);
+    
+    // Track failed API call
+    trackAPICall('openai', 'POST', 500, Date.now() - startTime, {
+      prompt_length: prompt.length,
+      history_length: history.length,
+      model: 'gpt-3.5-turbo',
+      error_message: error instanceof Error ? error.message : String(error)
+    });
+    
     throw error;
   }
 }

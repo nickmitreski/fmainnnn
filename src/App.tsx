@@ -3,6 +3,7 @@ import { Frame } from './components/ChoiceAnimation/Frame';
 import { ViewType } from './types/index';
 import './styles/global.css';
 import { posthog } from './lib/posthog';
+import { analytics, trackPageView, trackFeatureUsage } from './lib/analytics';
 import { WindowManagerProvider } from './contexts/WindowManagerContext';
 import ErrorBoundary from './components/ErrorBoundary';
 
@@ -55,6 +56,7 @@ function App(): JSX.Element {
   // Handle year selection, preload, and switch view
   const handleYearSelect = useCallback(async (year: '1996' | '2025') => {
     posthog.capture('year_selected', { year });
+    trackFeatureUsage('year_selection', 'selected', { year, is_mobile: isMobile });
     try {
       // Ensure component is preloaded before navigation
       if (year === '1996') {
@@ -75,9 +77,21 @@ function App(): JSX.Element {
     }
   }, [isMobile]);
 
-  // Track view changes with PostHog analytics
+  // Track view changes with enhanced analytics
   useEffect(() => {
     posthog.capture('view_changed', { view: currentView });
+    trackPageView(currentView, { view_type: currentView });
+    
+    // Track user journey progress
+    if (currentView === 'landing') {
+      analytics.trackUserJourney('landing_page_view');
+    } else if (currentView === '1996') {
+      analytics.trackUserJourney('feature_exploration', { feature: 'retro_emulator' });
+    } else if (currentView === '2025') {
+      analytics.trackUserJourney('feature_exploration', { feature: 'modern_site' });
+    } else if (currentView === 'admin') {
+      analytics.trackUserJourney('admin_access');
+    }
   }, [currentView]);
 
   // Preload likely next components on mount for better UX

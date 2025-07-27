@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react';
 import { supabase } from '../../../../../lib/supabase';
 import { callOpenAI } from '../../../../../lib/llm';
+import { trackFeatureUsage, trackGameUsage } from '../../../../../lib/analytics';
 
 interface ChatMessage {
   id?: string;
@@ -103,6 +104,13 @@ const Chatbot: React.FC = () => {
   const handleSend = useCallback(async () => {
     if (!input.trim() || loading || !sessionId) return;
     
+    // Track chatbot usage
+    trackFeatureUsage('chatbot', 'message_sent', {
+      message_length: input.length,
+      session_id: sessionId,
+      interface: 'windows95'
+    });
+    
     setError(null);
     const userMsg: ChatMessage = { role: 'user', content: input };
     setMessages((prev) => [...prev, userMsg]);
@@ -130,6 +138,13 @@ const Chatbot: React.FC = () => {
       // Call the AI
       const response = await callOpenAI(input, contextWithSystem);
       
+      // Track successful AI response
+      trackFeatureUsage('chatbot', 'ai_response_received', {
+        response_length: response.length,
+        session_id: sessionId,
+        interface: 'windows95'
+      });
+      
       // Add assistant response
       const assistantMessage: ChatMessage = { role: 'assistant', content: response };
       setMessages(prev => [...prev, assistantMessage]);
@@ -139,6 +154,13 @@ const Chatbot: React.FC = () => {
     } catch (err) {
       console.error('Error generating response:', err);
       setError(err instanceof Error ? err.message : 'Something went wrong!');
+      
+      // Track chatbot error
+      trackFeatureUsage('chatbot', 'error_occurred', {
+        error_message: err instanceof Error ? err.message : String(err),
+        session_id: sessionId,
+        interface: 'windows95'
+      });
       
       // Add a fallback response
       const fallbackMessage: ChatMessage = { 

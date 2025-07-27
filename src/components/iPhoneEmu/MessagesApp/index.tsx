@@ -5,6 +5,7 @@ import { CONVERSATION_EXAMPLES } from './conversationExamples';
 import MessagesHeader from './MessagesHeader';
 import MessageBubble from './MessageBubble';
 import InputBar from './InputBar';
+import { trackFeatureUsage, trackAPICall } from '../../../lib/analytics';
 
 type Message = {
   sender: 'user' | 'ai';
@@ -44,6 +45,13 @@ const MessagesApp: React.FC<MessagesAppProps> = ({ onClose }) => {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
+    
+    // Track iPhone messages usage
+    trackFeatureUsage('iphone_messages', 'message_sent', {
+      message_length: input.length,
+      interface: 'iphone'
+    });
+    
     const userMsg = { sender: 'user' as const, text: input };
     setMessages((msgs) => [...msgs, userMsg]);
     setInput('');
@@ -59,6 +67,7 @@ const MessagesApp: React.FC<MessagesAppProps> = ({ onClose }) => {
     ];
 
     try {
+      const startTime = Date.now();
       const response = await fetch(MISTRAL_API_URL, {
         method: 'POST',
         headers: {
@@ -73,6 +82,15 @@ const MessagesApp: React.FC<MessagesAppProps> = ({ onClose }) => {
         }),
       });
       const data = await response.json();
+      const responseTime = Date.now() - startTime;
+      
+      // Track API call
+      trackAPICall('mistral', 'POST', response.status, responseTime, {
+        model: MISTRAL_MODEL,
+        message_count: mistralMessages.length,
+        interface: 'iphone'
+      });
+      
       const aiReply = data.choices?.[0]?.message?.content || 'Sorry, I could not generate a response.';
       setMessages((msgs) => [...msgs, { sender: 'ai', text: aiReply }]);
     } catch (err) {
