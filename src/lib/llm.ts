@@ -41,35 +41,8 @@ export async function getLLMApiKey(provider: string): Promise<string> {
   return data.api_key;
 }
 
-export async function callGemini(prompt: string): Promise<string> {
-  const apiKey = await getLLMApiKey('gemini');
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
-  const body = {
-    contents: [
-      { role: 'user', parts: [{ text: prompt }] }
-    ]
-  };
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  });
-  if (!response.ok) {
-    let errMsg = 'Failed to fetch from Gemini API';
-    try {
-      const err = await response.json();
-      errMsg = err.error?.message || errMsg;
-    } catch {
-      // Ignore JSON parsing errors
-    }
-    throw new Error(errMsg);
-  }
-  const data = await response.json();
-  return data.candidates?.[0]?.content?.parts?.[0]?.text || 'Sorry, I glitched out!';
-}
-
+// Consolidated function to call OpenAI (replaces Gemini, DeepSeek, Grok)
 export async function callOpenAI(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  // Try to get API key from environment variable first, then Supabase, then fallback
   let apiKey: string;
   
   // Debug: Log what we're finding
@@ -98,6 +71,7 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
       console.log('Using hardcoded demo key');
     }
   }
+  
   const url = 'https://api.openai.com/v1/chat/completions';
   const messages = [...history, { role: 'user', content: prompt }];
   const response = await fetch(url, {
@@ -108,68 +82,38 @@ export async function callOpenAI(prompt: string, history: { role: string; conten
     },
     body: JSON.stringify({
       model: 'gpt-3.5-turbo',
-      messages: messages,
+      messages,
       temperature: 0.7,
       max_tokens: 500
     })
   });
+  
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.error?.message || 'Failed to get response from OpenAI');
   }
+  
   const data = await response.json();
   return data.choices[0].message.content;
+}
+
+// Legacy function names that now use OpenAI (for backward compatibility)
+export async function callGemini(prompt: string): Promise<string> {
+  console.log('Gemini call redirected to OpenAI');
+  return callOpenAI(prompt);
 }
 
 export async function callDeepseek(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
-  // Try to get API key from environment variable first, then Supabase, then fallback
-  let apiKey: string;
-  
-  // First try environment variable
-  if (import.meta.env.VITE_DEEPSEEK_API_KEY) {
-    apiKey = import.meta.env.VITE_DEEPSEEK_API_KEY;
-  } else {
-    try {
-      // Fallback to Supabase
-      apiKey = await getLLMApiKey('deepseek');
-    } catch {
-      // Return a demo response for 90sGPT when no API key is available
-      return "I apologize, but I'm currently running in demo mode without an active API key. In a full deployment, I would be able to help you with questions about 90s technology, Windows 95, early internet, and computing from the 1996 era. Please contact the administrator to configure the DeepSeek API key for full functionality.";
-    }
-  }
-  const url = 'https://api.deepseek.com/v1/chat/completions';
-  const messages = [...history, { role: 'user', content: prompt }];
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      model: 'deepseek-chat',
-      messages: messages,
-      temperature: 0.7,
-      max_tokens: 500
-    })
-  });
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(errorData.error?.message || 'Failed to get response from Deepseek');
-  }
-  const data = await response.json();
-  return data.choices[0].message.content;
+  console.log('DeepSeek call redirected to OpenAI');
+  return callOpenAI(prompt, history);
 }
 
-export async function testGeminiApiKey(apiKey: string): Promise<boolean> {
-  try {
-    const url = `https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`;
-    const response = await fetch(url);
-    return response.ok;
-  } catch {
-    return false;
-  }
+export async function callGrok(prompt: string, history: { role: string; content: string }[] = []): Promise<string> {
+  console.log('Grok call redirected to OpenAI');
+  return callOpenAI(prompt, history);
 }
 
+// Test functions for API key validation
 export async function testOpenAIApiKey(apiKey: string): Promise<boolean> {
   try {
     const response = await fetch('https://api.openai.com/v1/models', {
@@ -181,29 +125,17 @@ export async function testOpenAIApiKey(apiKey: string): Promise<boolean> {
   }
 }
 
+export async function testGeminiApiKey(apiKey: string): Promise<boolean> {
+  // Redirect to OpenAI test since we're consolidating
+  return testOpenAIApiKey(apiKey);
+}
+
 export async function testGrokApiKey(apiKey: string): Promise<boolean> {
-  try {
-    const response = await fetch('https://api.grok.x/v1/models', {
-      headers: { Authorization: `Bearer ${apiKey}` }
-    });
-    if (!response.ok) {
-      const text = await response.text();
-      console.error('Grok API test failed:', response.status, text);
-    }
-    return response.ok;
-  } catch (err) {
-    console.error('Grok API test error:', err);
-    return false;
-  }
+  // Redirect to OpenAI test since we're consolidating
+  return testOpenAIApiKey(apiKey);
 }
 
 export async function testDeepseekApiKey(apiKey: string): Promise<boolean> {
-  try {
-    const response = await fetch('https://api.deepseek.com/v1/models', {
-      headers: { Authorization: `Bearer ${apiKey}` }
-    });
-    return response.ok;
-  } catch {
-    return false;
-  }
+  // Redirect to OpenAI test since we're consolidating
+  return testOpenAIApiKey(apiKey);
 }

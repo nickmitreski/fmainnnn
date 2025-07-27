@@ -167,7 +167,7 @@ const ImageGenerator: React.FC = () => {
       }
       
       // Call the Supabase Edge Function
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://irzgkacsptptspcozrrd.supabase.co';
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const apiUrl = `${supabaseUrl}/functions/v1/generate-image`;
       
       const headers = {

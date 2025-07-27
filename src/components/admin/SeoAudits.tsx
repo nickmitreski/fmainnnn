@@ -19,10 +19,10 @@ const contactOptions = [
   { value: 'contacted', label: 'Contacted' },
 ];
 
-const supabaseUrl = 'https://irzgkacsptptspcozrrd.supabase.co/rest/v1/seo_audit_requests';
+const supabaseUrl = `${import.meta.env.VITE_SUPABASE_URL}/rest/v1/seo_audit_requests`;
 const supabaseHeaders = {
   'Content-Type': 'application/json',
-  'apikey': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32eMiRgRtYu57PrDyAdK06x1pRWl3NjnSvcoqQ',
+  'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
 };
 
 const SeoAudits: React.FC = () => {

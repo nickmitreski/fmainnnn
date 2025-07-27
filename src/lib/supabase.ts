@@ -1,18 +1,22 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Get environment variables with fallbacks to prevent undefined errors
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://irzgkacsptptspcozrrd.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32eMiRgRtYu57PrDyAdK06x1pRWl3NjnSvcoqQ';
+// Get environment variables - these should be set in Vercel
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 // Create the Supabase client with error handling
 let supabase: ReturnType<typeof createClient>;
+
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing required Supabase environment variables: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+  throw new Error('Supabase environment variables not configured. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.');
+}
 
 try {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 } catch (error) {
   console.error('Error initializing Supabase client:', error);
-  // Create a minimal client as fallback
-  supabase = createClient('https://irzgkacsptptspcozrrd.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32eMiRgRtYu57PrDyAdK06x1pRWl3NjnSvcoqQ');
+  throw new Error('Failed to initialize Supabase client');
 }
 
 export { supabase };
@@ -31,12 +35,16 @@ export const submitContactForm = async (data: {
     const { error } = await supabase.from('contact_submissions').insert([
       { ...data, timestamp: new Date().toISOString() }
     ]);
-    
-    if (error) throw error;
+
+    if (error) {
+      console.error('Error submitting contact form:', error);
+      return { success: false, error: error.message };
+    }
+
     return { success: true };
-  } catch (error) {
-    console.error('Error submitting contact form:', error);
-    return { success: false, error };
+  } catch (err) {
+    console.error('Unexpected error submitting contact form:', err);
+    return { success: false, error: 'An unexpected error occurred' };
   }
 };
 

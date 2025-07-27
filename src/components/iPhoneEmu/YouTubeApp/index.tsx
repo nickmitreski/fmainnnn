@@ -41,7 +41,7 @@ const YouTubeApp: React.FC<YouTubeAppProps> = ({ onClose }) => {
   const playerRef = useRef<HTMLDivElement>(null);
   const [recommended, setRecommended] = useState<any[]>([]);
 
-  const YT_API_KEY = 'AIzaSyCYmpRkz3yIBGyii--XrphQK9rA_bRJ5bk';
+  const YT_API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY;
 
   const fetchVideos = async (query: string) => {
     setLoading(true);

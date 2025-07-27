@@ -3,8 +3,8 @@ import { colors, typography } from '../../../theme/theme';
 import { X } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-// Supabase anon key for public requests
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlyemdrYWNzcHRwdHNwY296cnJkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg2NzU5NzksImV4cCI6MjA2NDI1MTk3OX0.-QXjX32e';
+// Use environment variable for Supabase anon key
+const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 interface GrowthWorkPopupProps {
   onClose: () => void;
