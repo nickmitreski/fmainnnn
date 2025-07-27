@@ -837,11 +837,7 @@ const AdminPage: React.FC = () => {
             ) : (
               <>
                 {activeTab === 'analytics' && (
-                  <AnalyticsDashboard 
-                    pageViews={pageViews} 
-                    clickEvents={clickEvents} 
-                    visitDurations={visitDurations} 
-                  />
+                  <AnalyticsDashboard />
                 )}
 
                 {activeTab === 'clients-jobs' && (

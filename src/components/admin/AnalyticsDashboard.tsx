@@ -1,174 +1,386 @@
-import React, { useState } from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-import { PageView, ClickEvent, VisitDuration } from '../AdminPage';
-import { Clock, MousePointer, Eye, Calendar, ArrowUpRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line, AreaChart, Area } from 'recharts';
+import { Clock, MousePointer, Eye, Calendar, ArrowUpRight, Users, TrendingUp, Activity, Zap, Smartphone, Monitor, Globe, MessageSquare, Gamepad2, Settings } from 'lucide-react';
 
-interface AnalyticsDashboardProps {
-  pageViews: PageView[];
-  clickEvents: ClickEvent[];
-  visitDurations: VisitDuration[];
+// PostHog API configuration
+const POSTHOG_API_KEY = 'phc_7bAsvmPvKkOF91RjkIMnidQhsAPF5HkO9GqvyGKu0Is';
+const POSTHOG_HOST = 'https://us.i.posthog.com';
+
+interface PostHogEvent {
+  id: string;
+  event: string;
+  properties: Record<string, any>;
+  timestamp: string;
+  person?: {
+    id: string;
+    properties: Record<string, any>;
+  };
 }
 
-const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ 
-  pageViews, 
-  clickEvents, 
-  visitDurations 
-}) => {
+interface PostHogInsight {
+  result: any[];
+  next?: string;
+}
+
+interface AnalyticsData {
+  events: PostHogEvent[];
+  pageViews: any[];
+  featureUsage: any[];
+  apiCalls: any[];
+  userJourney: any[];
+  deviceInfo: any[];
+  performance: any[];
+  errors: any[];
+}
+
+const AnalyticsDashboard: React.FC = () => {
   const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month' | 'all'>('week');
-  
-  // Process data for charts
-  const processPageViewData = () => {
-    // Group page views by page
-    const pageViewsByPage = pageViews.reduce((acc, view) => {
-      const page = view.page;
-      if (!acc[page]) acc[page] = 0;
-      acc[page]++;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Convert to array for chart
-    return Object.entries(pageViewsByPage).map(([page, count]) => ({
-      page: page.length > 20 ? page.substring(0, 20) + '...' : page,
-      count
-    })).sort((a, b) => b.count - a.count).slice(0, 10);
-  };
-  
-  const processClickData = () => {
-    // Group clicks by element
-    const clicksByElement = clickEvents.reduce((acc, click) => {
-      const element = click.element_text || click.element || click.element_id || 'Unknown';
-      if (!acc[element]) acc[element] = 0;
-      acc[element]++;
-      return acc;
-    }, {} as Record<string, number>);
-    
-    // Convert to array for chart
-    return Object.entries(clicksByElement).map(([element, count]) => ({
-      element: element.length > 20 ? element.substring(0, 20) + '...' : element,
-      count
-    })).sort((a, b) => b.count - a.count).slice(0, 10);
-  };
-  
-  const processDurationData = () => {
-    // Group durations by page
-    const durationsByPage = visitDurations.reduce((acc, duration) => {
-      const page = duration.page;
-      if (!acc[page]) {
-        acc[page] = { totalDuration: 0, count: 0 };
-      }
-      acc[page].totalDuration += duration.duration;
-      acc[page].count++;
-      return acc;
-    }, {} as Record<string, { totalDuration: number, count: number }>);
-    
-    // Calculate average duration per page
-    return Object.entries(durationsByPage).map(([page, data]) => ({
-      page: page.length > 20 ? page.substring(0, 20) + '...' : page,
-      avgDuration: Math.round(data.totalDuration / data.count)
-    })).sort((a, b) => b.avgDuration - a.avgDuration).slice(0, 10);
-  };
-  
-  const processTimeSeriesData = () => {
-    // Filter data based on selected time range
-    const now = new Date();
-    let startDate: Date;
-    
-    switch (timeRange) {
-      case 'day':
-        startDate = new Date(now);
-        startDate.setDate(now.getDate() - 1);
-        break;
-      case 'week':
-        startDate = new Date(now);
-        startDate.setDate(now.getDate() - 7);
-        break;
-      case 'month':
-        startDate = new Date(now);
-        startDate.setMonth(now.getMonth() - 1);
-        break;
-      default:
-        startDate = new Date(0); // All time
+  const [data, setData] = useState<AnalyticsData>({
+    events: [],
+    pageViews: [],
+    featureUsage: [],
+    apiCalls: [],
+    userJourney: [],
+    deviceInfo: [],
+    performance: [],
+    errors: []
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data from PostHog API
+  const fetchPostHogData = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const dateFrom = getDateFromTimeRange(timeRange);
+      
+      // Fetch various analytics data
+      const [
+        eventsResponse,
+        pageViewsResponse,
+        featureUsageResponse,
+        apiCallsResponse,
+        userJourneyResponse,
+        deviceInfoResponse,
+        performanceResponse,
+        errorsResponse
+      ] = await Promise.all([
+        fetchEvents(dateFrom),
+        fetchPageViews(dateFrom),
+        fetchFeatureUsage(dateFrom),
+        fetchAPICalls(dateFrom),
+        fetchUserJourney(dateFrom),
+        fetchDeviceInfo(dateFrom),
+        fetchPerformance(dateFrom),
+        fetchErrors(dateFrom)
+      ]);
+
+      setData({
+        events: eventsResponse,
+        pageViews: pageViewsResponse,
+        featureUsage: featureUsageResponse,
+        apiCalls: apiCallsResponse,
+        userJourney: userJourneyResponse,
+        deviceInfo: deviceInfoResponse,
+        performance: performanceResponse,
+        errors: errorsResponse
+      });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch analytics data');
+      console.error('Analytics fetch error:', err);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const getDateFromTimeRange = (range: string): string => {
+    const now = new Date();
+    switch (range) {
+      case 'day':
+        return new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
+      case 'week':
+        return new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
+      case 'month':
+        return new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+      default:
+        return new Date(0).toISOString();
+    }
+  };
+
+  // PostHog API calls
+  const fetchEvents = async (dateFrom: string): Promise<PostHogEvent[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/events/?date_from=${dateFrom}&limit=100`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
     
-    // Group data by day
-    const filteredPageViews = pageViews.filter(view => new Date(view.timestamp) >= startDate);
-    const filteredClickEvents = clickEvents.filter(click => new Date(click.timestamp) >= startDate);
+    if (!response.ok) throw new Error('Failed to fetch events');
+    const data = await response.json();
+    return data.results || [];
+  };
+
+  const fetchPageViews = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"page_viewed","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
     
-    const dataByDay: Record<string, { date: string, views: number, clicks: number }> = {};
+    if (!response.ok) throw new Error('Failed to fetch page views');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchFeatureUsage = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"feature_used","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch feature usage');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchAPICalls = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"api_call","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch API calls');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchUserJourney = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"user_journey","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch user journey');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchDeviceInfo = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"device_info","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch device info');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchPerformance = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"page_performance","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch performance data');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  const fetchErrors = async (dateFrom: string): Promise<any[]> => {
+    const response = await fetch(`${POSTHOG_HOST}/api/projects/@current/insights/trend/?events=[{"id":"error_occurred","type":"events"}]&date_from=${dateFrom}&interval=day`, {
+      headers: {
+        'Authorization': `Bearer ${POSTHOG_API_KEY}`,
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!response.ok) throw new Error('Failed to fetch error data');
+    const data = await response.json();
+    return data.result || [];
+  };
+
+  useEffect(() => {
+    fetchPostHogData();
+  }, [timeRange]);
+
+  // Calculate metrics
+  const calculateMetrics = () => {
+    const totalEvents = data.events.length;
+    const uniqueUsers = new Set(data.events.map(e => e.person?.id).filter(Boolean)).size;
+    const totalPageViews = data.pageViews.reduce((sum, item) => sum + (item.count || 0), 0);
+    const totalFeatureUsage = data.featureUsage.reduce((sum, item) => sum + (item.count || 0), 0);
+    const totalAPICalls = data.apiCalls.reduce((sum, item) => sum + (item.count || 0), 0);
+    const totalErrors = data.errors.reduce((sum, item) => sum + (item.count || 0), 0);
+
+    return {
+      totalEvents,
+      uniqueUsers,
+      totalPageViews,
+      totalFeatureUsage,
+      totalAPICalls,
+      totalErrors,
+      errorRate: totalAPICalls > 0 ? (totalErrors / totalAPICalls * 100) : 0
+    };
+  };
+
+  const metrics = calculateMetrics();
+
+  // Process data for charts
+  const processFeatureUsageData = () => {
+    const featureCounts: Record<string, number> = {};
+    data.events
+      .filter(e => e.event === 'feature_used')
+      .forEach(e => {
+        const feature = e.properties.feature || 'Unknown';
+        featureCounts[feature] = (featureCounts[feature] || 0) + 1;
+      });
+
+    return Object.entries(featureCounts)
+      .map(([feature, count]) => ({ feature, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
+  };
+
+  const processDeviceData = () => {
+    const deviceCounts: Record<string, number> = {};
+    data.events
+      .filter(e => e.event === 'device_info')
+      .forEach(e => {
+        const deviceType = e.properties.device_type || 'Unknown';
+        deviceCounts[deviceType] = (deviceCounts[deviceType] || 0) + 1;
+      });
+
+    return Object.entries(deviceCounts)
+      .map(([device, count]) => ({ device, count }))
+      .sort((a, b) => b.count - a.count);
+  };
+
+  const processAPIPerformanceData = () => {
+    const apiCounts: Record<string, { calls: number; errors: number; avgDuration: number }> = {};
+    
+    data.events
+      .filter(e => e.event === 'api_call')
+      .forEach(e => {
+        const api = e.properties.api || 'Unknown';
+        if (!apiCounts[api]) {
+          apiCounts[api] = { calls: 0, errors: 0, avgDuration: 0 };
+        }
+        apiCounts[api].calls++;
+        if (e.properties.status >= 400) {
+          apiCounts[api].errors++;
+        }
+        apiCounts[api].avgDuration += e.properties.duration || 0;
+      });
+
+    return Object.entries(apiCounts)
+      .map(([api, data]) => ({
+        api,
+        calls: data.calls,
+        errors: data.errors,
+        avgDuration: Math.round(data.avgDuration / data.calls),
+        errorRate: (data.errors / data.calls * 100)
+      }))
+      .sort((a, b) => b.calls - a.calls)
+      .slice(0, 10);
+  };
+
+  const processTimeSeriesData = () => {
+    const timeData: Record<string, { date: string; pageViews: number; features: number; apiCalls: number; errors: number }> = {};
     
     // Process page views
-    filteredPageViews.forEach(view => {
-      const date = new Date(view.timestamp).toISOString().split('T')[0];
-      if (!dataByDay[date]) {
-        dataByDay[date] = { date, views: 0, clicks: 0 };
+    data.pageViews.forEach(item => {
+      const date = item.date || item.day || 'Unknown';
+      if (!timeData[date]) {
+        timeData[date] = { date, pageViews: 0, features: 0, apiCalls: 0, errors: 0 };
       }
-      dataByDay[date].views++;
+      timeData[date].pageViews += item.count || 0;
     });
-    
-    // Process clicks
-    filteredClickEvents.forEach(click => {
-      const date = new Date(click.timestamp).toISOString().split('T')[0];
-      if (!dataByDay[date]) {
-        dataByDay[date] = { date, views: 0, clicks: 0 };
+
+    // Process feature usage
+    data.featureUsage.forEach(item => {
+      const date = item.date || item.day || 'Unknown';
+      if (!timeData[date]) {
+        timeData[date] = { date, pageViews: 0, features: 0, apiCalls: 0, errors: 0 };
       }
-      dataByDay[date].clicks++;
+      timeData[date].features += item.count || 0;
     });
-    
-    // Convert to array and sort by date
-    return Object.values(dataByDay).sort((a, b) => a.date.localeCompare(b.date));
+
+    // Process API calls
+    data.apiCalls.forEach(item => {
+      const date = item.date || item.day || 'Unknown';
+      if (!timeData[date]) {
+        timeData[date] = { date, pageViews: 0, features: 0, apiCalls: 0, errors: 0 };
+      }
+      timeData[date].apiCalls += item.count || 0;
+    });
+
+    // Process errors
+    data.errors.forEach(item => {
+      const date = item.date || item.day || 'Unknown';
+      if (!timeData[date]) {
+        timeData[date] = { date, pageViews: 0, features: 0, apiCalls: 0, errors: 0 };
+      }
+      timeData[date].errors += item.count || 0;
+    });
+
+    return Object.values(timeData).sort((a, b) => a.date.localeCompare(b.date));
   };
-  
-  const calculateBounceRate = () => {
-    const bounces = visitDurations.filter(duration => duration.is_bounce).length;
-    return bounces / visitDurations.length * 100 || 0;
-  };
-  
-  const calculateAverageSessionDuration = () => {
-    if (visitDurations.length === 0) return 0;
-    const totalDuration = visitDurations.reduce((acc, duration) => acc + duration.duration, 0);
-    return totalDuration / visitDurations.length;
-  };
-  
-  const pageViewData = processPageViewData();
-  const clickData = processClickData();
-  const durationData = processDurationData();
+
+  const featureUsageData = processFeatureUsageData();
+  const deviceData = processDeviceData();
+  const apiPerformanceData = processAPIPerformanceData();
   const timeSeriesData = processTimeSeriesData();
-  const bounceRate = calculateBounceRate();
-  const avgSessionDuration = calculateAverageSessionDuration();
-  
-  // Calculate unique visitors (approximation based on session_id)
-  const uniqueVisitors = new Set(pageViews.map(view => view.session_id)).size;
-  
-  // Calculate most active pages
-  const pageViewsByPage = pageViews.reduce((acc, view) => {
-    const page = view.page;
-    if (!acc[page]) acc[page] = 0;
-    acc[page]++;
-    return acc;
-  }, {} as Record<string, number>);
-  
-  const mostActivePage = Object.entries(pageViewsByPage)
-    .sort((a, b) => b[1] - a[1])
-    .map(([page, count]) => ({ page, count }))[0];
-  
-  // Calculate most clicked elements
-  const clicksByElement = clickEvents.reduce((acc, click) => {
-    const element = click.element_text || click.element || click.element_id || 'Unknown';
-    if (!acc[element]) acc[element] = 0;
-    acc[element]++;
-    return acc;
-  }, {} as Record<string, number>);
-  
-  const mostClickedElement = Object.entries(clicksByElement)
-    .sort((a, b) => b[1] - a[1])
-    .map(([element, count]) => ({ element, count }))[0];
-  
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
-  
+
+  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d', '#ffc658', '#ff7300'];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#0CF2A0] mx-auto mb-4"></div>
+          <p className="text-gray-400">Loading PostHog analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-6 rounded-lg">
+        <h3 className="text-lg font-semibold mb-2">Analytics Error</h3>
+        <p>{error}</p>
+        <button 
+          onClick={fetchPostHogData}
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-8">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-light tracking-tight">Analytics Dashboard</h2>
+        <div>
+          <h2 className="text-2xl font-light tracking-tight">PostHog Analytics Dashboard</h2>
+          <p className="text-gray-400 text-sm mt-1">Real-time analytics powered by PostHog</p>
+        </div>
         <div className="flex gap-2">
           <button
             onClick={() => setTimeRange('day')}
@@ -221,65 +433,61 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
               <Eye className="text-blue-400" size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-light text-gray-300">Page Views</h3>
-              <p className="text-3xl font-light text-white">{pageViews.length}</p>
+              <h3 className="text-lg font-light text-gray-300">Total Events</h3>
+              <p className="text-3xl font-light text-white">{metrics.totalEvents.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-sm text-gray-400 flex items-center">
             <ArrowUpRight size={14} className="mr-1" />
-            <span>{uniqueVisitors} unique visitors</span>
+            <span>{metrics.uniqueUsers} unique users</span>
           </div>
         </div>
         
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-full bg-green-500/20">
-              <MousePointer className="text-green-400" size={24} />
+              <Users className="text-green-400" size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-light text-gray-300">Interactions</h3>
-              <p className="text-3xl font-light text-white">{clickEvents.length}</p>
+              <h3 className="text-lg font-light text-gray-300">Page Views</h3>
+              <p className="text-3xl font-light text-white">{metrics.totalPageViews.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-sm text-gray-400 flex items-center">
             <ArrowUpRight size={14} className="mr-1" />
-            <span>
-              {mostClickedElement ? `Most clicked: ${mostClickedElement.element.substring(0, 15)}...` : 'No clicks recorded'}
-            </span>
+            <span>{metrics.totalFeatureUsage} feature interactions</span>
           </div>
         </div>
         
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-full bg-yellow-500/20">
-              <Clock className="text-yellow-400" size={24} />
+              <Zap className="text-yellow-400" size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-light text-gray-300">Avg. Session</h3>
-              <p className="text-3xl font-light text-white">{Math.round(avgSessionDuration)}s</p>
+              <h3 className="text-lg font-light text-gray-300">API Calls</h3>
+              <p className="text-3xl font-light text-white">{metrics.totalAPICalls.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-sm text-gray-400 flex items-center">
             <ArrowUpRight size={14} className="mr-1" />
-            <span>{bounceRate.toFixed(1)}% bounce rate</span>
+            <span>{metrics.errorRate.toFixed(1)}% error rate</span>
           </div>
         </div>
         
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-3 rounded-full bg-purple-500/20">
-              <Calendar className="text-purple-400" size={24} />
+              <Activity className="text-purple-400" size={24} />
             </div>
             <div>
-              <h3 className="text-lg font-light text-gray-300">Active Page</h3>
-              <p className="text-3xl font-light text-white">
-                {mostActivePage ? mostActivePage.page.substring(0, 10) + '...' : 'N/A'}
-              </p>
+              <h3 className="text-lg font-light text-gray-300">Errors</h3>
+              <p className="text-3xl font-light text-white">{metrics.totalErrors.toLocaleString()}</p>
             </div>
           </div>
           <div className="text-sm text-gray-400 flex items-center">
             <ArrowUpRight size={14} className="mr-1" />
-            <span>{mostActivePage ? `${mostActivePage.count} views` : 'No data'}</span>
+            <span>Last {timeRange}</span>
           </div>
         </div>
       </div>
@@ -288,10 +496,10 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Time Series Chart */}
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
-          <h3 className="text-lg font-light mb-4 tracking-tight">Traffic Over Time</h3>
+          <h3 className="text-lg font-light mb-4 tracking-tight">Activity Over Time</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart
+              <AreaChart
                 data={timeSeriesData}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
@@ -302,26 +510,27 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
                   contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }}
                   labelStyle={{ color: '#fff' }}
                 />
-                <Line type="monotone" dataKey="views" stroke="#0CF2A0" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="clicks" stroke="#FF1493" />
-              </LineChart>
+                <Area type="monotone" dataKey="pageViews" stackId="1" stroke="#0CF2A0" fill="#0CF2A0" fillOpacity={0.3} />
+                <Area type="monotone" dataKey="features" stackId="1" stroke="#FF1493" fill="#FF1493" fillOpacity={0.3} />
+                <Area type="monotone" dataKey="apiCalls" stackId="1" stroke="#FFCC00" fill="#FFCC00" fillOpacity={0.3} />
+              </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
         
-        {/* Page Views by Page */}
+        {/* Feature Usage */}
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
-          <h3 className="text-lg font-light mb-4 tracking-tight">Top Pages</h3>
+          <h3 className="text-lg font-light mb-4 tracking-tight">Top Features Used</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={pageViewData}
-                layout="vertical"
+                data={featureUsageData}
+                layout="horizontal"
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#888" />
-                <YAxis dataKey="page" type="category" width={150} stroke="#888" tick={{ fontSize: 12 }} />
+                <YAxis dataKey="feature" type="category" width={120} stroke="#888" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }}
                   labelStyle={{ color: '#fff' }}
@@ -332,101 +541,100 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({
           </div>
         </div>
         
-        {/* Clicks by Element */}
+        {/* Device Distribution */}
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
-          <h3 className="text-lg font-light mb-4 tracking-tight">Most Clicked Elements</h3>
+          <h3 className="text-lg font-light mb-4 tracking-tight">Device Distribution</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={clickData}
-                layout="vertical"
-                margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" stroke="#333" />
-                <XAxis type="number" stroke="#888" />
-                <YAxis dataKey="element" type="category" width={150} stroke="#888" tick={{ fontSize: 12 }} />
+              <PieChart>
+                <Pie
+                  data={deviceData}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ device, percent }) => `${device} ${(percent * 100).toFixed(0)}%`}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="count"
+                >
+                  {deviceData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }}
                   labelStyle={{ color: '#fff' }}
                 />
-                <Bar dataKey="count" fill="#FF1493" />
-              </BarChart>
+              </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
         
-        {/* Average Duration by Page */}
+        {/* API Performance */}
         <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
-          <h3 className="text-lg font-light mb-4 tracking-tight">Time Spent by Page (seconds)</h3>
+          <h3 className="text-lg font-light mb-4 tracking-tight">API Performance</h3>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
-                data={durationData}
-                layout="vertical"
+                data={apiPerformanceData}
+                layout="horizontal"
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
               >
                 <CartesianGrid strokeDasharray="3 3" stroke="#333" />
                 <XAxis type="number" stroke="#888" />
-                <YAxis dataKey="page" type="category" width={150} stroke="#888" tick={{ fontSize: 12 }} />
+                <YAxis dataKey="api" type="category" width={100} stroke="#888" tick={{ fontSize: 12 }} />
                 <Tooltip 
                   contentStyle={{ backgroundColor: '#222', border: '1px solid #444' }}
                   labelStyle={{ color: '#fff' }}
                 />
-                <Bar dataKey="avgDuration" fill="#FFCC00" />
+                <Bar dataKey="calls" fill="#FF1493" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
       
-      {/* Recent Activity */}
+      {/* Recent Events */}
       <div className="bg-[#1a1a1a] p-6 rounded-lg border border-gray-800">
-        <h3 className="text-lg font-light mb-4 tracking-tight">Recent Activity</h3>
+        <h3 className="text-lg font-light mb-4 tracking-tight">Recent Events</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-800">
-                <th className="text-left py-3 px-4 font-normal text-gray-400">Type</th>
-                <th className="text-left py-3 px-4 font-normal text-gray-400">Page</th>
-                <th className="text-left py-3 px-4 font-normal text-gray-400">Details</th>
+                <th className="text-left py-3 px-4 font-normal text-gray-400">Event</th>
+                <th className="text-left py-3 px-4 font-normal text-gray-400">User</th>
+                <th className="text-left py-3 px-4 font-normal text-gray-400">Properties</th>
                 <th className="text-left py-3 px-4 font-normal text-gray-400">Time</th>
               </tr>
             </thead>
             <tbody>
-              {/* Combine and sort recent activities */}
-              {[
-                ...pageViews.map(view => ({ 
-                  type: 'view', 
-                  page: view.page, 
-                  details: view.referrer ? `Referrer: ${view.referrer}` : 'Direct visit',
-                  timestamp: view.timestamp
-                })),
-                ...clickEvents.map(click => ({ 
-                  type: 'click', 
-                  page: click.page, 
-                  details: click.element_text || click.element || click.element_id || 'Unknown element',
-                  timestamp: click.timestamp
-                }))
-              ]
-                .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
-                .slice(0, 10)
-                .map((activity, index) => (
-                  <tr key={index} className="border-b border-gray-800">
-                    <td className="py-3 px-4">
-                      <span className={`inline-block px-2 py-1 rounded text-xs ${
-                        activity.type === 'view' ? 'bg-blue-500/20 text-blue-400' : 'bg-green-500/20 text-green-400'
-                      }`}>
-                        {activity.type === 'view' ? 'Page View' : 'Click'}
-                      </span>
-                    </td>
-                    <td className="py-3 px-4 text-gray-300">{activity.page}</td>
-                    <td className="py-3 px-4 text-gray-400">{activity.details}</td>
-                    <td className="py-3 px-4 text-gray-500">
-                      {new Date(activity.timestamp).toLocaleString()}
-                    </td>
-                  </tr>
-                ))
-              }
+              {data.events.slice(0, 10).map((event) => (
+                <tr key={event.id} className="border-b border-gray-800">
+                  <td className="py-3 px-4">
+                    <span className={`inline-block px-2 py-1 rounded text-xs ${
+                      event.event === 'page_viewed' ? 'bg-blue-500/20 text-blue-400' :
+                      event.event === 'feature_used' ? 'bg-green-500/20 text-green-400' :
+                      event.event === 'api_call' ? 'bg-yellow-500/20 text-yellow-400' :
+                      event.event === 'error_occurred' ? 'bg-red-500/20 text-red-400' :
+                      'bg-gray-500/20 text-gray-400'
+                    }`}>
+                      {event.event}
+                    </span>
+                  </td>
+                  <td className="py-3 px-4 text-gray-300">
+                    {event.person?.id ? event.person.id.substring(0, 8) + '...' : 'Anonymous'}
+                  </td>
+                  <td className="py-3 px-4 text-gray-400">
+                    {Object.entries(event.properties)
+                      .slice(0, 3)
+                      .map(([key, value]) => `${key}: ${String(value).substring(0, 20)}`)
+                      .join(', ')}
+                  </td>
+                  <td className="py-3 px-4 text-gray-500">
+                    {new Date(event.timestamp).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
