@@ -29,7 +29,9 @@ ${CONVERSATION_EXAMPLES}
 Follow these patterns - be conversational, not robotic. React naturally to what they say, use humor, and keep it short and engaging like a real friend would.`;
 
 // Use environment variable for Mistral API key
-const getMistralApiKey = () => import.meta.env.VITE_MISTRAL_API_KEY || '';
+import { config } from '../../../lib/config';
+
+  const getMistralApiKey = () => config.mistral.apiKey;
 const MISTRAL_API_URL = 'https://api.mistral.ai/v1/chat/completions';
 const MISTRAL_MODEL = 'mistral-tiny'; // Use the cheapest/quickest model
 

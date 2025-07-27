@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Map, Marker } from 'pigeon-maps';
 import MapsHeader from './MapsHeader';
 import './MapsApp.css';
+import { config } from '../../../lib/config';
 
 const MELBOURNE: [number, number] = [-37.8136, 144.9631];
 
@@ -26,7 +27,7 @@ const MapsApp: React.FC<MapsAppProps> = ({ onClose }) => {
     if (!window.google && !document.getElementById('google-maps-script')) {
       const script = document.createElement('script');
       script.id = 'google-maps-script';
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''}`;
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${config.google.mapsApiKey}`;
       script.async = true;
       script.defer = true;
       script.onload = () => initMap();

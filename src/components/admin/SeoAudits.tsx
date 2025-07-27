@@ -19,10 +19,12 @@ const contactOptions = [
   { value: 'contacted', label: 'Contacted' },
 ];
 
-  const supabaseUrl = `${import.meta.env.VITE_SUPABASE_URL || ''}/rest/v1/seo_audit_requests`;
+import { config } from '../../lib/config';
+
+  const supabaseUrl = `${config.supabase.url}/rest/v1/seo_audit_requests`;
 const supabaseHeaders = {
   'Content-Type': 'application/json',
-      'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY || '',
+      'apikey': config.supabase.anonKey,
 };
 
 const SeoAudits: React.FC = () => {

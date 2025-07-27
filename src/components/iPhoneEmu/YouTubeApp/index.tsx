@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import YouTubeHeader from './YouTubeHeader';
 import './YouTubeApp.css';
+import { config } from '../../../lib/config';
 
 interface Video {
   id: string;
@@ -41,7 +42,7 @@ const YouTubeApp: React.FC<YouTubeAppProps> = ({ onClose }) => {
   const playerRef = useRef<HTMLDivElement>(null);
   const [recommended, setRecommended] = useState<any[]>([]);
 
-  const getYoutubeApiKey = () => import.meta.env.VITE_YOUTUBE_API_KEY || '';
+  const getYoutubeApiKey = () => config.google.youtubeApiKey;
 
   const fetchVideos = async (query: string) => {
     setLoading(true);

@@ -1,21 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import { debugAPI, APIConfig } from './apiDebugger';
 import { trackAPICall } from './analytics';
+import { config } from './config';
 
 // Get Supabase configuration
 const getSupabaseConfig = () => {
-  try {
-    return {
-      url: import.meta.env.VITE_SUPABASE_URL || '',
-      anonKey: import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-    };
-  } catch (error) {
-    console.warn('Error accessing Supabase environment variables:', error);
-    return {
-      url: '',
-      anonKey: ''
-    };
-  }
+  return {
+    url: config.supabase.url,
+    anonKey: config.supabase.anonKey
+  };
 };
 
 // Create a mock client if environment variables are not set

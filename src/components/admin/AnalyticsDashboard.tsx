@@ -3,10 +3,12 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Clock, MousePointer, Eye, Calendar, ArrowUpRight, Users, TrendingUp, Activity, Zap, Smartphone, Monitor, Globe, MessageSquare, Gamepad2, Settings } from 'lucide-react';
 
 // PostHog API configuration - will be accessed within functions
-const getPostHogConfig = () => ({
-  apiKey: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
-  host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
-});
+import { config } from '../../lib/config';
+
+  const getPostHogConfig = () => ({
+    apiKey: config.posthog.key,
+    host: config.posthog.host
+  });
 
 interface PostHogEvent {
   id: string;
