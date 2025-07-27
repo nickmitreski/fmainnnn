@@ -13,17 +13,34 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
   const [isTesting, setIsTesting] = useState(false);
   const [activeTab, setActiveTab] = useState<'status' | 'tests' | 'logs' | 'keys'>('status');
 
+  // Debug logging
+  console.log('APIDebugger component rendered, isOpen:', isOpen);
+
   useEffect(() => {
+    console.log('APIDebugger useEffect triggered, isOpen:', isOpen);
     if (isOpen) {
-      setEnvironmentStatus(debugAPI.getStatus());
-      setDebugLog(debugAPI.getDebugLog());
+      try {
+        console.log('Setting environment status...');
+        const status = debugAPI.getStatus();
+        console.log('Environment status:', status);
+        setEnvironmentStatus(status);
+        
+        console.log('Setting debug log...');
+        const logs = debugAPI.getDebugLog();
+        console.log('Debug logs:', logs);
+        setDebugLog(logs);
+      } catch (error) {
+        console.error('Error in APIDebugger useEffect:', error);
+      }
     }
   }, [isOpen]);
 
   const runAPITests = async () => {
+    console.log('Running API tests...');
     setIsTesting(true);
     try {
       const results = await testAllAPIEndpoints();
+      console.log('API test results:', results);
       setApiTestResults(results);
     } catch (error) {
       console.error('Error running API tests:', error);
@@ -33,15 +50,18 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
   };
 
   const refreshLogs = () => {
+    console.log('Refreshing logs...');
     setDebugLog(debugAPI.getDebugLog());
   };
 
   const clearLogs = () => {
+    console.log('Clearing logs...');
     debugAPI.clearLog();
     setDebugLog([]);
   };
 
   const exportLogs = () => {
+    console.log('Exporting logs...');
     const logData = debugAPI.exportLog();
     const blob = new Blob([logData], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -67,7 +87,12 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
     }
   };
 
-  if (!isOpen) return null;
+  console.log('APIDebugger render - isOpen:', isOpen, 'environmentStatus:', environmentStatus);
+
+  if (!isOpen) {
+    console.log('APIDebugger not open, returning null');
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -76,7 +101,10 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
         <div className="bg-gray-800 text-white p-4 flex justify-between items-center">
           <h2 className="text-xl font-bold">🔍 API Debugger & Manager</h2>
           <button
-            onClick={onClose}
+            onClick={() => {
+              console.log('Close button clicked');
+              onClose();
+            }}
             className="text-white hover:text-gray-300 text-2xl"
           >
             ×
@@ -94,7 +122,10 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
             ].map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => {
+                  console.log('Tab clicked:', tab.id);
+                  setActiveTab(tab.id as any);
+                }}
                 className={`px-4 py-2 font-medium ${
                   activeTab === tab.id
                     ? 'bg-white border-b-2 border-blue-500 text-blue-600'
@@ -140,12 +171,12 @@ const APIDebugger: React.FC<APIDebuggerProps> = ({ isOpen, onClose }) => {
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h3 className="font-semibold mb-3">🔑 API Key Prefixes</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                          {Object.entries(environmentStatus.apiKeyPrefixes).map(([provider, prefix]) => (
-                          <div key={provider} className="bg-white p-3 rounded border">
-                            <div className="font-medium capitalize">{provider}</div>
-                            <div className="font-mono text-xs text-gray-600 mt-1">{String(prefix)}</div>
-                          </div>
-                        ))}
+                  {Object.entries(environmentStatus.apiKeyPrefixes).map(([provider, prefix]) => (
+                    <div key={provider} className="bg-white p-3 rounded border">
+                      <div className="font-medium capitalize">{provider}</div>
+                      <div className="font-mono text-xs text-gray-600 mt-1">{String(prefix)}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -273,6 +304,7 @@ const APIKeyValidator: React.FC = () => {
   const [isValidating, setIsValidating] = useState(false);
 
   const validateAllKeys = async () => {
+    console.log('Validating all keys...');
     setIsValidating(true);
     const results: Record<string, any> = {};
     
@@ -293,6 +325,7 @@ const APIKeyValidator: React.FC = () => {
       }
     }
     
+    console.log('Key validation results:', results);
     setKeyResults(results);
     setIsValidating(false);
   };

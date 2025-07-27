@@ -795,7 +795,12 @@ const AdminPage: React.FC = () => {
             {/* API Debugger Button */}
             <div className="mt-6 pt-6 border-t border-gray-800">
               <button
-                onClick={() => setIsAPIDebuggerOpen(true)}
+                onClick={() => {
+                  console.log('API Debugger button clicked');
+                  console.log('Current isAPIDebuggerOpen state:', isAPIDebuggerOpen);
+                  setIsAPIDebuggerOpen(true);
+                  console.log('Set isAPIDebuggerOpen to true');
+                }}
                 className="flex items-center gap-2 px-4 py-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 rounded w-full transition-colors"
               >
                 <Search size={18} />
@@ -1013,9 +1018,13 @@ const AdminPage: React.FC = () => {
       </div>
       
       {/* API Debugger Modal */}
+      {console.log('Rendering APIDebugger with isOpen:', isAPIDebuggerOpen)}
       <APIDebugger 
         isOpen={isAPIDebuggerOpen} 
-        onClose={() => setIsAPIDebuggerOpen(false)} 
+        onClose={() => {
+          console.log('APIDebugger onClose called');
+          setIsAPIDebuggerOpen(false);
+        }} 
       />
     </>
   );
