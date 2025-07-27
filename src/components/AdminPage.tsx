@@ -192,6 +192,11 @@ const AdminPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'analytics' | 'contacts' | 'supabase-status' | 'api-keys' | 'todos' | 'notes' | 'clients-jobs' | 'subscriptions' | 'financials' | 'coming-soon' | 'seo-audits'>('analytics');
   const [isAPIDebuggerOpen, setIsAPIDebuggerOpen] = useState(false);
   const [pageViews, setPageViews] = useState<PageView[]>([]);
+
+  // Debug effect for API Debugger
+  useEffect(() => {
+    console.log('APIDebugger state changed:', isAPIDebuggerOpen);
+  }, [isAPIDebuggerOpen]);
   const [clickEvents, setClickEvents] = useState<ClickEvent[]>([]);
   const [visitDurations, setVisitDurations] = useState<VisitDuration[]>([]);
   const [contactSubmissions, setContactSubmissions] = useState<ContactSubmission[]>([]);
@@ -963,7 +968,6 @@ const AdminPage: React.FC = () => {
       </div>
       
       {/* API Debugger Modal */}
-      {console.log('Rendering APIDebugger with isOpen:', isAPIDebuggerOpen)}
       <APIDebugger 
         isOpen={isAPIDebuggerOpen} 
         onClose={() => {
