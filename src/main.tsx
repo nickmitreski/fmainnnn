@@ -5,7 +5,7 @@ import './index.css';
 import './styles/skeuomorphic-ios.css';
 import { PostHogProvider } from 'posthog-js/react';
 import { posthog } from './lib/posthog';
-import { analytics } from './lib/analytics-simple';
+import { analytics } from './lib/analytics-new';
 
 // Using simplified analytics without DOM event listeners
 
