@@ -778,7 +778,8 @@ const AdminPage: React.FC = () => {
 
   if (isAuthenticated) {
     return (
-      <div className="min-h-screen bg-black text-white">
+      <>
+        <div className="min-h-screen bg-black text-white">
         <div className="flex">
           {/* Sidebar */}
           <div className="w-64 bg-[#1a1a1a] min-h-screen p-6 border-r border-gray-800">
@@ -975,6 +976,7 @@ const AdminPage: React.FC = () => {
           setIsAPIDebuggerOpen(false);
         }} 
       />
+      </>
     );
   }
 
