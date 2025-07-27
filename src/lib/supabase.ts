@@ -1,11 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
-import { getEnvVar } from './envVars';
+import { config } from './config';
 
 // Get environment variables - these should be set in Vercel
 const getSupabaseConfig = () => {
   return {
-    url: getEnvVar('VITE_SUPABASE_URL'),
-    anonKey: getEnvVar('VITE_SUPABASE_ANON_KEY')
+    url: config.supabase.url,
+    anonKey: config.supabase.anonKey
   };
 };
 

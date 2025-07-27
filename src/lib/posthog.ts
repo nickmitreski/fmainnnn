@@ -1,26 +1,26 @@
 import posthog from 'posthog-js';
-import { getEnvVar } from './envVars';
+import { config as appConfig } from './config';
 
 // Initialize PostHog with environment variables
-const getPostHogConfig = () => {
+const getPostHogConfig = (): { key: string; host: string } => {
   return {
-    key: getEnvVar('VITE_PUBLIC_POSTHOG_KEY'),
-    host: getEnvVar('VITE_PUBLIC_POSTHOG_HOST') || 'https://us.i.posthog.com'
+    key: appConfig.posthog.key,
+    host: appConfig.posthog.host
   };
 };
 
 let posthogInstance = posthog;
 
 // Only initialize if we have a valid PostHog key (not placeholder)
-const config = getPostHogConfig();
-const isValidPostHogKey = config.key && 
-  config.key !== 'your-posthog-key-here' && 
-  config.key !== 'disabled' && 
-  config.key.length > 10;
+const posthogConfig = getPostHogConfig();
+const isValidPostHogKey = posthogConfig.key && 
+  posthogConfig.key !== 'your-posthog-key-here' && 
+  posthogConfig.key !== 'disabled' && 
+  posthogConfig.key.length > 10;
 
 if (isValidPostHogKey) {
-  posthog.init(config.key, {
-    api_host: config.host,
+  posthog.init(posthogConfig.key, {
+    api_host: posthogConfig.host,
     capture_pageview: true, // Automatically capture pageviews
     capture_pageleave: true, // Capture when users leave the page
     autocapture: true, // Automatically capture clicks, form submissions etc.
@@ -28,7 +28,7 @@ if (isValidPostHogKey) {
     disable_session_recording: false,
     loaded: (posthog) => {
       // Add any additional configuration after PostHog is loaded
-      if (getEnvVar('DEV') === 'true') {
+      if (appConfig.env.isDev) {
         // Enable debug mode in development
         posthog.debug();
       }
