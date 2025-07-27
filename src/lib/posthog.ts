@@ -1,12 +1,18 @@
 import posthog from 'posthog-js';
-import { config as appConfig } from './config';
 
 // Initialize PostHog with environment variables
 const getPostHogConfig = (): { key: string; host: string } => {
-  return {
-    key: appConfig.posthog.key,
-    host: appConfig.posthog.host
-  };
+  try {
+    return {
+      key: import.meta.env.VITE_PUBLIC_POSTHOG_KEY || '',
+      host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com'
+    };
+  } catch {
+    return {
+      key: '',
+      host: 'https://us.i.posthog.com'
+    };
+  }
 };
 
 let posthogInstance = posthog;
@@ -28,7 +34,7 @@ if (isValidPostHogKey) {
     disable_session_recording: false,
     loaded: (posthog) => {
       // Add any additional configuration after PostHog is loaded
-      if (appConfig.env.isDev) {
+      if (import.meta.env.DEV) {
         // Enable debug mode in development
         posthog.debug();
       }

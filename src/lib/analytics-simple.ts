@@ -1,4 +1,11 @@
-import { posthog, trackEvent, identifyUser } from './posthog';
+// Mock PostHog functions for simplified analytics
+const trackEvent = (eventName: string, properties?: Record<string, unknown>) => {
+  console.log(`[Analytics] Event: ${eventName}`, properties);
+};
+
+const identifyUser = (id: string, properties?: Record<string, unknown>) => {
+  console.log(`[Analytics] Identify: ${id}`, properties);
+};
 
 // Simplified analytics tracking without DOM event listeners
 export class AnalyticsTracker {
