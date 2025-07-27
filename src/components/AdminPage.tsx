@@ -961,61 +961,6 @@ const AdminPage: React.FC = () => {
           </div>
         </div>
       </div>
-    );
-  }
-
-  return (
-    <>
-      <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
-        <motion.div 
-          className="w-full max-w-md bg-[#1a1a1a] p-8 rounded-lg border border-gray-800"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-2xl font-light mb-6 tracking-tight text-center">Admin Login</h1>
-          
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-500 p-3 rounded mb-4 text-sm">
-              {error}
-            </div>
-          )}
-
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-sm font-light mb-2 tracking-tight">
-                Email
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2 bg-black border border-gray-800 rounded text-white focus:outline-none focus:border-[#0CF2A0] transition-colors"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-light mb-2 tracking-tight">
-                Password
-              </label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-2 bg-black border border-gray-800 rounded text-white focus:outline-none focus:border-[#0CF2A0] transition-colors"
-                required
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-[#0CF2A0] text-black py-3 rounded transition-colors hover:bg-[#07C280] disabled:opacity-50"
-              disabled={loading}
-            >
-              {loading ? 'Loading...' : 'Login'}
-            </button>
-          </form>
-        </motion.div>
-      </div>
       
       {/* API Debugger Modal */}
       {console.log('Rendering APIDebugger with isOpen:', isAPIDebuggerOpen)}
@@ -1026,8 +971,8 @@ const AdminPage: React.FC = () => {
           setIsAPIDebuggerOpen(false);
         }} 
       />
-    </>
-  );
+    );
+  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center p-4">
